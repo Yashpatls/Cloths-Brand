@@ -1,0 +1,606 @@
+/* ==============================================================================
+   StyleHub — Premium Modern Fashion Design Stylesheet
+   Typography: Playfair Display (Headings) & DM Sans (Body)
+   ============================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..800;1,9..40,300..800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+
+:root {
+  --primary: #121212;
+  --primary-light: #2c2c2c;
+  --secondary: #6e6d68;
+  --accent: #c86a4b;
+  --accent-hover: #b05739;
+  --paper-bg: #f9f8f5;
+  --paper-card: #ffffff;
+  --border-line: #e8e6e1;
+  --gold: #d4af37;
+  --success: #2e7d32;
+  --danger: #d32f2f;
+  --font-serif: 'Playfair Display', Georgia, serif;
+  --font-sans: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --transition-smooth: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 6px 20px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 12px 35px rgba(0, 0, 0, 0.12);
+}
+
+body {
+  font-family: var(--font-sans);
+  color: var(--primary);
+  background-color: #ffffff;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, .font-serif, .brand {
+  font-family: var(--font-serif);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  transition: var(--transition-smooth);
+}
+
+a:hover {
+  color: var(--accent);
+}
+
+/* ------------------------------------------------------------------------------
+   Navigation & Top Bar
+   ------------------------------------------------------------------------------ */
+.site-header {
+  border-bottom: 1px solid var(--border-line);
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(10px);
+  position: sticky;
+  top: 0;
+  z-index: 1030;
+}
+
+.top-announcement {
+  background-color: var(--primary);
+  color: #ffffff;
+  font-size: 0.78rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 6px 0;
+  text-align: center;
+  font-weight: 500;
+}
+
+.navbar-brand {
+  font-size: 1.55rem;
+  font-weight: 800;
+  letter-spacing: 3px;
+  color: var(--primary) !important;
+}
+
+.navbar-brand span {
+  color: var(--accent);
+}
+
+.nav-link {
+  font-size: 0.88rem;
+  font-weight: 600;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: #3b3a36 !important;
+  padding: 0.5rem 1rem !important;
+  transition: var(--transition-smooth);
+}
+
+.nav-link:hover, .nav-link.active {
+  color: var(--accent) !important;
+}
+
+.badge-counter {
+  font-size: 0.65rem;
+  padding: 3px 6px;
+  border-radius: 50px;
+  background-color: var(--accent);
+  color: #ffffff;
+  vertical-align: top;
+  margin-left: 2px;
+}
+
+/* ------------------------------------------------------------------------------
+   Editorial Hero Section
+   ------------------------------------------------------------------------------ */
+.hero-editorial {
+  min-height: 82vh;
+  background: #f4f1ea;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+
+.hero-copy {
+  padding: 4rem 2rem;
+  z-index: 2;
+}
+
+.hero-tag {
+  font-size: 0.82rem;
+  letter-spacing: 3px;
+  font-weight: 700;
+  color: var(--accent);
+  text-transform: uppercase;
+  margin-bottom: 1.2rem;
+  display: inline-block;
+}
+
+.hero-title {
+  font-size: clamp(2.8rem, 5.5vw, 4.8rem);
+  line-height: 1.05;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: var(--primary);
+}
+
+.hero-title em {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--accent);
+}
+
+.hero-description {
+  font-size: 1.1rem;
+  color: var(--secondary);
+  max-width: 440px;
+  margin-bottom: 2.2rem;
+  line-height: 1.7;
+}
+
+.hero-image-wrap {
+  height: 100%;
+  min-height: 520px;
+  background-position: center;
+  background-size: cover;
+  border-radius: 4px;
+  box-shadow: var(--shadow-lg);
+}
+
+/* ------------------------------------------------------------------------------
+   Category Cards
+   ------------------------------------------------------------------------------ */
+.category-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 4px;
+  height: 380px;
+  display: block;
+  box-shadow: var(--shadow-sm);
+}
+
+.category-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.65s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.category-card:hover img {
+  transform: scale(1.06);
+}
+
+.category-card-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(18, 18, 18, 0.82) 0%, rgba(18, 18, 18, 0.15) 50%, transparent 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 2rem;
+  color: #ffffff;
+}
+
+.category-card-overlay h3 {
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin-bottom: 0.3rem;
+}
+
+.category-card-overlay p {
+  font-size: 0.85rem;
+  opacity: 0.85;
+  margin-bottom: 0.8rem;
+}
+
+.category-card-overlay span {
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* ------------------------------------------------------------------------------
+   Product Cards
+   ------------------------------------------------------------------------------ */
+.product-card {
+  border: none;
+  background: transparent;
+  transition: var(--transition-smooth);
+  position: relative;
+}
+
+.product-thumb {
+  position: relative;
+  overflow: hidden;
+  background-color: var(--paper-bg);
+  border-radius: 3px;
+  height: 370px;
+}
+
+.product-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.product-card:hover .product-thumb img {
+  transform: scale(1.04);
+}
+
+.product-badge {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  background-color: var(--primary);
+  color: #ffffff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 2px;
+  z-index: 2;
+}
+
+.product-badge.sale {
+  background-color: var(--accent);
+}
+
+.btn-wishlist {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background: #ffffff;
+  border: none;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  color: #333;
+  z-index: 2;
+}
+
+.btn-wishlist:hover, .btn-wishlist.active {
+  background: var(--accent);
+  color: #ffffff;
+}
+
+.product-info {
+  padding-top: 1rem;
+}
+
+.product-cat {
+  font-size: 0.75rem;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--secondary);
+  margin-bottom: 0.2rem;
+  font-weight: 600;
+}
+
+.product-title {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--primary);
+  margin-bottom: 0.4rem;
+  line-height: 1.35;
+}
+
+.product-price {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.price-original {
+  font-size: 0.88rem;
+  color: #999;
+  text-decoration: line-through;
+  font-weight: 400;
+}
+
+/* ------------------------------------------------------------------------------
+   Buttons & Micro-interactions
+   ------------------------------------------------------------------------------ */
+.btn-fashion-dark {
+  background-color: var(--primary);
+  color: #ffffff;
+  border: 1px solid var(--primary);
+  padding: 12px 28px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  border-radius: 2px;
+  transition: var(--transition-smooth);
+}
+
+.btn-fashion-dark:hover {
+  background-color: var(--accent);
+  border-color: var(--accent);
+  color: #ffffff;
+}
+
+.btn-fashion-light {
+  background-color: #ffffff;
+  color: var(--primary);
+  border: 1px solid var(--border-line);
+  padding: 12px 28px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  border-radius: 2px;
+  transition: var(--transition-smooth);
+}
+
+.btn-fashion-light:hover {
+  background-color: var(--paper-bg);
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+/* ------------------------------------------------------------------------------
+   Cart & Checkout Pages
+   ------------------------------------------------------------------------------ */
+.cart-summary-card {
+  background-color: var(--paper-bg);
+  padding: 2rem;
+  border-radius: 4px;
+  border: 1px solid var(--border-line);
+}
+
+.checkout-step {
+  padding: 1.8rem;
+  border: 1px solid var(--border-line);
+  border-radius: 4px;
+  margin-bottom: 1.5rem;
+}
+
+.checkout-step.active {
+  border-color: var(--primary);
+}
+
+.step-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 1.2rem;
+}
+
+.step-num {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+/* ------------------------------------------------------------------------------
+   Order Tracking Stepper
+   ------------------------------------------------------------------------------ */
+.tracking-stepper {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  margin: 2.5rem 0;
+}
+
+.tracking-stepper::before {
+  content: '';
+  position: absolute;
+  top: 15px;
+  left: 20px;
+  right: 20px;
+  height: 3px;
+  background-color: var(--border-line);
+  z-index: 1;
+}
+
+.track-step {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+}
+
+.track-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 3px solid var(--border-line);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 8px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #999;
+}
+
+.track-step.done .track-icon {
+  background: var(--success);
+  border-color: var(--success);
+  color: #ffffff;
+}
+
+.track-step.current .track-icon {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #ffffff;
+  box-shadow: 0 0 0 4px rgba(200, 106, 75, 0.2);
+}
+
+.track-step span {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--secondary);
+}
+
+.track-step.done span, .track-step.current span {
+  color: var(--primary);
+}
+
+/* ------------------------------------------------------------------------------
+   Footer
+   ------------------------------------------------------------------------------ */
+.site-footer {
+  background-color: #121212;
+  color: #d1cfc7;
+  padding: 5rem 0 2.5rem;
+  font-size: 0.9rem;
+}
+
+.site-footer h5 {
+  color: #ffffff;
+  font-size: 1.1rem;
+  margin-bottom: 1.4rem;
+}
+
+.site-footer a {
+  color: #a8a69e;
+}
+
+.site-footer a:hover {
+  color: #ffffff;
+}
+
+.footer-bottom {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 2rem;
+  margin-top: 3.5rem;
+  font-size: 0.8rem;
+  color: #7a7872;
+}
+
+/* ------------------------------------------------------------------------------
+   Black Friday Sale & Enhanced UI Animations
+   ------------------------------------------------------------------------------ */
+.black-friday-banner {
+  background: linear-gradient(135deg, #090909 0%, #1a0826 40%, #0d0014 100%);
+  border: 1px solid rgba(255, 0, 127, 0.25);
+  box-shadow: 0 10px 30px rgba(26, 8, 38, 0.4);
+  position: relative;
+  overflow: hidden;
+}
+
+.black-friday-banner::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255, 0, 127, 0.08) 0%, transparent 60%);
+  pointer-events: none;
+  animation: bfRotate 15s linear infinite;
+}
+
+@keyframes bfRotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.black-friday-badge {
+  background: linear-gradient(90deg, #ff007f, #ff7700);
+  color: #ffffff;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  animation: bfGlow 2s infinite alternate;
+}
+
+@keyframes bfGlow {
+  from { box-shadow: 0 0 6px rgba(255, 0, 127, 0.4); }
+  to { box-shadow: 0 0 22px rgba(255, 119, 0, 0.8); }
+}
+
+.coupon-copy-pill {
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px dashed rgba(255, 255, 255, 0.4);
+  color: #ffffff;
+  padding: 0.4rem 1rem;
+  border-radius: 50px;
+  font-family: monospace;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.coupon-copy-pill:hover {
+  background: rgba(255, 255, 255, 0.25);
+  border-color: #ffffff;
+  transform: scale(1.04);
+}
+
+.product-card {
+  transition: transform 0.28s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.28s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+}
+
+.product-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.12) !important;
+}
+
+.btn-fashion-gold {
+  background: linear-gradient(135deg, #d4af37 0%, #b08917 100%);
+  color: #000000 !important;
+  font-weight: 700;
+  border: none;
+  letter-spacing: 0.5px;
+  transition: all 0.25s ease;
+}
+
+.btn-fashion-gold:hover {
+  background: linear-gradient(135deg, #f5cf53 0%, #cfa325 100%);
+  color: #000000 !important;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(212, 175, 55, 0.4);
+}
+
+.btn-fashion-dark:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+.btn-fashion-light:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+}

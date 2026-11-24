@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <th:block th:replace="~{fragments :: head('Client Concierge & Contact')}"></th:block>
+</head>
+<body>
+
+  <div th:replace="~{fragments :: header}"></div>
+
+  <main class="container py-5">
+    <div class="mb-5 text-center">
+      <span class="text-uppercase small fw-bold text-muted letter-spacing-2">AT YOUR SERVICE</span>
+      <h1 class="display-5 font-serif mt-1">Concierge & Contact</h1>
+      <p class="text-secondary max-w-500 mx-auto" style="max-width: 550px;">
+        Our styling advisors and customer care team are available Monday through Saturday to assist with tailoring, orders, and inquiries.
+      </p>
+    </div>
+
+    <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+      <span th:text="${successMessage}"></span>
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <div class="row g-5">
+      <!-- Contact Form -->
+      <div class="col-lg-7">
+        <div class="card border rounded-3 p-4 p-md-5 shadow-sm bg-white">
+          <h3 class="font-serif mb-4">Send a Message</h3>
+          <form th:action="@{/contact/submit}" method="post">
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label small fw-bold">Your Name</label>
+                <input type="text" name="name" class="form-control" required placeholder="Aarav Sharma">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label small fw-bold">Email Address</label>
+                <input type="email" name="email" class="form-control" required placeholder="name@domain.com">
+              </div>
+              <div class="col-12">
+                <label class="form-label small fw-bold">Inquiry Subject</label>
+                <select name="subject" class="form-select">
+                  <option value="Order Status">Inquiry regarding an existing order</option>
+                  <option value="Sizing Advice">Sizing & fabric consultation</option>
+                  <option value="Returns & Exchanges">Returns or doorstep exchange</option>
+                  <option value="Corporate / Custom">Corporate or bridal styling</option>
+                </select>
+              </div>
+              <div class="col-12">
+                <label class="form-label small fw-bold">Your Message</label>
+                <textarea name="message" rows="5" class="form-control" required placeholder="Please provide any relevant details..."></textarea>
+              </div>
+              <div class="col-12 mt-4">
+                <button type="submit" class="btn btn-fashion-dark px-5 py-3">Transmit Inquiry</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Store Information & FAQ -->
+      <div class="col-lg-5">
+        <div class="d-flex flex-column gap-4">
+          <div class="card border rounded-3 p-4 bg-light">
+            <h5 class="font-serif mb-3">Direct Channels</h5>
+            <ul class="list-unstyled d-flex flex-column gap-3 small text-secondary mb-0">
+              <li>
+                <strong class="text-dark d-block">Hotline Support</strong>
+                +91 (022) 555-0199 (Mon–Sat, 9:00 AM – 7:00 PM IST)
+              </li>
+              <li>
+                <strong class="text-dark d-block">Concierge Email</strong>
+                concierge@stylehub.local / support@stylehub.local
+              </li>
+              <li>
+                <strong class="text-dark d-block">Flagship Showroom</strong>
+                StyleHub Atelier, 4th Floor, Maker Maxity, Bandra Kurla Complex (BKC), Mumbai 400051
+              </li>
+            </ul>
+          </div>
+
+          <div class="card border rounded-3 p-4 bg-light">
+            <h5 class="font-serif mb-3">Frequently Asked Questions</h5>
+            <div class="accordion accordion-flush" id="faqAccordion">
+              <div class="accordion-item bg-transparent">
+                <h2 class="accordion-header">
+                  <button class="accordion-button collapsed px-0 bg-transparent fw-bold small" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                    What is your delivery timeframe?
+                  </button>
+                </h2>
+                <div id="faq1" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                  <div class="accordion-body px-0 text-muted small">
+                    Orders are dispatched within 24 hours. Metro deliveries arrive in 2–3 business days; all other regions within 4–5 business days.
+                  </div>
+                </div>
+              </div>
+              <div class="accordion-item bg-transparent">
+                <h2 class="accordion-header">
+                  <button class="accordion-button collapsed px-0 bg-transparent fw-bold small" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                    How do doorstep returns work?
+                  </button>
+                </h2>
+                <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                  <div class="accordion-body px-0 text-muted small">
+                    Request an exchange or return from your Orders tab within 15 days. Our courier will pick up the package with complimentary return shipping.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div th:replace="~{fragments :: footer}"></div>
+
+</body>
+</html>

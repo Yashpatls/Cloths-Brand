@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <th:block th:replace="~{fragments :: head('Sign In')}"></th:block>
+</head>
+<body class="bg-light">
+
+  <div th:replace="~{fragments :: header}"></div>
+
+  <main class="container py-5 d-flex justify-content-center align-items-center" style="min-height: 70vh;">
+    <div class="card border-0 shadow-sm p-4 p-md-5 rounded-3 bg-white" style="max-width: 460px; width: 100%;">
+      <div class="text-center mb-4">
+        <span class="text-uppercase small fw-bold text-muted">WELCOME BACK</span>
+        <h1 class="display-6 font-serif mt-1">Sign In</h1>
+        <p class="text-muted small">Access your personal wardrobe, orders, and wishlist.</p>
+      </div>
+
+      <div th:if="${param.error}" class="alert alert-danger small py-2" role="alert">
+        Invalid email or password. Please try again.
+      </div>
+      <div th:if="${param.registered}" class="alert alert-success small py-2" role="alert">
+        Account successfully created! Please log in below.
+      </div>
+      <div th:if="${param.loggedout}" class="alert alert-info small py-2" role="alert">
+        You have been signed out.
+      </div>
+
+      <form th:action="@{/login}" method="post">
+        <div class="mb-3">
+          <label class="form-label small fw-bold">Email Address</label>
+          <input type="email" name="username" class="form-control" required placeholder="name@domain.com">
+        </div>
+        <div class="mb-3">
+          <div class="d-flex justify-content-between align-items-center">
+            <label class="form-label small fw-bold">Password</label>
+          </div>
+          <input type="password" name="password" class="form-control" required placeholder="••••••••">
+        </div>
+
+        <div class="mb-4 form-check">
+          <input type="checkbox" name="remember-me" class="form-check-input" id="rememberMe">
+          <label class="form-check-label small text-muted" for="rememberMe">Keep me signed in for 14 days</label>
+        </div>
+
+        <button type="submit" class="btn btn-fashion-dark w-100 py-3 mb-3">
+          Sign In to StyleHub
+        </button>
+      </form>
+
+      <div class="text-center border-top pt-3 small text-muted">
+        Don't have an account yet? <a href="/register" class="fw-bold text-dark text-decoration-underline">Create an account</a>
+      </div>
+
+      <!-- Quick Demo Credentials Hint -->
+      <div class="card bg-light border p-2 mt-4 text-start small">
+        <span class="fw-bold text-muted">Demo Credentials:</span>
+        <div class="text-secondary">Admin: <code>admin@stylehub.local</code> / <code>Admin@12345</code></div>
+        <div class="text-secondary">Customer: <code>customer@stylehub.local</code> / <code>Customer@12345</code></div>
+      </div>
+    </div>
+  </main>
+
+  <div th:replace="~{fragments :: footer}"></div>
+
+</body>
+</html>

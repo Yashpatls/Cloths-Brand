@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <th:block th:replace="~{admin/admin-fragments :: admin-head('Dashboard')}"></th:block>
+</head>
+<body class="admin-body">
+
+  <div th:replace="~{admin/admin-fragments :: sidebar}"></div>
+
+  <main class="admin-main">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <div>
+        <h2 class="fw-bold mb-1">Executive Dashboard</h2>
+        <span class="text-muted small">Live store overview, sales metrics, and pending order dispatches</span>
+      </div>
+      <div>
+        <a href="/admin/products/new" class="btn btn-primary btn-sm"><i class="bi bi-plus-lg me-1"></i> Add Product</a>
+      </div>
+    </div>
+
+    <!-- Alert Messages -->
+    <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+      <span th:text="${successMessage}"></span>
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <!-- KPI Metrics Row -->
+    <div class="row g-4 mb-4">
+      <div class="col-sm-6 col-xl-3">
+        <div class="kpi-card">
+          <div class="kpi-title">Gross Revenue</div>
+          <div class="kpi-value text-success" th:text="'₹' + ${totalRevenue}">₹0</div>
+          <small class="text-muted">Total settled store sales</small>
+        </div>
+      </div>
+      <div class="col-sm-6 col-xl-3">
+        <div class="kpi-card">
+          <div class="kpi-title">Total Orders</div>
+          <div class="kpi-value" th:text="${totalOrders}">0</div>
+          <small class="text-muted"><span th:text="${pendingOrders}">0</span> pending fulfillment</small>
+        </div>
+      </div>
+      <div class="col-sm-6 col-xl-3">
+        <div class="kpi-card">
+          <div class="kpi-title">Active Products</div>
+          <div class="kpi-value" th:text="${totalProducts}">0</div>
+          <small class="text-muted"><span class="text-danger fw-bold" th:text="${lowStockCount}">0</span> low stock alerts</small>
+        </div>
+      </div>
+      <div class="col-sm-6 col-xl-3">
+        <div class="kpi-card">
+          <div class="kpi-title">Registered Clients</div>
+          <div class="kpi-value" th:text="${totalCustomers}">0</div>
+          <small class="text-muted">Customer accounts</small>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Orders Table -->
+    <div class="admin-table mb-4">
+      <div class="d-flex justify-content-between align-items-center p-3 border-bottom bg-white">
+        <h5 class="mb-0 fw-bold">Recent Customer Orders</h5>
+        <a href="/admin/orders" class="small text-decoration-none">View All Orders →</a>
+      </div>
+      <div class="table-responsive">
+        <table class="table align-middle">
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>Customer</th>
+              <th>Date</th>
+              <th>Total</th>
+              <th>Payment</th>
+              <th>Status</th>
+              <th>Update Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="o : ${recentOrders}">
+              <td><a th:href="@{/admin/orders/{id}(id=${o.id})}" class="fw-bold text-primary font-monospace" th:text="${o.orderNumber}">SH-000</a></td>
+              <td th:text="${o.customer.name}">Customer Name</td>
+              <td class="small text-muted" th:text="${o.formattedDate}">Date</td>
+              <td class="fw-bold" th:text="'₹' + ${o.total}">₹0</td>
+              <td><span class="badge bg-light text-dark border" th:text="${o.paymentMethod}">DEMO</span></td>
+              <td>
+                <span class="badge-status"
+                      th:classappend="'status-' + ${#strings.toLowerCase(o.status)}"
+                      th:text="${o.status}">PLACED</span>
+              </td>
+              <td>
+                <form th:action="@{/admin/orders/{id}/status(id=${o.id})}" method="post" class="d-flex gap-2">
+                  <select name="status" class="form-select form-select-sm" style="width: 140px;">
+                    <option th:each="st : ${T(com.stylehub.model.OrderStatus).values()}"
+                            th:value="${st}" th:text="${st}"
+                            th:selected="${st == o.status}"></option>
+                  </select>
+                  <button type="submit" class="btn btn-sm btn-outline-dark">Save</button>
+                </form>
+              </td>
+            </tr>
+            <tr th:if="${recentOrders.isEmpty()}">
+              <td colspan="7" class="text-center py-4 text-muted">No orders recorded yet.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

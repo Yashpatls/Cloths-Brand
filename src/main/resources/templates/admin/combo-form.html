@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <th:block th:replace="~{admin/admin-fragments :: admin-head(${combo.id != null ? 'Edit Combo Package' : 'New Combo Package'})}"></th:block>
+</head>
+<body class="admin-body">
+
+  <div th:replace="~{admin/admin-fragments :: sidebar}"></div>
+
+  <main class="admin-main">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <div>
+        <h1 class="h3 font-serif mb-1" th:text="${combo.id != null ? 'Edit Combo Package: ' + combo.name : 'Create New Combo Package'}">New Combo Package</h1>
+        <p class="text-secondary small mb-0">Assemble multi-item bundles, define budget tiers, and configure price discounts.</p>
+      </div>
+      <a href="/admin/combos" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left me-1"></i> Back to Combos
+      </a>
+    </div>
+
+    <form th:action="@{/admin/combos/save}" method="post" enctype="multipart/form-data" class="row g-4">
+      <input type="hidden" name="id" th:value="${combo.id}">
+
+      <!-- Left Column: Package Details -->
+      <div class="col-lg-7">
+        <div class="card p-4 border shadow-sm mb-4">
+          <h5 class="font-serif mb-3 border-bottom pb-2">1. Package Information</h5>
+
+          <div class="mb-3">
+            <label class="form-label small fw-bold">Package Name *</label>
+            <input type="text" name="name" th:value="${combo.name}" class="form-control" placeholder="e.g. Combo 5 – Men's Casual" required>
+          </div>
+
+          <div class="row g-3 mb-3">
+            <div class="col-md-6">
+              <label class="form-label small fw-bold">Budget Tier *</label>
+              <select name="tier" class="form-select" required>
+                <option th:each="t : ${tiers}" th:value="${t.name()}" th:text="${t.displayName} + ' (' + ${t.description} + ')'"
+                        th:selected="${combo.tier != null and combo.tier.name() == t.name()}">
+                  Standard Combos
+                </option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label small fw-bold">Badge Text (Optional)</label>
+              <input type="text" name="badge" th:value="${combo.badge}" class="form-control" placeholder="e.g. Save 35%, Best Value, Trending">
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label small fw-bold">Custom Slug (Optional)</label>
+            <input type="text" name="slug" th:value="${combo.slug}" class="form-control" placeholder="Leave blank to auto-generate from name">
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label small fw-bold">Package Description</label>
+            <textarea name="description" rows="3" class="form-control" th:text="${combo.description}" placeholder="Describe what makes this package special..."></textarea>
+          </div>
+
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label small fw-bold">Main Image URL</label>
+              <input type="url" name="imageUrl" th:value="${combo.imageUrl}" class="form-control" placeholder="https://...">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label small fw-bold">Or Upload Image File</label>
+              <input type="file" name="imageFile" class="form-control" accept="image/*">
+            </div>
+          </div>
+        </div>
+
+        <!-- Constituent Products Selection -->
+        <div class="card p-4 border shadow-sm">
+          <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-3">
+            <h5 class="font-serif mb-0">2. Select Constituent Products</h5>
+            <span class="small text-muted">Pick garments from inventory</span>
+          </div>
+
+          <p class="small text-secondary mb-3">
+            Check the garments that make up this combo package. Stock will be deducted automatically from each selected item upon purchase.
+          </p>
+
+          <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+            <table class="table table-sm table-hover align-middle">
+              <thead class="table-light small">
+                <tr>
+                  <th style="width: 40px;">Select</th>
+                  <th>Garment</th>
+                  <th style="width: 140px;">Custom Label in Bundle</th>
+                  <th style="width: 80px;">Qty</th>
+                  <th>Price</th>
+                  <th>Stock</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr th:each="p : ${products}">
+                  <td>
+                    <input type="checkbox" name="productIds" th:value="${p.id}" class="form-check-input item-check"
+                           th:checked="${combo.items != null and #lists.contains(combo.items.![product != null ? product.id : null], p.id)}"
+                           th:attr="data-price=${p.price}">
+                  </td>
+                  <td>
+                    <div class="d-flex align-items-center gap-2">
+                      <img th:src="${p.imageUrl}" class="rounded object-fit-cover border" style="width: 35px; height: 35px;"
+                           onerror="this.src='https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=100';">
+                      <div>
+                        <strong class="d-block small" th:text="${p.name}">Shirt</strong>
+                        <span class="text-muted" style="font-size: 0.7rem;" th:text="${p.categoryName}">Men</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <input type="text" name="customTitles" class="form-control form-control-sm" th:value="'1 ' + ${p.name}">
+                  </td>
+                  <td>
+                    <input type="number" name="quantities" value="1" min="1" class="form-control form-control-sm">
+                  </td>
+                  <td>
+                    <span class="small fw-semibold" th:text="'₹' + ${p.price}">₹999</span>
+                  </td>
+                  <td>
+                    <span class="badge" th:classappend="${p.stock > 0} ? 'bg-success' : 'bg-danger'" th:text="${p.stock} + ' pcs'">20</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Pricing & Scheduling -->
+      <div class="col-lg-5">
+        <div class="card p-4 border shadow-sm mb-4">
+          <h5 class="font-serif mb-3 border-bottom pb-2">3. Package Pricing</h5>
+
+          <div class="mb-3">
+            <label class="form-label small fw-bold">Combo Package Selling Price (₹) *</label>
+            <input type="number" step="0.01" name="comboPrice" th:value="${combo.comboPrice}" class="form-control form-control-lg fw-bold text-dark" placeholder="e.g. 1499.00" required>
+            <small class="text-muted">The bundled price customer actually pays.</small>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label small fw-bold">Original Strikethrough Price (₹)</label>
+            <input type="number" step="0.01" id="originalPriceInput" name="originalPrice" th:value="${combo.originalPrice}" class="form-control" placeholder="e.g. 2299.00">
+            <small class="text-muted">Displayed as strikethrough (shows savings discount to shoppers).</small>
+          </div>
+
+          <div class="form-check form-switch mb-2">
+            <input class="form-check-input" type="checkbox" name="active" value="true" th:checked="${combo.active}">
+            <label class="form-check-label small fw-bold">Package Active & Available in Storefront</label>
+          </div>
+
+          <div class="form-check form-switch mb-3">
+            <input class="form-check-input" type="checkbox" name="featured" value="true" th:checked="${combo.featured}">
+            <label class="form-check-label small fw-bold">Feature on Homepage Carousel</label>
+          </div>
+        </div>
+
+        <!-- Promotional Scheduling Card -->
+        <div class="card p-4 border shadow-sm mb-4">
+          <h5 class="font-serif mb-3 border-bottom pb-2">4. Promotional Price Scheduling (Optional)</h5>
+          
+          <div class="mb-3">
+            <label class="form-label small fw-bold">Special Promo Price (₹)</label>
+            <input type="number" step="0.01" name="promoPrice" th:value="${combo.promoPrice}" class="form-control" placeholder="e.g. 1299.00">
+          </div>
+
+          <div class="row g-2">
+            <div class="col-6">
+              <label class="form-label small fw-bold">Promo Start Date</label>
+              <input type="datetime-local" name="promoStartDate" th:value="${combo.promoStartDate}" class="form-control form-control-sm">
+            </div>
+            <div class="col-6">
+              <label class="form-label small fw-bold">Promo End Date</label>
+              <input type="datetime-local" name="promoEndDate" th:value="${combo.promoEndDate}" class="form-control form-control-sm">
+            </div>
+          </div>
+        </div>
+
+        <!-- Automatic Lookbook Preview Collage Card -->
+        <div class="card p-4 border shadow-sm mb-4">
+          <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-3">
+            <h5 class="font-serif mb-0">5. Automatic Collage Preview</h5>
+            <span class="badge bg-danger-subtle text-danger" id="preview-count-badge">0 Products Selected</span>
+          </div>
+          
+          <img id="admin-live-collage" src="/combos/live-collage.jpg" class="w-100 rounded border object-fit-cover shadow-sm mb-2" style="max-height: 280px; display: none;" alt="Collage Preview">
+
+          <div id="admin-collage-empty" class="p-4 text-center border rounded bg-light text-muted small mb-2">
+            <i class="bi bi-images fs-3 d-block mb-1 text-secondary"></i>
+            Check products on the left to see the auto-generated flat-lay collage preview in real time.
+          </div>
+
+          <div id="admin-selected-chips" class="d-flex flex-wrap gap-1 mb-3"></div>
+
+          <button type="button" class="btn btn-sm btn-outline-dark w-100" id="btn-use-auto-collage">
+            <i class="bi bi-magic me-1"></i> Use Auto-Generated Collage as Main Image
+          </button>
+          <small class="text-muted d-block mt-1 text-center" style="font-size: 0.72rem;">
+            If Main Image URL is blank, StyleHub automatically serves this live composite image.
+          </small>
+        </div>
+
+        <button type="submit" class="btn btn-fashion-dark w-100 py-3 fw-bold fs-6">
+          <i class="bi bi-check2-circle me-1"></i> Save Combo Package
+        </button>
+      </div>
+
+    </form>
+  </main>
+
+  <!-- Live Dynamic Collage Preview Script for Admin -->
+  <script>
+    function updateCollagePreview() {
+      const checked = Array.from(document.querySelectorAll('.item-check:checked'));
+      const pids = checked.map(c => c.value);
+      const countBadge = document.getElementById('preview-count-badge');
+      const img = document.getElementById('admin-live-collage');
+      const emptyBox = document.getElementById('admin-collage-empty');
+      const chipsBox = document.getElementById('admin-selected-chips');
+
+      if (countBadge) {
+        countBadge.textContent = pids.length + ' Product' + (pids.length !== 1 ? 's' : '') + ' Selected';
+      }
+
+      if (pids.length === 0) {
+        if (img) img.style.display = 'none';
+        if (emptyBox) emptyBox.style.display = 'block';
+        if (chipsBox) chipsBox.innerHTML = '';
+        return;
+      }
+
+      if (emptyBox) emptyBox.style.display = 'none';
+      if (img) {
+        img.style.display = 'block';
+        img.src = '/combos/live-collage.jpg?productIds=' + pids.join(',') + '&t=' + Date.now();
+      }
+
+      if (chipsBox) {
+        chipsBox.innerHTML = checked.map(c => {
+          const row = c.closest('tr');
+          const name = row ? row.querySelector('strong').textContent : 'Item';
+          return '<span class="badge bg-light text-dark border"><i class="bi bi-check me-1 text-success"></i>' + name + '</span>';
+        }).join('');
+      }
+    }
+
+    document.querySelectorAll('.item-check').forEach(chk => {
+      chk.addEventListener('change', updateCollagePreview);
+    });
+
+    const btnAuto = document.getElementById('btn-use-auto-collage');
+    if (btnAuto) {
+      btnAuto.addEventListener('click', () => {
+        const urlInput = document.querySelector('input[name="imageUrl"]');
+        if (urlInput) {
+          urlInput.value = '';
+          urlInput.placeholder = 'Auto-generated dynamic collage will be used';
+          alert('Auto-Generated Collage is selected! Leave URL blank to use auto-composite lookbook image.');
+        }
+      });
+    }
+
+    // Pre-load collage preview for selected items
+    window.addEventListener('DOMContentLoaded', () => {
+      updateCollagePreview();
+    });
+  </script>
+
+</body>
+</html>

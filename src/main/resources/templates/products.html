@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <th:block th:replace="~{fragments :: head(${selectedCategory != null ? selectedCategory + ' Collection' : 'Shop All Products'})}"></th:block>
+</head>
+<body>
+
+  <div th:replace="~{fragments :: header}"></div>
+
+  <main class="container py-5">
+    <!-- Breadcrumb & Header -->
+    <div class="mb-4">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb small">
+          <li class="breadcrumb-item"><a href="/">Home</a></li>
+          <li class="breadcrumb-item active" th:text="${selectedCategory != null ? selectedCategory : 'Catalog'}">Catalog</li>
+        </ol>
+      </nav>
+      <div class="d-flex justify-content-between align-items-end flex-wrap gap-2">
+        <div>
+          <h1 class="display-6 font-serif mb-1" th:text="${selectedCategory != null ? selectedCategory + ' Collection' : 'All Products'}">All Products</h1>
+          <p class="text-muted small mb-0" th:text="${products.size()} + ' styles found'">0 styles found</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="row g-4">
+      <!-- Faceted Filter Sidebar -->
+      <aside class="col-lg-3">
+        <div class="card border-0 shadow-sm p-4 bg-light rounded-3 sticky-top" style="top: 100px;">
+          <h5 class="font-serif mb-3">Filters</h5>
+          <form action="/shop" method="get">
+            <!-- Hidden query if active -->
+            <input type="hidden" name="q" th:value="${query}" th:if="${query != null}">
+
+            <!-- Category Filter -->
+            <div class="mb-4">
+              <label class="form-label small fw-bold text-uppercase text-muted">Category</label>
+              <div class="d-flex flex-column gap-2">
+                <a href="/shop" class="small text-decoration-none" th:classappend="${selectedCategory == null} ? 'fw-bold text-dark' : 'text-secondary'">
+                  All Categories
+                </a>
+                <a th:each="cat : ${categories}" th:href="@{/category/{slug}(slug=${cat.slug})}"
+                   class="small text-decoration-none"
+                   th:classappend="${selectedCategory != null and (selectedCategory.equalsIgnoreCase(cat.name) or selectedCategory.equalsIgnoreCase(cat.slug))} ? 'fw-bold text-dark' : 'text-secondary'"
+                   th:text="${cat.name}">Category</a>
+              </div>
+            </div>
+
+            <!-- Price Range -->
+            <div class="mb-4">
+              <label class="form-label small fw-bold text-uppercase text-muted">Price Range (₹)</label>
+              <div class="d-flex gap-2">
+                <input type="number" name="minPrice" class="form-control form-control-sm" placeholder="Min" th:value="${minPrice}">
+                <input type="number" name="maxPrice" class="form-control form-control-sm" placeholder="Max" th:value="${maxPrice}">
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-fashion-dark w-100 py-2">Apply Filters</button>
+            <a href="/shop" class="btn btn-fashion-light w-100 py-2 mt-2">Reset</a>
+          </form>
+        </div>
+      </aside>
+
+      <!-- Products Grid -->
+      <div class="col-lg-9">
+        <div th:if="${products.isEmpty()}" class="text-center py-5 bg-light rounded-3">
+          <i class="bi bi-search fs-1 text-muted d-block mb-3"></i>
+          <h4 class="font-serif">No products match your criteria</h4>
+          <p class="text-muted">Try clearing your filters or searching for something else.</p>
+          <a href="/shop" class="btn btn-fashion-dark mt-2">View All Products</a>
+        </div>
+
+        <div class="row g-4" th:unless="${products.isEmpty()}">
+          <div class="col-6 col-md-4" th:each="product : ${products}">
+            <div class="product-card">
+              <div class="product-thumb">
+                <span class="product-badge sale" th:if="${product.discountPrice != null}">Sale</span>
+                <button class="btn-wishlist btn-wishlist-toggle" th:attr="data-product-id=${product.id}" title="Save to wishlist">
+                  <i class="bi bi-heart"></i>
+                </button>
+                <a th:href="@{/products/{id}(id=${product.id})}">
+                  <img th:src="${product.imageUrl}" th:alt="${product.name}" loading="lazy">
+                </a>
+              </div>
+              <div class="product-info">
+                <div class="product-cat" th:text="${product.categoryName}">Category</div>
+                <a th:href="@{/products/{id}(id=${product.id})}">
+                  <h3 class="product-title" th:text="${product.name}">Product Name</h3>
+                </a>
+                <div class="product-price">
+                  <span th:if="${product.discountPrice != null}" th:text="'₹' + ${product.discountPrice}">₹0</span>
+                  <span th:classappend="${product.discountPrice != null} ? 'price-original' : ''" th:text="'₹' + ${product.price}">₹0</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div th:replace="~{fragments :: footer}"></div>
+
+</body>
+</html>

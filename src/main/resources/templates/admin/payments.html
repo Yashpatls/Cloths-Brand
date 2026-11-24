@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <th:block th:replace="~{admin/admin-fragments :: admin-head('Payment Transactions')}"></th:block>
+</head>
+<body class="admin-body">
+
+  <div th:replace="~{admin/admin-fragments :: sidebar}"></div>
+
+  <main class="admin-main">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <div>
+        <h2 class="fw-bold mb-1">Financial Transactions</h2>
+        <span class="text-muted small">Live payment gateway captures, Razorpay transaction IDs, and settlement records</span>
+      </div>
+    </div>
+
+    <div class="admin-table">
+      <div class="table-responsive">
+        <table class="table align-middle">
+          <thead>
+            <tr>
+              <th>Txn ID</th>
+              <th>Order ID</th>
+              <th>Method</th>
+              <th>Gateway Ref</th>
+              <th>Amount</th>
+              <th>Status</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="p : ${payments}">
+              <td><code class="fw-bold" th:text="${p.transactionId}">TXN-000</code></td>
+              <td><a th:href="@{/admin/orders/{id}(id=${p.orderId})}" th:text="'Order #' + ${p.orderId}">#1</a></td>
+              <td>
+                <span class="badge bg-light text-dark border" th:text="${p.paymentMethod}">RAZORPAY</span>
+              </td>
+              <td>
+                <small class="font-monospace text-muted" th:text="${p.razorpayOrderId != null ? p.razorpayOrderId : 'N/A'}">order_000</small>
+              </td>
+              <td><strong th:text="'₹' + ${p.amount}">₹0</strong></td>
+              <td>
+                <span class="badge"
+                      th:classappend="${p.status.name() == 'COMPLETED'} ? 'bg-success' : (${p.status.name() == 'PENDING'} ? 'bg-warning text-dark' : 'bg-danger')"
+                      th:text="${p.status}">COMPLETED</span>
+              </td>
+              <td class="small text-muted" th:text="${#temporals.format(p.paymentDate, 'dd MMM yyyy, hh:mm a')}">Date</td>
+            </tr>
+            <tr th:if="${payments.isEmpty()}">
+              <td colspan="7" class="text-center py-4 text-muted">No transactions recorded.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

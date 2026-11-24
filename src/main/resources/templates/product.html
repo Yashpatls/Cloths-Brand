@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+  <th:block th:replace="~{fragments :: head(${product.name})}"></th:block>
+</head>
+<body>
+
+  <div th:replace="~{fragments :: header}"></div>
+
+  <main class="container py-5">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+      <ol class="breadcrumb small">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item"><a href="/shop">Shop</a></li>
+        <li class="breadcrumb-item" th:if="${product.category != null}">
+          <a th:href="@{/category/{slug}(slug=${product.category.slug})}" th:text="${product.categoryName}">Category</a>
+        </li>
+        <li class="breadcrumb-item active" th:text="${product.name}">Product Name</li>
+      </ol>
+    </nav>
+
+    <!-- Feedback messages -->
+    <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+      <span th:text="${successMessage}"></span>
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+      <span th:text="${errorMessage}"></span>
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <!-- Product Hero Row -->
+    <div class="row g-5">
+      <!-- Image Gallery Column -->
+      <div class="col-lg-6">
+        <div class="position-relative bg-light rounded-3 overflow-hidden mb-3" style="max-height: 600px;">
+          <img id="main-product-image" th:src="${product.imageUrl}" th:alt="${product.name}" class="w-100 h-100 object-fit-cover" style="min-height: 480px; max-height: 600px;">
+          <span class="product-badge sale" th:if="${product.discountPrice != null}">Special Offer</span>
+        </div>
+
+        <!-- Thumbnails gallery (multiple images) -->
+        <div class="d-flex gap-2 flex-wrap mt-2" th:if="${not #lists.isEmpty(product.images)}">
+          <div th:each="img, stat : ${product.images}"
+               class="thumb-selector border rounded-2 p-1 cursor-pointer transition-all"
+               th:classappend="${stat.index == 0} ? 'border-dark shadow-sm active-thumb' : 'border-secondary-subtle opacity-75'"
+               th:attr="onclick='switchMainProductImage(this, \'' + ${img.imageUrl} + '\')'"
+               style="width: 78px; height: 96px; overflow: hidden; cursor: pointer;">
+            <img th:src="${img.imageUrl}" class="w-100 h-100 object-fit-cover rounded-1" th:alt="${img.altText}">
+          </div>
+        </div>
+      </div>
+
+      <!-- Product Details & Actions Column -->
+      <div class="col-lg-6">
+        <div class="ps-lg-3">
+          <span class="text-uppercase small fw-bold text-muted letter-spacing-2" th:text="${product.categoryName}">CATEGORY</span>
+          <h1 class="display-6 font-serif mt-1 mb-2" th:text="${product.name}">Product Name</h1>
+          
+          <!-- Rating Summary -->
+          <div class="d-flex align-items-center gap-2 mb-3">
+            <div class="text-warning small">
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i>
+            </div>
+            <span class="small text-muted" th:text="|(${reviews != null ? reviews.size() : 0} verified reviews)|">(0 reviews)</span>
+          </div>
+
+          <!-- Price -->
+          <div class="d-flex align-items-baseline gap-3 mb-3">
+            <h2 class="h3 font-serif fw-bold text-dark mb-0" th:if="${product.discountPrice != null}" th:text="'₹' + ${product.discountPrice}">₹0</h2>
+            <h2 class="h3 font-serif fw-bold text-dark mb-0" th:if="${product.discountPrice == null}" th:text="'₹' + ${product.price}">₹0</h2>
+            <span class="text-muted text-decoration-line-through fs-5" th:if="${product.discountPrice != null}" th:text="'₹' + ${product.price}">₹0</span>
+            <span class="badge bg-success-subtle text-success small" th:if="${product.discountPrice != null}">Inclusive of all taxes</span>
+          </div>
+
+          <!-- Black Friday Offer Callout Box -->
+          <div class="p-3 mb-4 rounded-3 text-white" style="background: linear-gradient(135deg, #0f0f0f 0%, #1e1e1e 100%); border: 1px solid rgba(212, 175, 55, 0.4); box-shadow: 0 4px 15px rgba(0,0,0,0.15);">
+            <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+              <div>
+                <span class="badge bg-danger text-uppercase fw-bold letter-spacing-1 me-2" style="font-size: 0.65rem;">⚡ BLACK FRIDAY SALE</span>
+                <span class="fw-bold" style="color: #d4af37;">Extra 30% OFF</span>
+              </div>
+              <div class="d-flex align-items-center gap-2">
+                <span class="small text-white-50">Code:</span>
+                <span class="badge bg-dark border border-warning text-warning font-monospace px-2 py-1 fs-6">BLACKFRIDAY</span>
+                <button type="button" class="btn btn-sm btn-outline-warning py-0 px-2" onclick="navigator.clipboard.writeText('BLACKFRIDAY'); alert('Coupon BLACKFRIDAY copied!');">Copy</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Description -->
+          <p class="text-secondary mb-4" th:text="${product.description}" style="line-height: 1.8;">
+            Product detailed description.
+          </p>
+
+          <!-- Add to Bag / Buy Now Form -->
+          <form th:action="@{/cart/add}" method="post">
+            <input type="hidden" name="productId" th:value="${product.id}">
+
+            <!-- Size Selector -->
+            <div class="mb-4" th:if="${not #lists.isEmpty(product.sizes)}">
+              <label class="form-label small fw-bold text-uppercase text-dark d-flex justify-content-between">
+                <span>Select Size</span>
+                <a href="#sizeGuideModal" data-bs-toggle="modal" class="text-muted text-decoration-underline font-normal">Size Guide</a>
+              </label>
+              <div class="d-flex gap-2 flex-wrap">
+                <div th:each="s, stat : ${product.sizes}">
+                  <input type="radio" class="btn-check" name="size" th:id="'size-' + ${s.id}" th:value="${s.sizeName}" th:checked="${stat.index == 0}">
+                  <label class="btn btn-outline-dark rounded-0 px-3 py-2 fw-semibold" th:for="'size-' + ${s.id}" th:text="${s.sizeName}">M</label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Color Selector -->
+            <div class="mb-4" th:if="${not #lists.isEmpty(product.colors)}">
+              <label class="form-label small fw-bold text-uppercase text-dark">Select Shade</label>
+              <div class="d-flex gap-2 flex-wrap">
+                <div th:each="c, stat : ${product.colors}">
+                  <input type="radio" class="btn-check" name="color" th:id="'col-' + ${c.id}" th:value="${c.colorName}" th:checked="${stat.index == 0}">
+                  <label class="btn btn-outline-secondary rounded-0 px-3 py-2 small" th:for="'col-' + ${c.id}" th:text="${c.colorName}">Black</label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Quantity & Stock Indicator -->
+            <div class="row g-3 align-items-center mb-4">
+              <div class="col-4 col-sm-3">
+                <label class="form-label small fw-bold text-uppercase text-dark">Quantity</label>
+                <input type="number" name="quantity" class="form-control" value="1" min="1" th:max="${product.stock}">
+              </div>
+              <div class="col-8 col-sm-9 pt-4">
+                <span class="small" th:if="${product.stock > 5}" th:text="'In stock (' + ${product.stock} + ' available)'" style="color: var(--success);">In stock</span>
+                <span class="small text-danger fw-bold" th:if="${product.stock > 0 and product.stock <= 5}" th:text="'Only ' + ${product.stock} + ' left in stock - order soon!'">Only 2 left</span>
+                <span class="small text-danger fw-bold" th:if="${product.stock <= 0}">Currently Sold Out</span>
+              </div>
+            </div>
+
+            <!-- Action Buttons: Add to Bag, Buy Now & Wishlist -->
+            <div class="d-flex flex-column flex-sm-row gap-3 mb-4">
+              <button type="submit" class="btn btn-fashion-dark flex-grow-1 py-3" th:disabled="${product.stock <= 0}">
+                <i class="bi bi-bag-plus me-2"></i> Add To Bag
+              </button>
+              <button type="submit" name="buyNow" value="true" class="btn btn-fashion-gold flex-grow-1 py-3" th:disabled="${product.stock <= 0}">
+                <i class="bi bi-lightning-charge-fill me-1"></i> Instant Buy Now
+              </button>
+              <button type="button" class="btn btn-outline-dark rounded-0 px-3 py-3 btn-wishlist-toggle" th:attr="data-product-id=${product.id}" title="Wishlist">
+                <i class="bi bi-heart" th:classappend="${isWishlisted} ? 'bi-heart-fill text-danger' : ''"></i>
+              </button>
+            </div>
+          </form>
+
+          <!-- Delivery Pincode Check Widget -->
+          <div class="card border rounded-3 p-3 bg-light mb-4">
+            <label class="form-label small fw-bold text-uppercase mb-2"><i class="bi bi-geo-alt-fill me-1 text-danger"></i> Delivery Estimates & COD Check</label>
+            <div class="input-group input-group-sm">
+              <input type="text" id="pincodeInput" class="form-control" placeholder="Enter 6-digit delivery pincode (e.g. 400001)" maxlength="6">
+              <button class="btn btn-dark" type="button" onclick="checkPincode()">Check</button>
+            </div>
+            <div id="pincodeResult" class="small mt-2" style="display:none;"></div>
+          </div>
+
+          <!-- Highlights Checklist -->
+          <div class="border-top mt-5 pt-4">
+            <ul class="list-unstyled small d-flex flex-column gap-2 text-muted">
+              <li><i class="bi bi-truck me-2 text-dark"></i> Free express shipping on orders over ₹1,500</li>
+              <li><i class="bi bi-arrow-repeat me-2 text-dark"></i> 15-day complimentary returns & doorstep pickups</li>
+              <li><i class="bi bi-shield-check me-2 text-dark"></i> 100% certified authentic luxury fabrics</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reviews Section -->
+    <section class="mt-5 pt-5 border-top">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+          <h3 class="font-serif display-6">Customer Reviews</h3>
+          <p class="text-muted small" th:text="|(${reviews != null ? reviews.size() : 0}) thoughts on this style|">0 reviews</p>
+        </div>
+        <button class="btn btn-fashion-light" data-bs-toggle="modal" data-bs-target="#reviewModal" sec:authorize="isAuthenticated()">
+          Write a Review
+        </button>
+        <a href="/login" class="btn btn-fashion-light" sec:authorize="isAnonymous()">
+          Sign In to Review
+        </a>
+      </div>
+
+      <div class="row g-4" th:if="${not #lists.isEmpty(reviews)}">
+        <div class="col-md-6" th:each="r : ${reviews}">
+          <div class="card p-3 border rounded-3 bg-light h-100">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <strong th:text="${r.user.name}">Customer Name</strong>
+              <div class="text-warning small">
+                <i class="bi bi-star-fill" th:each="i : ${#numbers.sequence(1, r.rating)}"></i>
+              </div>
+            </div>
+            <h6 class="fw-bold mb-1" th:text="${r.title}">Review Title</h6>
+            <p class="small text-secondary mb-0" th:text="${r.comment}">Review comment text.</p>
+          </div>
+        </div>
+      </div>
+      <div th:if="${#lists.isEmpty(reviews)}" class="py-4 text-center bg-light rounded-3">
+        <p class="text-muted mb-0">Be the first to share your experience with this piece.</p>
+      </div>
+    </section>
+  </main>
+
+  <!-- Size Guide Modal -->
+  <div class="modal fade" id="sizeGuideModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header border-bottom">
+          <h5 class="modal-title font-serif">Garment Size Guide</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <p class="small text-muted mb-3">All measurements are provided in inches for a standard tailored fit.</p>
+          <div class="table-responsive">
+            <table class="table table-bordered table-sm text-center small align-middle mb-0">
+              <thead class="table-dark">
+                <tr>
+                  <th>Size</th>
+                  <th>Chest (in)</th>
+                  <th>Waist (in)</th>
+                  <th>Length (in)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="fw-bold">S</td>
+                  <td>36 - 38</td>
+                  <td>28 - 30</td>
+                  <td>27.5</td>
+                </tr>
+                <tr class="table-active">
+                  <td class="fw-bold">M</td>
+                  <td>39 - 41</td>
+                  <td>31 - 33</td>
+                  <td>28.5</td>
+                </tr>
+                <tr>
+                  <td class="fw-bold">L</td>
+                  <td>42 - 44</td>
+                  <td>34 - 36</td>
+                  <td>29.5</td>
+                </tr>
+                <tr>
+                  <td class="fw-bold">XL</td>
+                  <td>45 - 47</td>
+                  <td>37 - 39</td>
+                  <td>30.5</td>
+                </tr>
+                <tr>
+                  <td class="fw-bold">XXL</td>
+                  <td>48 - 50</td>
+                  <td>40 - 42</td>
+                  <td>31.5</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="alert alert-light border small mt-3 mb-0">
+            <i class="bi bi-info-circle me-1 text-primary"></i> <strong>Fit Tip:</strong> For an oversized or relaxed look, order one size up. Doorstep size exchanges are complimentary within 15 days.
+          </div>
+        </div>
+        <div class="modal-footer border-top">
+          <button type="button" class="btn btn-sm btn-dark" data-bs-dismiss="modal">Close Guide</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Review Modal -->
+  <div class="modal fade" id="reviewModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <form th:action="@{/reviews/add}" method="post">
+          <input type="hidden" name="productId" th:value="${product.id}">
+          <div class="modal-header">
+            <h5 class="modal-title font-serif">Review This Garment</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3">
+              <label class="form-label small fw-bold">Overall Rating</label>
+              <select name="rating" class="form-select">
+                <option value="5">★★★★★ — Exceptional Quality (5/5)</option>
+                <option value="4">★★★★☆ — Great Fit (4/5)</option>
+                <option value="3">★★★☆☆ — Meets Expectations (3/5)</option>
+                <option value="2">★★☆☆☆ — Room for Improvement (2/5)</option>
+                <option value="1">★☆☆☆☆ — Not Satisfied (1/5)</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label class="form-label small fw-bold">Review Headline</label>
+              <input type="text" name="title" class="form-control" placeholder="e.g. Flawless tailoring and drape">
+            </div>
+            <div class="mb-3">
+              <label class="form-label small fw-bold">Comments</label>
+              <textarea name="comment" rows="4" class="form-control" required placeholder="Share details about the fabric, sizing, comfort, and wear..."></textarea>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-fashion-dark">Submit Review</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function switchMainProductImage(thumbElement, newUrl) {
+      const mainImg = document.getElementById('main-product-image');
+      if (mainImg && newUrl) {
+        mainImg.style.transition = 'opacity 0.2s ease';
+        mainImg.style.opacity = '0.5';
+        setTimeout(() => {
+          mainImg.src = newUrl;
+          mainImg.style.opacity = '1';
+        }, 150);
+      }
+      document.querySelectorAll('.thumb-selector').forEach(el => {
+        el.classList.remove('border-dark', 'shadow-sm', 'active-thumb');
+        el.classList.add('border-secondary-subtle', 'opacity-75');
+      });
+      if (thumbElement) {
+        thumbElement.classList.remove('border-secondary-subtle', 'opacity-75');
+        thumbElement.classList.add('border-dark', 'shadow-sm', 'active-thumb');
+      }
+    }
+
+    function checkPincode() {
+      const pin = document.getElementById('pincodeInput').value.trim();
+      const res = document.getElementById('pincodeResult');
+      if (pin.length !== 6 || isNaN(pin)) {
+        res.style.display = 'block';
+        res.innerHTML = '<span class="text-danger"><i class="bi bi-x-circle me-1"></i> Please enter a valid 6-digit postal code.</span>';
+        return;
+      }
+      res.style.display = 'block';
+      res.innerHTML = '<span class="text-success fw-bold"><i class="bi bi-check-circle-fill me-1"></i> Delivery available to ' + pin + '! Express delivery in 2-3 days. Cash on Delivery (COD) & Online Payment available.</span>';
+    }
+  </script>
+
+  <div th:replace="~{fragments :: footer}"></div>
+
+</body>
+</html>

@@ -1,0 +1,17 @@
+[Unit]
+Description=StyleHub Java Spring Boot E-Commerce Application
+After=network.target
+
+[Service]
+User=ubuntu
+WorkingDirectory=/opt/stylehub
+EnvironmentFile=/etc/stylehub.env
+ExecStart=/usr/bin/java -Xms256m -Xmx512m -jar /opt/stylehub/stylehub.jar
+SuccessExitStatus=143
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <th:block th:replace="~{fragments :: head('Your Shopping Bag')}"></th:block>
+</head>
+<body>
+
+  <div th:replace="~{fragments :: header}"></div>
+
+  <main class="container py-5">
+    <div class="mb-4">
+      <span class="text-uppercase small fw-bold text-muted">YOUR SELECTION</span>
+      <h1 class="display-6 font-serif mt-1">Shopping Bag</h1>
+    </div>
+
+    <!-- Alert Messages -->
+    <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+      <span th:text="${successMessage}"></span>
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+      <span th:text="${errorMessage}"></span>
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <!-- Empty Bag State -->
+    <div th:if="${cart.items.isEmpty()}" class="text-center py-5 bg-light rounded-3 my-4">
+      <i class="bi bi-bag fs-1 text-muted d-block mb-3"></i>
+      <h3 class="font-serif">Your shopping bag is currently empty</h3>
+      <p class="text-muted">Explore our curated collections and add your favourite pieces.</p>
+      <a href="/shop" class="btn btn-fashion-dark mt-2">Discover New Arrivals</a>
+    </div>
+
+    <!-- Cart Layout -->
+    <div class="row g-5" th:unless="${cart.items.isEmpty()}">
+      <!-- Cart Items Table -->
+      <div class="col-lg-8">
+        <div class="table-responsive">
+          <table class="table align-middle">
+            <thead class="table-light text-uppercase small text-muted">
+              <tr>
+                <th scope="col" style="min-width: 250px;">Garment</th>
+                <th scope="col">Price</th>
+                <th scope="col" style="min-width: 140px;">Quantity</th>
+                <th scope="col">Total</th>
+                <th scope="col"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:each="item : ${cart.items}">
+                <td>
+                  <div class="d-flex align-items-center gap-3">
+                    <img th:src="${item.itemImageUrl}" class="rounded" style="width: 70px; height: 90px; object-fit: cover;"
+                         onerror="this.src='https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=100';">
+                    <div>
+                      <div th:if="${item.isCombo}">
+                        <span class="badge bg-danger text-uppercase px-2 py-1 mb-1" style="font-size: 0.65rem;">Combo Package</span>
+                        <a th:href="@{/combos/{slug}(slug=${item.comboPackage.slug})}" class="fw-bold text-dark text-decoration-none d-block" th:text="${item.comboPackage.name}">Combo Package</a>
+                        <span class="small text-muted d-block" style="font-size: 0.8rem;" th:text="${item.comboSelections}">Selections</span>
+                      </div>
+                      <div th:unless="${item.isCombo}">
+                        <a th:href="@{/products/{id}(id=${item.product.id})}" class="fw-bold text-dark text-decoration-none d-block" th:text="${item.product.name}">Product Name</a>
+                        <span class="small text-muted" th:text="'Size: ' + ${item.selectedSize} + ' · Shade: ' + ${item.selectedColor}">Size M · Color Black</span>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+                <td class="fw-semibold" th:text="'₹' + ${item.unitPrice}">₹0</td>
+                <td>
+                  <form th:action="@{/cart/update}" method="post" class="d-flex align-items-center gap-2">
+                    <input type="hidden" name="itemId" th:value="${item.id}">
+                    <input type="number" name="quantity" class="form-control form-control-sm text-center" th:value="${item.quantity}" min="1" max="10" style="width: 65px;" onchange="this.form.submit()">
+                  </form>
+                </td>
+                <td class="fw-bold" th:text="'₹' + ${item.totalPrice}">₹0</td>
+                <td>
+                  <form th:action="@{/cart/remove}" method="post">
+                    <input type="hidden" name="itemId" th:value="${item.id}">
+                    <button type="submit" class="btn btn-link text-muted p-0" title="Remove item"><i class="bi bi-trash3"></i></button>
+                  </form>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="d-flex justify-content-between mt-4">
+          <a href="/shop" class="btn btn-fashion-light"><i class="bi bi-arrow-left me-2"></i> Continue Shopping</a>
+        </div>
+      </div>
+
+      <!-- Order Summary Card -->
+      <div class="col-lg-4">
+        <div class="cart-summary-card">
+          <h4 class="font-serif mb-3">Order Summary</h4>
+
+          <!-- Coupon Form -->
+          <div class="mb-4">
+            <label class="form-label small fw-bold text-uppercase text-muted">Promo Code</label>
+            <div th:if="${appliedCoupon != null}" class="alert alert-success d-flex justify-content-between align-items-center p-2 mb-0">
+              <div>
+                <strong th:text="${appliedCoupon.code}">STYLE20</strong> applied
+              </div>
+              <form th:action="@{/cart/remove-coupon}" method="post">
+                <button type="submit" class="btn btn-sm text-danger p-0">Remove</button>
+              </form>
+            </div>
+            <form th:if="${appliedCoupon == null}" id="couponForm" th:action="@{/cart/apply-coupon}" method="post" class="d-flex gap-2 mb-2">
+              <input type="text" id="couponCodeInput" name="code" class="form-control form-control-sm text-uppercase" placeholder="e.g. BLACKFRIDAY" required>
+              <button type="submit" class="btn btn-sm btn-dark">Apply</button>
+            </form>
+            <div th:if="${appliedCoupon == null}" class="d-flex flex-wrap gap-1 align-items-center mt-2">
+              <span class="small text-muted" style="font-size: 0.75rem;">Offers:</span>
+              <button type="button" class="btn btn-sm btn-outline-danger py-0 px-2 fw-semibold" style="font-size: 0.75rem;" onclick="applyQuickCoupon('BLACKFRIDAY')">
+                ⚡ BLACKFRIDAY (30% OFF)
+              </button>
+              <button type="button" class="btn btn-sm btn-outline-dark py-0 px-2" style="font-size: 0.75rem;" onclick="applyQuickCoupon('BF500')">
+                BF500 (₹500 OFF)
+              </button>
+            </div>
+            <div th:if="${couponSuccess}" class="text-success small mt-1" th:text="${couponSuccess}"></div>
+            <div th:if="${couponError}" class="text-danger small mt-1" th:text="${couponError}"></div>
+          </div>
+
+          <script>
+            function applyQuickCoupon(code) {
+              const inp = document.getElementById('couponCodeInput');
+              if (inp) {
+                inp.value = code;
+                document.getElementById('couponForm').submit();
+              }
+            }
+          </script>
+
+          <!-- Cost Breakdown Table -->
+          <div class="d-flex flex-column gap-2 border-top pt-3 small">
+            <div class="d-flex justify-content-between">
+              <span class="text-secondary">Subtotal</span>
+              <strong th:text="'₹' + ${subtotal}">₹0</strong>
+            </div>
+            <div class="d-flex justify-content-between text-success" th:if="${discount.compareTo(T(java.math.BigDecimal).ZERO) > 0}">
+              <span>Coupon Discount</span>
+              <strong th:text="'-₹' + ${discount}">-₹0</strong>
+            </div>
+            <div class="d-flex justify-content-between">
+              <span class="text-secondary">Estimated Shipping</span>
+              <span th:if="${shipping.compareTo(T(java.math.BigDecimal).ZERO) == 0}" class="text-success fw-bold">FREE</span>
+              <strong th:unless="${shipping.compareTo(T(java.math.BigDecimal).ZERO) == 0}" th:text="'₹' + ${shipping}">₹99</strong>
+            </div>
+            <div class="d-flex justify-content-between">
+              <span class="text-secondary">Estimated Tax (GST 5%)</span>
+              <strong th:text="'₹' + ${tax}">₹0</strong>
+            </div>
+            <div class="d-flex justify-content-between border-top pt-3 fs-5">
+              <span class="font-serif fw-bold">Total</span>
+              <strong class="font-serif" th:text="'₹' + ${total}">₹0</strong>
+            </div>
+          </div>
+
+          <a href="/checkout" class="btn btn-fashion-dark w-100 py-3 mt-4">
+            Proceed To Checkout <i class="bi bi-arrow-right ms-2"></i>
+          </a>
+          <p class="text-muted text-center small mt-3 mb-0">
+            <i class="bi bi-shield-lock me-1"></i> 256-bit SSL encrypted checkout
+          </p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div th:replace="~{fragments :: footer}"></div>
+
+</body>
+</html>

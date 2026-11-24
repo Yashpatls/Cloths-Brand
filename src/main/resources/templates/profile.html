@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <th:block th:replace="~{fragments :: head('My Account & Profile')}"></th:block>
+</head>
+<body>
+
+  <div th:replace="~{fragments :: header}"></div>
+
+  <main class="container py-5">
+    <div class="mb-4">
+      <span class="text-uppercase small fw-bold text-muted">CUSTOMER SUITE</span>
+      <h1 class="display-6 font-serif mt-1">My Account</h1>
+    </div>
+
+    <!-- Alert Messages -->
+    <div th:if="${profileSuccess}" class="alert alert-success alert-dismissible fade show" role="alert">
+      <span th:text="${profileSuccess}"></span>
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    <div th:if="${profileError}" class="alert alert-danger alert-dismissible fade show" role="alert">
+      <span th:text="${profileError}"></span>
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    <div th:if="${passwordSuccess}" class="alert alert-success alert-dismissible fade show" role="alert">
+      <span th:text="${passwordSuccess}"></span>
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    <div th:if="${passwordError}" class="alert alert-danger alert-dismissible fade show" role="alert">
+      <span th:text="${passwordError}"></span>
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    <div th:if="${addressSuccess}" class="alert alert-success alert-dismissible fade show" role="alert">
+      <span th:text="${addressSuccess}"></span>
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <div class="row g-5">
+      <!-- Tabs Navigation -->
+      <div class="col-lg-3">
+        <div class="list-group list-group-flush border rounded-3 overflow-hidden shadow-sm">
+          <a class="list-group-item list-group-item-action active fw-bold py-3" data-bs-toggle="list" href="#tab-profile">
+            <i class="bi bi-person me-2"></i> Personal Details
+          </a>
+          <a class="list-group-item list-group-item-action fw-bold py-3" data-bs-toggle="list" href="#tab-addresses">
+            <i class="bi bi-geo-alt me-2"></i> Saved Addresses
+          </a>
+          <a class="list-group-item list-group-item-action fw-bold py-3" data-bs-toggle="list" href="#tab-password">
+            <i class="bi bi-shield-lock me-2"></i> Password & Security
+          </a>
+          <a href="/orders" class="list-group-item list-group-item-action fw-bold py-3 text-dark">
+            <i class="bi bi-box-seam me-2"></i> Order History
+          </a>
+          <a href="/wishlist" class="list-group-item list-group-item-action fw-bold py-3 text-dark">
+            <i class="bi bi-heart me-2"></i> My Wishlist
+          </a>
+        </div>
+      </div>
+
+      <!-- Tab Contents -->
+      <div class="col-lg-9">
+        <div class="tab-content">
+          <!-- 1. Profile Tab -->
+          <div class="tab-pane fade show active" id="tab-profile">
+            <div class="card border rounded-3 p-4 shadow-sm bg-white">
+              <h4 class="font-serif mb-4">Edit Profile Information</h4>
+              <form th:action="@{/profile/update}" method="post">
+                <div class="row g-3">
+                  <div class="col-md-6">
+                    <label class="form-label small fw-bold">Full Name</label>
+                    <input type="text" name="name" class="form-control" th:value="${user.name}" required>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label small fw-bold">Email Address</label>
+                    <input type="email" class="form-control" th:value="${user.email}" disabled readonly>
+                    <small class="text-muted">Email is linked to account authentication.</small>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label small fw-bold">Contact Phone</label>
+                    <input type="tel" name="phone" class="form-control" th:value="${user.phone}">
+                  </div>
+                  <div class="col-12">
+                    <label class="form-label small fw-bold">Default Residence Address</label>
+                    <textarea name="address" rows="3" class="form-control" th:text="${user.address}"></textarea>
+                  </div>
+                  <div class="col-12 mt-4">
+                    <button type="submit" class="btn btn-fashion-dark px-4 py-2">Save Profile Changes</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <!-- 2. Addresses Tab -->
+          <div class="tab-pane fade" id="tab-addresses">
+            <div class="card border rounded-3 p-4 shadow-sm bg-white mb-4">
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <h4 class="font-serif mb-0">Delivery Addresses</h4>
+                <button class="btn btn-sm btn-fashion-dark" data-bs-toggle="modal" data-bs-target="#newAddressModal">
+                  + Add New Address
+                </button>
+              </div>
+
+              <div class="row g-3" th:unless="${addresses.isEmpty()}">
+                <div class="col-md-6" th:each="addr : ${addresses}">
+                  <div class="border rounded p-3 bg-light h-100 position-relative">
+                    <span class="badge bg-dark small position-absolute top-0 end-0 m-2" th:if="${addr.defaultShipping}">Default</span>
+                    <strong class="d-block mb-1" th:text="${addr.fullName}">Name</strong>
+                    <div class="small text-muted mb-1" th:text="${addr.streetAddress}">Street</div>
+                    <div class="small text-muted" th:text="${addr.city} + ', ' + ${addr.state} + ' - ' + ${addr.postalCode}">City</div>
+                    <div class="small text-muted mt-2"><i class="bi bi-telephone me-1"></i> <span th:text="${addr.phone}">Phone</span></div>
+                  </div>
+                </div>
+              </div>
+              <div th:if="${addresses.isEmpty()}" class="py-4 text-center text-muted">
+                No delivery addresses saved yet.
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. Password Tab -->
+          <div class="tab-pane fade" id="tab-password">
+            <div class="card border rounded-3 p-4 shadow-sm bg-white">
+              <h4 class="font-serif mb-4">Update Password</h4>
+              <form th:action="@{/profile/password}" method="post">
+                <div class="row g-3" style="max-width: 500px;">
+                  <div class="col-12">
+                    <label class="form-label small fw-bold">Current Password</label>
+                    <input type="password" name="currentPassword" class="form-control" required>
+                  </div>
+                  <div class="col-12">
+                    <label class="form-label small fw-bold">New Password (at least 8 characters)</label>
+                    <input type="password" name="newPassword" class="form-control" minlength="8" required>
+                  </div>
+                  <div class="col-12">
+                    <label class="form-label small fw-bold">Confirm New Password</label>
+                    <input type="password" name="confirmPassword" class="form-control" minlength="8" required>
+                  </div>
+                  <div class="col-12 mt-4">
+                    <button type="submit" class="btn btn-fashion-dark px-4 py-2">Update Password</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Add Address Modal -->
+  <div class="modal fade" id="newAddressModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <form th:action="@{/profile/address/add}" method="post">
+          <div class="modal-header">
+            <h5 class="modal-title font-serif">Add Delivery Address</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body row g-3">
+            <div class="col-md-6">
+              <label class="form-label small fw-bold">Full Name</label>
+              <input type="text" name="fullName" class="form-control" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label small fw-bold">Phone Number</label>
+              <input type="tel" name="phone" class="form-control" required>
+            </div>
+            <div class="col-12">
+              <label class="form-label small fw-bold">Street Address</label>
+              <input type="text" name="streetAddress" class="form-control" required>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label small fw-bold">City</label>
+              <input type="text" name="city" class="form-control" required>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label small fw-bold">State</label>
+              <input type="text" name="state" class="form-control" required>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label small fw-bold">PIN Code</label>
+              <input type="text" name="postalCode" class="form-control" required>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-fashion-dark">Save Address</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div th:replace="~{fragments :: footer}"></div>
+
+</body>
+</html>

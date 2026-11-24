@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <th:block th:replace="~{admin/admin-fragments :: admin-head(${product.id == null ? 'Add Product' : 'Edit Product'})}"></th:block>
+</head>
+<body class="admin-body">
+
+  <div th:replace="~{admin/admin-fragments :: sidebar}"></div>
+
+  <main class="admin-main">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <div>
+        <h2 class="fw-bold mb-1" th:text="${product.id == null ? 'Add New Product' : 'Edit Garment Details'}">Add New Product</h2>
+        <span class="text-muted small">Configure pricing, category, available sizes, colors, and media</span>
+      </div>
+      <a href="/admin/products" class="btn btn-outline-secondary btn-sm"><i class="bi bi-arrow-left me-1"></i> Back to Products</a>
+    </div>
+
+    <div class="card border-0 shadow-sm p-4 bg-white rounded-3" style="max-width: 850px;">
+      <form th:action="@{/admin/products/save}" th:object="${product}" method="post" enctype="multipart/form-data">
+        <input type="hidden" th:field="*{id}">
+
+        <div class="row g-3">
+          <div class="col-md-8">
+            <label class="form-label small fw-bold">Garment Title</label>
+            <input type="text" th:field="*{name}" class="form-control" required placeholder="e.g. Tailored Oxford Cotton Shirt">
+          </div>
+          <div class="col-md-4">
+            <label class="form-label small fw-bold">Stock Keeping Unit (SKU)</label>
+            <input type="text" th:field="*{sku}" class="form-control" placeholder="e.g. SH-M-001">
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label small fw-bold">Wardrobe Category</label>
+            <select name="categoryId" class="form-select" required>
+              <option value="">Choose category...</option>
+              <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.name}"
+                      th:selected="${product.category != null and product.category.id == cat.id}"></option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label small fw-bold">Regular Price (₹)</label>
+            <input type="number" step="0.01" th:field="*{price}" class="form-control" required placeholder="1499.00">
+          </div>
+          <div class="col-md-3">
+            <label class="form-label small fw-bold">Special Sale Price (₹)</label>
+            <input type="number" step="0.01" th:field="*{discountPrice}" class="form-control" placeholder="Optional">
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label small fw-bold">Current Stock Quantity</label>
+            <input type="number" th:field="*{stock}" class="form-control" required min="0" placeholder="50">
+          </div>
+          <div class="col-md-6 d-flex align-items-center pt-4">
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" th:field="*{featured}" id="featuredSwitch">
+              <label class="form-check-label small fw-bold" for="featuredSwitch">Showcase as Featured Piece on Homepage</label>
+            </div>
+          </div>
+
+          <div class="col-12">
+            <label class="form-label small fw-bold">Garment Description & Styling Notes</label>
+            <textarea th:field="*{description}" rows="4" class="form-control" placeholder="Fabric composition, fit, care instructions..."></textarea>
+          </div>
+
+          <!-- Sizes & Colors Inputs -->
+          <div class="col-md-6">
+            <label class="form-label small fw-bold">Available Sizes (Comma separated)</label>
+            <input type="text" name="sizesInput" class="form-control" placeholder="XS,S,M,L,XL,XXL"
+                   th:value="${product.sizes != null and not product.sizes.isEmpty()} ? ${#strings.listJoin(product.sizes.![sizeName], ',')} : 'S,M,L,XL'">
+            <small class="text-muted">Example: S,M,L,XL</small>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label small fw-bold">Available Colors (Comma separated)</label>
+            <input type="text" name="colorsInput" class="form-control" placeholder="White,Navy,Black"
+                   th:value="${product.colors != null and not product.colors.isEmpty()} ? ${#strings.listJoin(product.colors.![colorName], ',')} : 'Black,White'">
+            <small class="text-muted">Example: White,Navy,Black</small>
+          </div>
+
+          <!-- Product Image: File upload (AWS S3) or direct URL -->
+          <div class="col-md-6">
+            <label class="form-label small fw-bold">Upload Image to AWS S3 / Local Media</label>
+            <input type="file" name="imageFile" class="form-control" accept="image/*">
+            <small class="text-muted">Files uploaded here are saved directly to Amazon S3 (or local uploads directory).</small>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label small fw-bold">Or External Image URL</label>
+            <input type="url" th:field="*{imageUrl}" class="form-control" placeholder="https://images.unsplash.com/...">
+          </div>
+
+          <div class="col-12 mt-4 d-flex gap-3">
+            <button type="submit" class="btn btn-primary px-4 py-2">Save Product</button>
+            <a href="/admin/products" class="btn btn-outline-secondary px-4 py-2">Cancel</a>
+          </div>
+        </div>
+      </form>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

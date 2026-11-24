@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <th:block th:replace="~{admin/admin-fragments :: admin-head('Store Configuration')}"></th:block>
+</head>
+<body class="admin-body">
+
+  <div th:replace="~{admin/admin-fragments :: sidebar}"></div>
+
+  <main class="admin-main">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <div>
+        <h2 class="fw-bold mb-1">Store Settings</h2>
+        <span class="text-muted small">Brand identity, tax calculations, shipping thresholds, and client care contacts</span>
+      </div>
+    </div>
+
+    <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+      <span th:text="${successMessage}"></span>
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <div class="row g-4">
+      <!-- Settings List -->
+      <div class="col-lg-8">
+        <div class="admin-table">
+          <div class="table-responsive">
+            <table class="table align-middle">
+              <thead>
+                <tr>
+                  <th>Configuration Key</th>
+                  <th>Current Setting Value</th>
+                  <th>Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr th:each="s : ${settings}">
+                  <td><code class="fw-bold" th:text="${s.settingKey}">store_name</code></td>
+                  <td>
+                    <form th:action="@{/admin/settings/save}" method="post" class="d-flex gap-2">
+                      <input type="hidden" name="key" th:value="${s.settingKey}">
+                      <input type="text" name="value" class="form-control form-control-sm" th:value="${s.settingValue}">
+                      <button type="submit" class="btn btn-sm btn-dark">Update</button>
+                    </form>
+                  </td>
+                  <td class="small text-muted" th:text="${s.description}">Description</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cloud Environment Details -->
+      <div class="col-lg-4">
+        <div class="card border-0 shadow-sm p-4 bg-white rounded-3">
+          <h5 class="fw-bold mb-3">AWS Cloud Architecture</h5>
+          <ul class="list-unstyled d-flex flex-column gap-2 small text-muted">
+            <li><i class="bi bi-hdd-network me-2 text-primary"></i> <strong>Hosting:</strong> Amazon EC2 Ubuntu 24.04</li>
+            <li><i class="bi bi-database me-2 text-primary"></i> <strong>Database:</strong> Amazon RDS MySQL 8.0</li>
+            <li><i class="bi bi-cloud-arrow-up me-2 text-primary"></i> <strong>Media:</strong> Amazon S3 Media Bucket</li>
+            <li><i class="bi bi-speedometer me-2 text-primary"></i> <strong>CDN:</strong> Amazon CloudFront</li>
+            <li><i class="bi bi-credit-card me-2 text-primary"></i> <strong>Gateway:</strong> Razorpay Test Mode</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

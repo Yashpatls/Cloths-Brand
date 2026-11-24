@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <th:block th:replace="~{admin/admin-fragments :: admin-head('Order #' + ${order.orderNumber})}"></th:block>
+</head>
+<body class="admin-body">
+
+  <div th:replace="~{admin/admin-fragments :: sidebar}"></div>
+
+  <main class="admin-main">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <div>
+        <h2 class="fw-bold mb-1" th:text="'Order Details #' + ${order.orderNumber}">Order Details</h2>
+        <span class="text-muted small">Placed on <span th:text="${order.formattedDate}">Date</span></span>
+      </div>
+      <a href="/admin/orders" class="btn btn-outline-secondary btn-sm"><i class="bi bi-arrow-left me-1"></i> Back to Orders</a>
+    </div>
+
+    <div class="row g-4">
+      <!-- Items Table -->
+      <div class="col-lg-8">
+        <div class="admin-table p-3 mb-4">
+          <h5 class="fw-bold mb-3">Garments Ordered</h5>
+          <div class="table-responsive">
+            <table class="table align-middle">
+              <thead>
+                <tr>
+                  <th>Garment</th>
+                  <th>Price</th>
+                  <th>Qty</th>
+                  <th>Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr th:each="item : ${order.items}">
+                  <td>
+                    <div class="d-flex align-items-center gap-3">
+                      <img th:src="${item.productImage}" class="rounded" style="width: 50px; height: 65px; object-fit: cover;">
+                      <div>
+                        <strong th:text="${item.productName}">Product</strong>
+                        <small class="d-block text-muted" th:text="'Size: ' + ${item.selectedSize} + ' · Color: ' + ${item.selectedColor}"></small>
+                      </div>
+                    </div>
+                  </td>
+                  <td th:text="'₹' + ${item.unitPrice}">₹0</td>
+                  <td th:text="${item.quantity}">1</td>
+                  <td class="fw-bold" th:text="'₹' + ${item.totalPrice}">₹0</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Status Update Form -->
+        <div class="card border-0 shadow-sm p-4 bg-white rounded-3">
+          <h5 class="fw-bold mb-3">Update Order Status</h5>
+          <form th:action="@{/admin/orders/{id}/status(id=${order.id})}" method="post" class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label small fw-bold">Order Tracking Status</label>
+              <select name="status" class="form-select">
+                <option th:each="st : ${orderStatuses}" th:value="${st}" th:text="${st}" th:selected="${st == order.status}"></option>
+              </select>
+            </div>
+            <div class="col-12">
+              <button type="submit" class="btn btn-primary px-4">Update Status</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Customer & Shipping Summary -->
+      <div class="col-lg-4">
+        <div class="card border-0 shadow-sm p-4 bg-white rounded-3 mb-4">
+          <h5 class="fw-bold mb-3">Customer Information</h5>
+          <div class="small mb-2"><strong>Name:</strong> <span th:text="${order.customer.name}">Customer Name</span></div>
+          <div class="small mb-2"><strong>Email:</strong> <span th:text="${order.customer.email}">Email</span></div>
+          <div class="small mb-3"><strong>Phone:</strong> <span th:text="${order.customer.phone}">Phone</span></div>
+          <hr>
+          <h6 class="fw-bold mb-2">Shipping Destination</h6>
+          <p class="small text-muted mb-0" th:text="${order.shippingAddress}">Address</p>
+        </div>
+
+        <div class="card border-0 shadow-sm p-4 bg-white rounded-3">
+          <h5 class="fw-bold mb-3">Financial Breakdown</h5>
+          <div class="d-flex justify-content-between small mb-2">
+            <span>Subtotal:</span>
+            <strong th:text="'₹' + ${order.subtotal}">₹0</strong>
+          </div>
+          <div class="d-flex justify-content-between small mb-2" th:if="${order.discountAmount.compareTo(T(java.math.BigDecimal).ZERO) > 0}">
+            <span class="text-success">Discount:</span>
+            <strong class="text-success" th:text="'-₹' + ${order.discountAmount}">-₹0</strong>
+          </div>
+          <div class="d-flex justify-content-between small mb-2">
+            <span>Shipping:</span>
+            <span class="text-success fw-bold">FREE</span>
+          </div>
+          <div class="d-flex justify-content-between small mb-2">
+            <span>GST Tax (5%):</span>
+            <strong th:text="'₹' + ${order.taxAmount}">₹0</strong>
+          </div>
+          <div class="d-flex justify-content-between fs-5 border-top pt-2 mt-2">
+            <strong>Total Paid:</strong>
+            <strong class="text-primary" th:text="'₹' + ${order.total}">₹0</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <th:block th:replace="~{fragments :: head('Order Confirmed')}"></th:block>
+</head>
+<body>
+
+  <div th:replace="~{fragments :: header}"></div>
+
+  <main class="container py-5 text-center" style="max-width: 680px;">
+    <div class="py-5">
+      <div class="mb-4">
+        <div class="rounded-circle bg-success text-white d-inline-flex align-items-center justify-content-center" style="width: 75px; height: 75px;">
+          <i class="bi bi-check-lg fs-1"></i>
+        </div>
+      </div>
+      <span class="text-uppercase small fw-bold letter-spacing-2 text-success">ORDER CONFIRMED</span>
+      <h1 class="display-5 font-serif mt-2 mb-3">Thank You For Your Order</h1>
+      <p class="text-muted mb-4">
+        We have received your order and our atelier has begun preparing your garments with exquisite care.
+      </p>
+
+      <!-- Order Summary Box -->
+      <div class="card border p-4 bg-light text-start mb-4">
+        <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-3">
+          <div>
+            <span class="small text-muted d-block">Order Reference Number</span>
+            <strong class="font-monospace fs-5 text-dark" th:text="${order.orderNumber}">SH-0000</strong>
+          </div>
+          <span class="badge bg-dark px-3 py-2 text-uppercase" th:text="${order.status}">CONFIRMED</span>
+        </div>
+        <div class="small text-secondary mb-2">
+          <strong>Delivery Address:</strong> <span th:text="${order.shippingAddress}">Address</span>
+        </div>
+        <div class="small text-secondary mb-2">
+          <strong>Payment Mode:</strong> <span th:text="${order.paymentMethod}">DEMO</span>
+        </div>
+        <div class="small text-secondary border-top pt-2 mt-2 d-flex justify-content-between fs-6">
+          <strong>Total Amount Paid:</strong>
+          <strong class="text-dark" th:text="'₹' + ${order.total}">₹0</strong>
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-center gap-3">
+        <a th:href="@{/orders/{id}(id=${order.id})}" class="btn btn-fashion-dark">
+          Track Your Delivery <i class="bi bi-arrow-right ms-2"></i>
+        </a>
+        <a href="/shop" class="btn btn-fashion-light">
+          Continue Shopping
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <div th:replace="~{fragments :: footer}"></div>
+
+</body>
+</html>

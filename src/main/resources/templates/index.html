@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <th:block th:replace="~{fragments :: head('Wear Your Story')}"></th:block>
+</head>
+<body>
+
+  <!-- Header -->
+  <div th:replace="~{fragments :: header}"></div>
+
+  <!-- Editorial Hero Section -->
+  <section class="hero-editorial">
+    <div class="container">
+      <div class="row align-items-center g-4">
+        <div class="col-lg-6 hero-copy">
+          <span class="hero-tag">AUTUMN / WINTER 2026 COLLECTION</span>
+          <h1 class="hero-title">
+            Wear your<br><em>own story.</em>
+          </h1>
+          <p class="hero-description">
+            Thoughtfully tailored pieces in Egyptian cotton, lightweight merino wool, and French linen. Elevated essentials designed for everyday distinction.
+          </p>
+          <div class="d-flex gap-3 flex-wrap">
+            <a href="/shop" class="btn btn-fashion-dark">Explore The Shop</a>
+            <a href="/combos" class="btn btn-fashion-gold"><i class="bi bi-gift-fill me-1"></i> Combo Packages</a>
+            <a href="/category/women" class="btn btn-fashion-light">Women's Edit</a>
+          </div>
+        </div>
+        <div class="col-lg-6 d-none d-lg-block">
+          <div class="hero-image-wrap" style="background-image: url('https://images.unsplash.com/photo-1483985988355-763728e1935b?w=1400');"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Black Friday Mega Sale Feature Banner -->
+  <section class="py-5 text-white position-relative overflow-hidden" style="background: linear-gradient(135deg, #090909 0%, #171717 50%, #201a15 100%); border-top: 2px solid #d4af37; border-bottom: 2px solid #d4af37;">
+    <div class="container py-3">
+      <div class="row align-items-center g-4">
+        <div class="col-lg-8">
+          <div class="d-flex align-items-center gap-2 mb-2">
+            <span class="badge bg-danger text-uppercase px-3 py-2 fw-bold letter-spacing-2" style="font-size: 0.75rem; box-shadow: 0 0 15px rgba(220, 53, 69, 0.7);">
+              ⚡ BLACK FRIDAY MEGA SALE
+            </span>
+            <span class="text-warning small fw-bold"><i class="bi bi-fire me-1"></i>Limited Time Offer</span>
+          </div>
+          <h2 class="display-5 font-serif text-white mb-2">
+            Extra <span style="color: #d4af37;">30% OFF</span> Sitewide + Price-Wise Combos
+          </h2>
+          <p class="text-light opacity-75 mb-3" style="max-width: 650px;">
+            Save big on curated wardrobe packages, designer apparel, and seasonal essentials. Enter coupon code <strong class="text-warning font-monospace fs-5">BLACKFRIDAY</strong> at checkout!
+          </p>
+          <div class="d-flex flex-wrap gap-3 align-items-center">
+            <a href="/combos" class="btn btn-fashion-gold px-4 py-2 fs-6 fw-bold">
+              <i class="bi bi-gift-fill me-1"></i> Shop Combo Bundles (From ₹499)
+            </a>
+            <a href="/shop" class="btn btn-outline-light px-4 py-2 fs-6">
+              Browse All Deals →
+            </a>
+            <div class="d-flex align-items-center gap-2 ms-lg-2 bg-dark p-2 rounded-2 border border-secondary">
+              <span class="small text-muted">Coupon:</span>
+              <span class="badge bg-black text-warning font-monospace fs-6 px-2 py-1">BLACKFRIDAY</span>
+              <button class="btn btn-sm btn-outline-warning py-0 px-2" onclick="navigator.clipboard.writeText('BLACKFRIDAY'); alert('Coupon BLACKFRIDAY copied!');">Copy</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-4">
+          <div class="row g-2">
+            <div class="col-6">
+              <div class="p-3 rounded-2 text-center" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);">
+                <div class="fs-4 fw-bold text-warning font-serif">₹299+</div>
+                <div class="small text-white-50">Budget Combos</div>
+                <a href="/combos?tier=BUDGET" class="small text-warning text-decoration-underline d-block mt-1">View Sets →</a>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="p-3 rounded-2 text-center" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);">
+                <div class="fs-4 fw-bold text-warning font-serif">₹1,000+</div>
+                <div class="small text-white-50">Standard Value</div>
+                <a href="/combos?tier=STANDARD" class="small text-warning text-decoration-underline d-block mt-1">View Sets →</a>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="p-3 rounded-2 text-center" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);">
+                <div class="fs-4 fw-bold text-warning font-serif">₹2,500+</div>
+                <div class="small text-white-50">Premium Looks</div>
+                <a href="/combos?tier=PREMIUM" class="small text-warning text-decoration-underline d-block mt-1">View Sets →</a>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="p-3 rounded-2 text-center" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);">
+                <div class="fs-4 fw-bold text-warning font-serif">₹6,000+</div>
+                <div class="small text-white-50">Luxury Festive</div>
+                <a href="/combos?tier=LUXURY" class="small text-warning text-decoration-underline d-block mt-1">View Sets →</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Curated Collection Highlights -->
+  <section class="py-5 bg-white">
+    <div class="container py-4">
+      <div class="d-flex justify-content-between align-items-end mb-4">
+        <div>
+          <span class="text-uppercase small fw-bold text-muted letter-spacing-2">Curated Categories</span>
+          <h2 class="display-6 font-serif mt-1 mb-0">Shop by Wardrobe</h2>
+        </div>
+        <a href="/shop" class="text-decoration-underline text-dark fw-bold small">Browse All Collections →</a>
+      </div>
+
+      <div class="row g-4">
+        <!-- Men -->
+        <div class="col-md-4">
+          <a href="/category/men" class="category-card">
+            <img src="https://images.unsplash.com/photo-1617137984095-74e4e5e3613f?w=900" alt="Men's Collection">
+            <div class="category-card-overlay">
+              <h3>Men's Collection</h3>
+              <p>Tailored oxfords, selvedge denim & knitwear</p>
+              <span>Explore Collection <i class="bi bi-arrow-right"></i></span>
+            </div>
+          </a>
+        </div>
+        <!-- Women -->
+        <div class="col-md-4">
+          <a href="/category/women" class="category-card">
+            <img src="https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=900" alt="Women's Collection">
+            <div class="category-card-overlay">
+              <h3>Women's Edit</h3>
+              <p>Floral midi dresses, wool coats & cardigans</p>
+              <span>Explore Collection <i class="bi bi-arrow-right"></i></span>
+            </div>
+          </a>
+        </div>
+        <!-- Kids & Accessories -->
+        <div class="col-md-4">
+          <a href="/category/kids" class="category-card">
+            <img src="https://images.unsplash.com/photo-1519238263530-99bdd11df2ea?w=900" alt="Kids Collection">
+            <div class="category-card-overlay">
+              <h3>Kids & Playwear</h3>
+              <p>Organic cotton sets & weather-ready layers</p>
+              <span>Explore Collection <i class="bi bi-arrow-right"></i></span>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Products Section -->
+  <section class="py-5" style="background-color: var(--paper-bg);">
+    <div class="container py-4">
+      <div class="d-flex justify-content-between align-items-end mb-4">
+        <div>
+          <span class="text-uppercase small fw-bold text-muted">Handpicked Highlights</span>
+          <h2 class="display-6 font-serif mt-1 mb-0">Featured Pieces</h2>
+        </div>
+        <a href="/shop" class="text-dark fw-bold small text-decoration-underline">View Catalog →</a>
+      </div>
+
+      <div class="row g-4">
+        <div class="col-6 col-md-4 col-lg-3" th:each="product : ${featuredProducts}">
+          <div class="product-card">
+            <div class="product-thumb">
+              <span class="product-badge sale" th:if="${product.discountPrice != null}">Sale</span>
+              <button class="btn-wishlist btn-wishlist-toggle" th:attr="data-product-id=${product.id}" title="Save to wishlist">
+                <i class="bi bi-heart"></i>
+              </button>
+              <a th:href="@{/products/{id}(id=${product.id})}">
+                <img th:src="${product.imageUrl}" th:alt="${product.name}" loading="lazy">
+              </a>
+            </div>
+            <div class="product-info">
+              <div class="product-cat" th:text="${product.categoryName}">Category</div>
+              <a th:href="@{/products/{id}(id=${product.id})}">
+                <h3 class="product-title" th:text="${product.name}">Product Name</h3>
+              </a>
+              <div class="product-price">
+                <span th:if="${product.discountPrice != null}" th:text="'₹' + ${product.discountPrice}">₹0</span>
+                <span th:classappend="${product.discountPrice != null} ? 'price-original' : ''" th:text="'₹' + ${product.price}">₹0</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Promotional Banner -->
+  <section class="py-5 text-white text-center" style="background-color: var(--primary);">
+    <div class="container py-4">
+      <span class="text-uppercase small letter-spacing-3 fw-bold" style="color: var(--accent);">SPECIAL INTRODUCTORY PRIVILEGE</span>
+      <h2 class="display-5 font-serif my-3">Enjoy 20% Off Your Curated Order</h2>
+      <p class="text-secondary max-w-500 mx-auto mb-4" style="max-width: 500px;">
+        Use coupon code <span class="badge bg-light text-dark px-3 py-2 fw-bold font-monospace fs-6">STYLE20</span> during checkout on orders over ₹1,200.
+      </p>
+      <a href="/shop" class="btn btn-fashion-light">Claim Your Offer</a>
+    </div>
+  </section>
+
+  <!-- Brand Value Props -->
+  <section class="py-5 bg-white border-top">
+    <div class="container py-3">
+      <div class="row g-4 text-center">
+        <div class="col-md-3">
+          <i class="bi bi-box-seam fs-2 text-dark mb-2 d-inline-block"></i>
+          <h6 class="fw-bold mb-1">Complimentary Shipping</h6>
+          <p class="text-muted small mb-0">Free express shipping on all orders over ₹1,500.</p>
+        </div>
+        <div class="col-md-3">
+          <i class="bi bi-arrow-counterclockwise fs-2 text-dark mb-2 d-inline-block"></i>
+          <h6 class="fw-bold mb-1">Seamless 15-Day Returns</h6>
+          <p class="text-muted small mb-0">Effortless exchanges or full refunds at your doorstep.</p>
+        </div>
+        <div class="col-md-3">
+          <i class="bi bi-shield-check fs-2 text-dark mb-2 d-inline-block"></i>
+          <h6 class="fw-bold mb-1">Certified Authenticity</h6>
+          <p class="text-muted small mb-0">100% pure organic cotton, genuine leather & merino wool.</p>
+        </div>
+        <div class="col-md-3">
+          <i class="bi bi-credit-card fs-2 text-dark mb-2 d-inline-block"></i>
+          <h6 class="fw-bold mb-1">Secure Checkout</h6>
+          <p class="text-muted small mb-0">Encrypted transactions powered by Razorpay & AWS.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <div th:replace="~{fragments :: footer}"></div>
+
+</body>
+</html>

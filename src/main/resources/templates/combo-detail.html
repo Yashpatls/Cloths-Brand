@@ -1,0 +1,479 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <th:block th:replace="~{fragments :: head(${combo.name} + ' — Combo Package')}"></th:block>
+</head>
+<body>
+
+  <!-- Storefront Header -->
+  <div th:replace="~{fragments :: header}"></div>
+
+  <main class="container py-5">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+      <ol class="breadcrumb small">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item"><a href="/combos">Combo Packages</a></li>
+        <li class="breadcrumb-item">
+          <a th:href="@{/combos(tier=${combo.tier.name()})}" th:text="${combo.tier.displayName}">Budget Combos</a>
+        </li>
+        <li class="breadcrumb-item active" th:text="${combo.name}">Combo Name</li>
+      </ol>
+    </nav>
+
+    <!-- Feedback alerts -->
+    <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+      <span th:text="${successMessage}"></span>
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+      <span th:text="${errorMessage}"></span>
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <!-- Main Hero Section -->
+    <div class="row g-5">
+      <!-- Left Column: Gallery & Dynamic Included Items Visual Showcase -->
+      <div class="col-lg-6">
+        <!-- Main Auto-Generated Combo Preview Collage Image -->
+        <div class="position-relative bg-light rounded-3 overflow-hidden mb-3 shadow-sm" style="max-height: 540px;">
+          <img id="main-bundle-image" th:src="@{'/combos/' + ${combo.id} + '/collage.jpg'}" th:alt="${combo.name}"
+               class="w-100 h-100 object-fit-cover transition-all" style="min-height: 440px; max-height: 540px;"
+               th:attr="onerror='this.src=\'' + ${combo.imageUrl != null ? combo.imageUrl : 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=600'} + '\';'">
+          
+          <span class="position-absolute top-0 start-0 m-3 badge px-3 py-2 text-uppercase fw-bold shadow-sm"
+                th:classappend="${combo.tier.name() == 'BUDGET' ? 'bg-success' : (combo.tier.name() == 'STANDARD' ? 'bg-primary' : (combo.tier.name() == 'PREMIUM' ? 'bg-warning text-dark' : 'bg-dark text-white'))}"
+                th:text="${combo.tier.displayName}">
+            Standard Combo
+          </span>
+
+          <span id="live-savings-badge-hero" class="position-absolute top-0 end-0 m-3 badge bg-danger text-white px-3 py-2 fw-bold shadow-sm"
+                th:if="${combo.savingsPercentage > 0}"
+                th:text="'SAVE ' + ${combo.savingsPercentage} + '% OFF'">
+            SAVE 35% OFF
+          </span>
+        </div>
+
+        <!-- GARMENTS INCLUDED IN THIS PACKAGE: Separate Product List -->
+        <div class="border rounded-3 p-3 bg-white shadow-sm mb-4">
+          <div class="d-flex justify-content-between align-items-center mb-2 pb-2 border-bottom">
+            <h6 class="small fw-bold text-uppercase text-dark mb-0 letter-spacing-1 font-serif">
+              <i class="bi bi-collection-fill me-2 text-danger"></i>GARMENTS INCLUDED IN THIS PACKAGE:
+            </h6>
+            <span id="live-garments-count-badge" class="badge bg-secondary-subtle text-dark small"
+                  th:text="${#lists.size(combo.items)} + ' Garments Included'">
+              3 Garments Included
+            </span>
+          </div>
+          <p class="small text-muted mb-3" style="font-size: 0.78rem;">
+            Only the garments actually included in your bundle are displayed below. Removing any garment automatically updates the main preview image and recalculates your total price.
+          </p>
+          <div class="row g-2" id="dynamic-gallery-container">
+            <div th:each="item : ${combo.items}" class="col-4 dynamic-preview-col" th:id="'gallery-item-' + ${item.id}">
+              <div class="card h-100 border rounded-2 p-2 text-center position-relative shadow-2xs bg-light">
+                <img th:src="${item.product != null ? item.product.imageUrl : '/images/placeholder.jpg'}"
+                     class="w-100 rounded object-fit-cover mb-2 border" style="height: 110px;"
+                     onerror="this.src='https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=300';">
+                <span class="d-block small text-truncate fw-bold text-dark px-1 mb-1" style="font-size: 0.75rem;" th:text="${item.customTitle}">Item</span>
+                <span class="badge bg-success-subtle text-success small py-1" style="font-size: 0.7rem;"
+                      th:text="'₹' + ${item.itemPrice}">₹699</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Package Details & Dynamic Customizer -->
+      <div class="col-lg-6">
+        <div class="ps-lg-3">
+          <div class="d-flex align-items-center gap-2 mb-1">
+            <span class="badge bg-secondary-subtle text-secondary small fw-bold text-uppercase" th:text="${combo.tier.displayName}">Tier</span>
+            <span class="badge bg-light text-dark border small" th:if="${combo.badge != null}" th:text="${combo.badge}">Best Value</span>
+            <span id="live-items-summary" class="badge bg-dark text-white small ms-auto"
+                  th:text="${#lists.size(combo.items)} + ' of ' + ${#lists.size(combo.items)} + ' Items Active'">
+              All Items Active
+            </span>
+          </div>
+
+          <h1 class="display-6 font-serif mt-1 mb-2" th:text="${combo.name}">Combo Package Title</h1>
+
+          <!-- Price & Savings Callout Box (Dynamically Recalculated) -->
+          <div class="p-3 bg-light rounded-3 mb-4 border">
+            <div class="d-flex align-items-baseline gap-3 flex-wrap">
+              <h2 class="display-6 font-serif fw-bold text-dark mb-0">
+                ₹<span id="live-combo-price" th:text="${combo.effectivePrice}">1,499</span>
+              </h2>
+              <span class="text-muted text-decoration-line-through fs-5">
+                ₹<span id="live-original-price" th:text="${combo.originalPrice != null ? combo.originalPrice : combo.effectivePrice}">2,999</span>
+              </span>
+              <span id="live-savings-badge" class="badge bg-danger text-white fw-bold px-2 py-1 ms-auto"
+                    th:if="${combo.savingsAmount > 0}"
+                    th:text="'You Save ₹' + ${combo.savingsAmount} + ' (' + ${combo.savingsPercentage} + '% OFF)'">
+                You Save ₹800 (35% OFF)
+              </span>
+            </div>
+
+            <!-- Black Friday Extra 30% Promo -->
+            <div class="mt-3 pt-2 border-top d-flex align-items-center justify-content-between flex-wrap gap-2">
+              <span class="badge bg-dark text-warning border border-warning font-monospace px-2 py-1">Code: BLACKFRIDAY</span>
+              <span class="small fw-bold text-dark">Get an EXTRA 30% OFF at checkout!</span>
+            </div>
+            <p class="small text-muted mb-0 mt-2">
+              <i class="bi bi-shield-check text-success me-1"></i> <strong>Dynamic Price Guarantee:</strong> Price automatically recalculates when garments are added or removed.
+            </p>
+          </div>
+
+          <!-- Description -->
+          <p class="text-secondary mb-4" th:text="${combo.description}" style="line-height: 1.8;">
+            Curated wardrobe essentials packaged together for effortless styling and maximum value.
+          </p>
+
+          <!-- Interactive Customizer Form -->
+          <form id="combo-customizer-form" th:action="@{/combos/add-to-cart}" method="post" class="border rounded-3 p-4 bg-white shadow-sm mb-4">
+            <input type="hidden" name="comboId" th:value="${combo.id}">
+
+            <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-3">
+              <h5 class="font-serif mb-0">
+                <i class="bi bi-sliders2 me-2"></i>Garments Included in Combo
+              </h5>
+              <span class="small text-muted" style="font-size: 0.75rem;">Customize or Remove Items</span>
+            </div>
+
+            <!-- Constituent Garments List -->
+            <div th:each="item, stat : ${combo.items}" class="mb-3 pb-3 border-bottom combo-item-row" th:id="'item-row-' + ${item.id}">
+              
+              <!-- Hidden Checkbox for Form Submission -->
+              <input type="checkbox" name="includedItems" th:value="${item.id}" th:id="'check-item-' + ${item.id}"
+                     class="d-none combo-inclusion-check" checked>
+
+              <!-- Excluded Notice (Hidden by default, shown when removed) -->
+              <div th:id="'excluded-notice-' + ${item.id}" class="p-2 mb-2 bg-light border border-dashed rounded justify-content-between align-items-center d-none" style="display: none !important;">
+                <span class="small text-muted">
+                  <i class="bi bi-x-circle text-danger me-1"></i>
+                  <strong th:text="${item.customTitle}">Item</strong> excluded from bundle
+                  <span class="badge bg-secondary-subtle text-dark ms-1" th:text="'-₹' + ${item.itemPrice}">-₹300</span>
+                </span>
+                <button type="button" class="btn btn-sm btn-outline-success py-0 px-2 fw-semibold"
+                        th:attr="onclick='includeComboItem(' + ${item.id} + ')'" style="font-size: 0.75rem;">
+                  <i class="bi bi-plus-circle me-1"></i> Add Back (+₹<span th:text="${item.itemPrice}">300</span>)
+                </button>
+              </div>
+
+              <!-- Active Item Card -->
+              <div th:id="'active-card-' + ${item.id}" class="active-item-card">
+                <div class="d-flex align-items-center gap-3 mb-2">
+                  <img th:src="${item.product != null ? item.product.imageUrl : '/images/placeholder.jpg'}"
+                       class="rounded object-fit-cover border" style="width: 55px; height: 55px;"
+                       onerror="this.src='https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=100';">
+                  <div class="flex-grow-1">
+                    <div class="d-flex justify-content-between align-items-start">
+                      <div>
+                        <h6 class="mb-0 fw-bold" th:text="${item.customTitle}">1 Garment Title</h6>
+                        <span class="small text-muted" th:text="'Quantity: ' + ${item.quantity} + ' pc'">Quantity: 1</span>
+                      </div>
+                      <div class="text-end">
+                        <span class="badge bg-light text-dark border fw-bold" th:text="'₹' + ${item.itemPrice}">₹699</span>
+                        <button type="button" class="btn btn-sm btn-outline-danger py-0 px-2 d-block mt-1"
+                                th:attr="onclick='removeComboItem(' + ${item.id} + ')'"
+                                title="Remove this item and recalculate package price" style="font-size: 0.7rem;">
+                          <i class="bi bi-dash-circle me-1"></i>Remove
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row g-2">
+                  <!-- Size Selector for this item -->
+                  <div class="col-sm-6">
+                    <label class="form-label small fw-bold text-uppercase text-secondary mb-1">Select Size</label>
+                    <select th:name="'size_' + ${item.id}" class="form-select form-select-sm">
+                      <th:block th:if="${item.product != null and not #lists.isEmpty(item.product.sizes)}">
+                        <option th:each="s : ${item.product.sizes}" th:value="${s.sizeName}" th:text="${s.sizeName}">M</option>
+                      </th:block>
+                      <th:block th:if="${item.product == null or #lists.isEmpty(item.product.sizes)}">
+                        <option value="S">S</option>
+                        <option value="M" selected>M</option>
+                        <option value="L">L</option>
+                        <option value="XL">XL</option>
+                        <option value="Free Size">Free Size</option>
+                      </th:block>
+                    </select>
+                  </div>
+
+                  <!-- Color / Shade Selector for this item -->
+                  <div class="col-sm-6">
+                    <label class="form-label small fw-bold text-uppercase text-secondary mb-1">Select Shade / Color</label>
+                    <select th:name="'color_' + ${item.id}" class="form-select form-select-sm">
+                      <th:block th:if="${item.product != null and not #lists.isEmpty(item.product.colors)}">
+                        <option th:each="c : ${item.product.colors}" th:value="${c.colorName}" th:text="${c.colorName}">Navy Blue</option>
+                      </th:block>
+                      <th:block th:if="${item.product == null or #lists.isEmpty(item.product.colors)}">
+                        <option value="Classic Black">Classic Black</option>
+                        <option value="Navy Blue">Navy Blue</option>
+                        <option value="White">White</option>
+                        <option value="Olive">Olive</option>
+                      </th:block>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Package Quantity -->
+            <div class="row g-3 align-items-center mb-4">
+              <div class="col-4">
+                <label class="form-label small fw-bold text-uppercase text-dark">Package Qty</label>
+                <input type="number" name="quantity" class="form-control" value="1" min="1" th:max="${combo.availableStock}">
+              </div>
+              <div class="col-8 pt-4">
+                <span class="small" th:if="${combo.availableStock > 0}" style="color: var(--success);">
+                  <i class="bi bi-check-circle-fill me-1"></i>Constituent garments in stock (<span th:text="${combo.availableStock}">10</span> sets available)
+                </span>
+                <span class="small text-danger fw-bold" th:if="${combo.availableStock <= 0}">
+                  <i class="bi bi-x-circle-fill me-1"></i>Temporarily Sold Out
+                </span>
+              </div>
+            </div>
+
+            <!-- Add to Cart & Buy Now Actions -->
+            <div class="d-flex flex-column flex-sm-row gap-2">
+              <button type="submit" id="btn-add-combo" class="btn btn-fashion-dark flex-grow-1 py-3 fs-6 fw-bold" th:disabled="${!combo.inStock}">
+                <i class="bi bi-bag-plus me-2"></i> <span id="btn-add-text">Add Package To Bag (₹<span th:text="${combo.effectivePrice}">1499</span>)</span>
+              </button>
+              <button type="submit" name="buyNow" value="true" id="btn-buy-combo" class="btn btn-fashion-gold flex-grow-1 py-3 fs-6 fw-bold" th:disabled="${!combo.inStock}">
+                <i class="bi bi-lightning-charge-fill me-1"></i> <span id="btn-buy-text">Instant Buy Now (₹<span th:text="${combo.effectivePrice}">1499</span>)</span>
+              </button>
+            </div>
+          </form>
+
+          <!-- Guarantees Checklist -->
+          <div class="border-top pt-4">
+            <ul class="list-unstyled small d-flex flex-column gap-2 text-muted">
+              <li><i class="bi bi-truck me-2 text-dark"></i> Free express shipping on all combo packages</li>
+              <li><i class="bi bi-arrow-repeat me-2 text-dark"></i> 15-day complimentary returns on complete or customized bundles</li>
+              <li><i class="bi bi-shield-check me-2 text-dark"></i> 100% certified authentic luxury fabrics</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Related Combos in Same Tier -->
+    <section class="mt-5 pt-5 border-top" th:if="${not #lists.isEmpty(relatedCombos)}">
+      <h3 class="font-serif mb-4">More In This Budget Category</h3>
+      <div class="row g-4">
+        <div class="col-md-4" th:each="rel : ${relatedCombos}">
+          <div class="card h-100 border rounded-3 p-3 shadow-sm">
+            <img th:src="${rel.imageUrl}" class="rounded object-fit-cover mb-2" style="height: 200px;"
+                 onerror="this.src='https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=400';">
+            <h6 class="font-serif mb-1"><a th:href="@{/combos/{slug}(slug=${rel.slug})}" class="text-dark text-decoration-none" th:text="${rel.name}">Rel</a></h6>
+            <div class="d-flex justify-content-between align-items-baseline">
+              <span class="fw-bold text-dark" th:text="'₹' + ${rel.effectivePrice}">₹999</span>
+              <a th:href="@{/combos/{slug}(slug=${rel.slug})}" class="btn btn-sm btn-outline-dark">View Bundle</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Dynamic Combo Product Management & Price Recalculation Script -->
+  <script th:inline="javascript">
+    /*<![CDATA[*/
+    const comboData = {
+      id: /*[[${combo.id}]]*/ 0,
+      baseComboPrice: /*[[${combo.effectivePrice}]]*/ 1499,
+      baseOriginalPrice: /*[[${combo.originalPrice != null ? combo.originalPrice : combo.effectivePrice}]]*/ 2999,
+      items: [
+        /*[# th:each="it : ${combo.items}"]*/
+        {
+          id: /*[[${it.id}]]*/ 0,
+          productId: /*[[${it.product != null ? it.product.id : 0}]]*/ 0,
+          title: /*[[${it.customTitle}]]*/ 'Item',
+          price: parseFloat(/*[[${it.itemPrice}]]*/ 0),
+          origPrice: parseFloat(/*[[${it.originalPrice}]]*/ 0),
+          included: true
+        },
+        /*[/]*/
+      ]
+    };
+
+    function recalculateCombo() {
+      const activeItems = comboData.items.filter(it => it.included);
+      const activeCount = activeItems.length;
+
+      let currentPrice = 0;
+      let currentOrigPrice = 0;
+
+      activeItems.forEach(it => {
+        currentPrice += it.price;
+        currentOrigPrice += it.origPrice;
+      });
+
+      currentPrice = Math.round(currentPrice);
+      currentOrigPrice = Math.round(currentOrigPrice);
+      const savings = Math.max(0, currentOrigPrice - currentPrice);
+      const savingsPercent = currentOrigPrice > 0 ? Math.round((savings / currentOrigPrice) * 100) : 0;
+
+      // Update Live UI Displays
+      const elPrice = document.getElementById('live-combo-price');
+      if (elPrice) elPrice.textContent = currentPrice.toLocaleString('en-IN');
+
+      const elOrig = document.getElementById('live-original-price');
+      if (elOrig) elOrig.textContent = currentOrigPrice.toLocaleString('en-IN');
+
+      const elSavings = document.getElementById('live-savings-badge');
+      if (elSavings) {
+        if (savings > 0) {
+          elSavings.style.display = 'inline-block';
+          elSavings.textContent = 'You Save ₹' + savings.toLocaleString('en-IN') + ' (' + savingsPercent + '% OFF)';
+        } else {
+          elSavings.style.display = 'none';
+        }
+      }
+
+      const elHeroSavings = document.getElementById('live-savings-badge-hero');
+      if (elHeroSavings) {
+        if (savingsPercent > 0) {
+          elHeroSavings.style.display = 'inline-block';
+          elHeroSavings.textContent = 'SAVE ' + savingsPercent + '% OFF';
+        } else {
+          elHeroSavings.style.display = 'none';
+        }
+      }
+
+      // Automatically Update Main Composite Flat-Lay Preview Image (Contained Items Only)
+      const mainImg = document.getElementById('main-bundle-image');
+      if (mainImg) {
+        const activeItemIds = activeItems.map(it => it.id);
+        const activePids = activeItems.map(it => it.productId).filter(pid => pid > 0);
+        if (activeItemIds.length > 0) {
+          const newSrc = '/combos/' + comboData.id + '/collage.jpg?itemIds=' + activeItemIds.join(',') + '&productIds=' + activePids.join(',') + '&t=' + Date.now();
+          const currentKeyStr = activeItemIds.slice().sort().join(',');
+          if (mainImg.getAttribute('data-active-items') !== currentKeyStr) {
+            mainImg.setAttribute('data-active-items', currentKeyStr);
+            mainImg.style.transition = 'opacity 0.2s ease';
+            mainImg.style.opacity = '0.5';
+            const preload = new Image();
+            preload.onload = function() {
+              mainImg.src = newSrc;
+              mainImg.style.opacity = '1';
+            };
+            preload.onerror = function() {
+              mainImg.style.opacity = '1';
+            };
+            preload.src = newSrc;
+          }
+        }
+      }
+
+      // Update button labels
+      const elBtnAdd = document.getElementById('btn-add-text');
+      if (elBtnAdd) elBtnAdd.textContent = 'Add Package To Bag (₹' + currentPrice.toLocaleString('en-IN') + ')';
+
+      const elBtnBuy = document.getElementById('btn-buy-text');
+      if (elBtnBuy) elBtnBuy.textContent = 'Instant Buy Now (₹' + currentPrice.toLocaleString('en-IN') + ')';
+
+      // Update badges
+      const elCountBadge = document.getElementById('live-garments-count-badge');
+      if (elCountBadge) elCountBadge.textContent = activeCount + ' Garment' + (activeCount > 1 ? 's' : '') + ' Included';
+
+      const elSummary = document.getElementById('live-items-summary');
+      if (elSummary) {
+        if (activeCount === comboData.items.length) {
+          elSummary.textContent = 'All Items Active';
+          elSummary.className = 'badge bg-dark text-white small ms-auto';
+        } else {
+          elSummary.textContent = activeCount + ' of ' + comboData.items.length + ' Items Selected';
+          elSummary.className = 'badge bg-warning text-dark small ms-auto fw-bold';
+        }
+      }
+
+      // Check disable status
+      const btnAdd = document.getElementById('btn-add-combo');
+      const btnBuy = document.getElementById('btn-buy-combo');
+      if (btnAdd) btnAdd.disabled = (activeCount === 0);
+      if (btnBuy) btnBuy.disabled = (activeCount === 0);
+    }
+
+    function removeComboItem(itemId) {
+      const activeCount = comboData.items.filter(it => it.included).length;
+      if (activeCount <= 1) {
+        alert('You must keep at least 1 garment included in the combo package.');
+        return;
+      }
+
+      const target = comboData.items.find(it => it.id === itemId);
+      if (!target) return;
+
+      target.included = false;
+
+      // 1. Hide active card & show excluded notice
+      const card = document.getElementById('active-card-' + itemId);
+      const notice = document.getElementById('excluded-notice-' + itemId);
+      const check = document.getElementById('check-item-' + itemId);
+
+      if (card) {
+        card.style.setProperty('display', 'none', 'important');
+        card.classList.add('d-none');
+      }
+      if (notice) {
+        notice.style.setProperty('display', 'flex', 'important');
+        notice.classList.remove('d-none');
+        notice.classList.add('d-flex');
+      }
+      if (check) check.checked = false;
+
+      // 2. Remove that item from the combo visual image gallery on left
+      const galleryItem = document.getElementById('gallery-item-' + itemId);
+      if (galleryItem) {
+        galleryItem.style.setProperty('display', 'none', 'important');
+        galleryItem.classList.add('d-none');
+      }
+
+      // 3. Automatically recalculate price
+      recalculateCombo();
+    }
+
+    function includeComboItem(itemId) {
+      const target = comboData.items.find(it => it.id === itemId);
+      if (!target) return;
+
+      target.included = true;
+
+      // 1. Show active card & hide excluded notice
+      const card = document.getElementById('active-card-' + itemId);
+      const notice = document.getElementById('excluded-notice-' + itemId);
+      const check = document.getElementById('check-item-' + itemId);
+
+      if (card) {
+        card.style.removeProperty('display');
+        card.classList.remove('d-none');
+      }
+      if (notice) {
+        notice.style.setProperty('display', 'none', 'important');
+        notice.classList.add('d-none');
+        notice.classList.remove('d-flex');
+      }
+      if (check) check.checked = true;
+
+      // 2. Restore that item in the combo visual image gallery on left
+      const galleryItem = document.getElementById('gallery-item-' + itemId);
+      if (galleryItem) {
+        galleryItem.style.removeProperty('display');
+        galleryItem.classList.remove('d-none');
+      }
+
+      // 3. Automatically recalculate price
+      recalculateCombo();
+    }
+    /*]]>*/
+  </script>
+
+  <!-- Storefront Footer -->
+  <div th:replace="~{fragments :: footer}"></div>
+
+</body>
+</html>

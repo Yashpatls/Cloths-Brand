@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <th:block th:replace="~{fragments :: head('Create Account')}"></th:block>
+</head>
+<body class="bg-light">
+
+  <div th:replace="~{fragments :: header}"></div>
+
+  <main class="container py-5 d-flex justify-content-center align-items-center" style="min-height: 75vh;">
+    <div class="card border-0 shadow-sm p-4 p-md-5 rounded-3 bg-white" style="max-width: 500px; width: 100%;">
+      <div class="text-center mb-4">
+        <span class="text-uppercase small fw-bold text-muted">NEW CLIENT REGISTRATION</span>
+        <h1 class="display-6 font-serif mt-1">Create Account</h1>
+        <p class="text-muted small">Join StyleHub for complimentary delivery and private seasonal sales.</p>
+      </div>
+
+      <div th:if="${errorMessage}" class="alert alert-danger small py-2" role="alert" th:text="${errorMessage}">
+        Error message.
+      </div>
+
+      <form th:action="@{/register}" th:object="${registerDto}" method="post">
+        <div class="mb-3">
+          <label class="form-label small fw-bold">Full Name</label>
+          <input type="text" th:field="*{name}" class="form-control" required placeholder="Aarav Sharma">
+          <div class="text-danger small" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label small fw-bold">Email Address</label>
+          <input type="email" th:field="*{email}" class="form-control" required placeholder="name@domain.com">
+          <div class="text-danger small" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label small fw-bold">Phone Number</label>
+          <input type="tel" th:field="*{phone}" class="form-control" placeholder="+91 98765 43210">
+        </div>
+
+        <div class="mb-4">
+          <label class="form-label small fw-bold">Create Password (min. 8 characters)</label>
+          <input type="password" th:field="*{password}" class="form-control" minlength="8" required placeholder="••••••••">
+          <div class="text-danger small" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
+        </div>
+
+        <button type="submit" class="btn btn-fashion-dark w-100 py-3 mb-3">
+          Create StyleHub Account
+        </button>
+      </form>
+
+      <div class="text-center border-top pt-3 small text-muted">
+        Already have an account? <a href="/login" class="fw-bold text-dark text-decoration-underline">Sign In</a>
+      </div>
+    </div>
+  </main>
+
+  <div th:replace="~{fragments :: footer}"></div>
+
+</body>
+</html>

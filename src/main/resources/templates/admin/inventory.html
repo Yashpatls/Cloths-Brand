@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <th:block th:replace="~{admin/admin-fragments :: admin-head('Inventory & Stock Control')}"></th:block>
+</head>
+<body class="admin-body">
+
+  <div th:replace="~{admin/admin-fragments :: sidebar}"></div>
+
+  <main class="admin-main">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <div>
+        <h2 class="fw-bold mb-1">Inventory Management</h2>
+        <span class="text-muted small">Real-time stock tracking, out-of-stock prevention, and instant inventory adjustments</span>
+      </div>
+    </div>
+
+    <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+      <span th:text="${successMessage}"></span>
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <div class="admin-table">
+      <div class="table-responsive">
+        <table class="table align-middle">
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th>Category</th>
+              <th>SKU</th>
+              <th>Status</th>
+              <th>Current Stock</th>
+              <th>Adjust Quantity</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="p : ${products}">
+              <td>
+                <div class="d-flex align-items-center gap-3">
+                  <img th:src="${p.imageUrl}" class="rounded" style="width: 45px; height: 55px; object-fit: cover;">
+                  <strong th:text="${p.name}">Product Name</strong>
+                </div>
+              </td>
+              <td th:text="${p.categoryName}">Category</td>
+              <td><code th:text="${p.sku != null ? p.sku : 'N/A'}">SKU</code></td>
+              <td>
+                <span class="badge"
+                      th:classappend="${p.stock > 10} ? 'bg-success' : (${p.stock > 0} ? 'bg-warning text-dark' : 'bg-danger')"
+                      th:text="${p.stock > 10 ? 'Optimal' : (p.stock > 0 ? 'Low Stock' : 'Out of Stock')}">Status</span>
+              </td>
+              <td><strong class="fs-6" th:text="${p.stock}">0</strong> units</td>
+              <td>
+                <form th:action="@{/admin/inventory/update}" method="post" class="d-flex gap-2">
+                  <input type="hidden" name="productId" th:value="${p.id}">
+                  <input type="number" name="stock" class="form-control form-control-sm" th:value="${p.stock}" min="0" style="width: 90px;">
+                  <button type="submit" class="btn btn-sm btn-dark">Update</button>
+                </form>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

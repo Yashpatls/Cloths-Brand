@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <th:block th:replace="~{fragments :: head('Order Tracking #' + ${order.orderNumber})}"></th:block>
+</head>
+<body>
+
+  <div th:replace="~{fragments :: header}"></div>
+
+  <main class="container py-5" style="max-width: 900px;">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+      <ol class="breadcrumb small">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item"><a href="/orders">My Orders</a></li>
+        <li class="breadcrumb-item active" th:text="${order.orderNumber}">SH-0000</li>
+      </ol>
+    </nav>
+
+    <!-- Header Box -->
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 border-bottom pb-3 mb-4">
+      <div>
+        <span class="small text-muted">Tracking Order</span>
+        <h1 class="display-6 font-serif mb-0" th:text="${order.orderNumber}">SH-0000</h1>
+      </div>
+      <div class="text-end">
+        <span class="badge px-3 py-2 text-uppercase fs-6"
+              th:classappend="${order.status.name() == 'DELIVERED'} ? 'bg-success' : 'bg-dark'"
+              th:text="${order.status}">CONFIRMED</span>
+      </div>
+    </div>
+
+    <!-- Visual Tracking Progress Bar -->
+    <div class="card p-4 border rounded-3 mb-5 bg-light">
+      <h5 class="font-serif mb-4 text-center">Live Shipment Status</h5>
+      <div class="tracking-stepper">
+        <!-- 1. Placed -->
+        <div class="track-step" th:classappend="${order.status.ordinal() >= 0} ? 'done' : ''">
+          <div class="track-icon"><i class="bi bi-check"></i></div>
+          <span>Order Placed</span>
+        </div>
+        <!-- 2. Confirmed -->
+        <div class="track-step" th:classappend="${order.status.ordinal() >= 1} ? 'done' : (${order.status.ordinal() == 0} ? 'current' : '')">
+          <div class="track-icon"><i class="bi bi-check"></i></div>
+          <span>Confirmed</span>
+        </div>
+        <!-- 3. Processing -->
+        <div class="track-step" th:classappend="${order.status.ordinal() >= 2} ? 'done' : (${order.status.ordinal() == 1} ? 'current' : '')">
+          <div class="track-icon"><i class="bi bi-box"></i></div>
+          <span>Tailoring & Pack</span>
+        </div>
+        <!-- 4. Shipped -->
+        <div class="track-step" th:classappend="${order.status.ordinal() >= 3} ? 'done' : (${order.status.ordinal() == 2} ? 'current' : '')">
+          <div class="track-icon"><i class="bi bi-truck"></i></div>
+          <span>In Transit</span>
+        </div>
+        <!-- 5. Delivered -->
+        <div class="track-step" th:classappend="${order.status.name() == 'DELIVERED'} ? 'done' : ''">
+          <div class="track-icon"><i class="bi bi-house-door"></i></div>
+          <span>Delivered</span>
+        </div>
+      </div>
+      <div class="text-center small text-muted mt-2" th:if="${order.trackingNumber != null}">
+        Carrier Consignment Tracking: <strong class="text-dark font-monospace" th:text="${order.trackingNumber}">TRK-000</strong>
+      </div>
+    </div>
+
+    <!-- Order Items & Invoice Details -->
+    <div class="row g-4">
+      <div class="col-lg-7">
+        <h5 class="font-serif mb-3">Garments in this Package</h5>
+        <div class="card border rounded-3 p-3">
+          <div th:each="item : ${order.items}" class="d-flex align-items-center gap-3 border-bottom py-3">
+            <img th:src="${item.productImage}" class="rounded" style="width: 60px; height: 80px; object-fit: cover;">
+            <div class="flex-grow-1">
+              <h6 class="mb-1" th:text="${item.productName}">Product Name</h6>
+              <div class="small text-muted" th:text="'Size: ' + ${item.selectedSize} + ' · Shade: ' + ${item.selectedColor}"></div>
+              <small class="text-muted" th:text="'Qty: ' + ${item.quantity} + ' × ₹' + ${item.unitPrice}"></small>
+            </div>
+            <strong class="font-serif" th:text="'₹' + ${item.totalPrice}">₹0</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-5">
+        <h5 class="font-serif mb-3">Order Details</h5>
+        <div class="card border rounded-3 p-3 bg-light">
+          <div class="mb-3">
+            <label class="small text-muted fw-bold text-uppercase">Delivery Address</label>
+            <p class="small text-dark mb-0" th:text="${order.shippingAddress}">Address details</p>
+          </div>
+          <div class="mb-3">
+            <label class="small text-muted fw-bold text-uppercase">Payment Method</label>
+            <p class="small text-dark mb-0" th:text="${order.paymentMethod} + ' (' + ${order.paymentStatus} + ')'">DEMO</p>
+          </div>
+          <div class="border-top pt-3">
+            <div class="d-flex justify-content-between small mb-1">
+              <span class="text-secondary">Subtotal</span>
+              <strong th:text="'₹' + ${order.subtotal}">₹0</strong>
+            </div>
+            <div class="d-flex justify-content-between small mb-1" th:if="${order.discountAmount.compareTo(T(java.math.BigDecimal).ZERO) > 0}">
+              <span class="text-success">Discount</span>
+              <strong class="text-success" th:text="'-₹' + ${order.discountAmount}">-₹0</strong>
+            </div>
+            <div class="d-flex justify-content-between small mb-1">
+              <span class="text-secondary">Shipping</span>
+              <span class="text-success fw-bold">FREE</span>
+            </div>
+            <div class="d-flex justify-content-between fs-5 border-top pt-2 mt-2">
+              <span class="font-serif fw-bold">Total Paid</span>
+              <strong class="font-serif text-dark" th:text="'₹' + ${order.total}">₹0</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div th:replace="~{fragments :: footer}"></div>
+
+</body>
+</html>

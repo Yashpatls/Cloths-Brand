@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <th:block th:replace="~{fragments :: head('Express Checkout')}"></th:block>
+</head>
+<body>
+
+  <div th:replace="~{fragments :: header}"></div>
+
+  <main class="container py-5">
+    <div class="mb-4 text-center">
+      <span class="text-uppercase small fw-bold text-muted">SECURE TRANSACTION</span>
+      <h1 class="display-6 font-serif mt-1">Express Checkout</h1>
+    </div>
+
+    <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+      <span th:text="${errorMessage}"></span>
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <div class="row g-5">
+      <!-- Checkout Form Column -->
+      <div class="col-lg-7">
+        <form id="checkout-form" th:action="@{/checkout/place-order}" method="post">
+
+          <!-- Step 1: Shipping Address -->
+          <div class="checkout-step active">
+            <div class="step-header">
+              <span class="step-num">1</span>
+              <h4 class="font-serif mb-0">Delivery Details</h4>
+            </div>
+
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label small fw-bold">Full Name</label>
+                <input type="text" name="fullName" class="form-control" required placeholder="Aarav Sharma"
+                       th:value="${addresses != null and !addresses.isEmpty() ? addresses[0].fullName : ''}">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label small fw-bold">Mobile Phone</label>
+                <input type="tel" name="phone" class="form-control" required placeholder="+91 98765 43210"
+                       th:value="${addresses != null and !addresses.isEmpty() ? addresses[0].phone : ''}">
+              </div>
+              <div class="col-12">
+                <label class="form-label small fw-bold">Street Address / Landmark</label>
+                <input type="text" name="streetAddress" class="form-control" required placeholder="Flat 402, Lotus Residency, Central Ave"
+                       th:value="${addresses != null and !addresses.isEmpty() ? addresses[0].streetAddress : ''}">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label small fw-bold">City</label>
+                <input type="text" name="city" class="form-control" required placeholder="Mumbai"
+                       th:value="${addresses != null and !addresses.isEmpty() ? addresses[0].city : ''}">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label small fw-bold">State</label>
+                <input type="text" name="state" class="form-control" required placeholder="Maharashtra"
+                       th:value="${addresses != null and !addresses.isEmpty() ? addresses[0].state : ''}">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label small fw-bold">PIN Code</label>
+                <input type="text" name="postalCode" class="form-control" required placeholder="400076"
+                       th:value="${addresses != null and !addresses.isEmpty() ? addresses[0].postalCode : ''}">
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 2: Payment Method Selection -->
+          <div class="checkout-step active">
+            <div class="step-header">
+              <span class="step-num">2</span>
+              <h4 class="font-serif mb-0">Select Payment Method</h4>
+            </div>
+
+            <div class="d-flex flex-column gap-3">
+              <!-- Online Payment Option -->
+              <div class="border rounded-3 p-3 d-flex align-items-center gap-3 bg-light cursor-pointer">
+                <input class="form-check-input fs-5" type="radio" name="paymentMethod" id="pay-online" value="ONLINE" checked>
+                <label class="form-check-label flex-grow-1 cursor-pointer" for="pay-online">
+                  <div class="d-flex justify-content-between align-items-center">
+                    <span class="fw-bold fs-6"><i class="bi bi-credit-card-2-front-fill text-primary me-2"></i>Online Payment (UPI, Cards & NetBanking)</span>
+                    <span class="badge bg-success text-white">Instant Confirmation</span>
+                  </div>
+                  <small class="text-secondary d-block mt-1">Instant digital payment via UPI (Google Pay, PhonePe, Paytm), Credit/Debit Cards, or NetBanking.</small>
+                </label>
+              </div>
+
+              <!-- Cash on Delivery Option -->
+              <div class="border rounded-3 p-3 d-flex align-items-center gap-3 bg-light cursor-pointer">
+                <input class="form-check-input fs-5" type="radio" name="paymentMethod" id="pay-cod" value="CASH_ON_DELIVERY">
+                <label class="form-check-label flex-grow-1 cursor-pointer" for="pay-cod">
+                  <div class="d-flex justify-content-between align-items-center">
+                    <span class="fw-bold fs-6"><i class="bi bi-cash-stack text-success me-2"></i>Cash on Delivery (COD)</span>
+                    <span class="badge bg-secondary text-white">Pay at Doorstep</span>
+                  </div>
+                  <small class="text-secondary d-block mt-1">Pay with cash or UPI directly to our logistics partner upon arrival.</small>
+                </label>
+              </div>
+            </div>
+
+            <!-- Submit Action Container -->
+            <div class="mt-4">
+              <button id="btn-standard-place-order" type="submit" class="btn btn-fashion-dark w-100 py-3 fs-5 fw-bold shadow-sm">
+                <i class="bi bi-shield-check me-2"></i> Confirm & Place Order
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <!-- Order Summary Column -->
+      <div class="col-lg-5">
+        <div class="cart-summary-card">
+          <h4 class="font-serif mb-3">Order Bag Items</h4>
+          <div class="d-flex flex-column gap-3 mb-4" style="max-height: 320px; overflow-y: auto;">
+            <div th:each="item : ${cart.items}" class="d-flex align-items-center gap-3 border-bottom pb-2">
+              <img th:src="${item.itemImageUrl}" class="rounded" style="width: 50px; height: 65px; object-fit: cover;"
+                   onerror="this.src='https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=100';">
+              <div class="flex-grow-1">
+                <span class="badge bg-danger text-uppercase px-1 mb-1" style="font-size: 0.6rem;" th:if="${item.isCombo}">Combo</span>
+                <h6 class="small fw-bold mb-0" th:text="${item.itemTitle}">Item Name</h6>
+                <small class="text-muted d-block" style="font-size: 0.75rem;" th:if="${item.isCombo}" th:text="${item.comboSelections} + ' · Qty ' + ${item.quantity}"></small>
+                <small class="text-muted" th:unless="${item.isCombo}" th:text="${item.selectedSize} + ' · ' + ${item.selectedColor} + ' · Qty ' + ${item.quantity}"></small>
+              </div>
+              <strong class="small" th:text="'₹' + ${item.totalPrice}">₹0</strong>
+            </div>
+          </div>
+
+          <div class="d-flex flex-column gap-2 small">
+            <div class="d-flex justify-content-between">
+              <span class="text-secondary">Bag Subtotal</span>
+              <strong th:text="'₹' + ${cart.subtotal}">₹0</strong>
+            </div>
+            <div class="d-flex justify-content-between" th:if="${appliedCouponCode != null}">
+              <span class="text-success">Coupon (<span th:text="${appliedCouponCode}"></span>)</span>
+              <span class="text-success fw-bold">Applied</span>
+            </div>
+            <div class="d-flex justify-content-between">
+              <span class="text-secondary">Standard Shipping</span>
+              <span class="text-success fw-bold">COMPLIMENTARY</span>
+            </div>
+            <div class="d-flex justify-content-between">
+              <span class="text-secondary">Tax (5% GST)</span>
+              <span>Included</span>
+            </div>
+            <div class="d-flex justify-content-between border-top pt-3 fs-5">
+              <span class="font-serif fw-bold">Final Amount</span>
+              <strong class="font-serif" th:text="'₹' + ${cart.subtotal}">₹0</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div th:replace="~{fragments :: footer}"></div>
+
+</body>
+</html>

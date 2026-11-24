@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:fragment="head(title)">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title th:text="${title != null ? title + ' | StyleHub' : 'StyleHub | Wear Your Story'}">StyleHub | Wear Your Story</title>
+  
+  <!-- CSRF Tokens -->
+  <meta name="_csrf" th:content="${_csrf?.token}"/>
+  <meta name="_csrf_header" th:content="${_csrf?.headerName}"/>
+
+  <!-- Bootstrap 5 & Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  
+  <!-- Custom Fashion Theme -->
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+  <!-- Top Announcement Header -->
+  <header th:fragment="header" class="site-header">
+    <div class="top-announcement" style="background: #000000; border-bottom: 1px solid rgba(255, 0, 127, 0.35);">
+      <div class="container d-flex justify-content-between align-items-center py-1">
+        <div>
+          <span class="badge bg-danger text-uppercase me-2 fw-bold" style="letter-spacing: 1px; font-size: 0.65rem;">BLACK FRIDAY LIVE</span>
+          <span class="small text-light">Extra 30% OFF Sitewide with code <strong class="text-warning font-monospace">BLACKFRIDAY</strong> | Free Express Shipping over ₹1,500</span>
+        </div>
+        <div class="d-none d-md-flex gap-3 small">
+          <a href="/combos" class="text-warning text-decoration-none fw-bold"><i class="bi bi-gift-fill me-1"></i>Combo Deals</a>
+          <span class="text-secondary">·</span>
+          <a href="/contact" class="text-white text-decoration-none">Concierge / Contact</a>
+          <span class="text-secondary">·</span>
+          <a href="/orders" class="text-white text-decoration-none">Track Order</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Navigation Bar -->
+    <nav class="navbar navbar-expand-lg bg-white py-3">
+      <div class="container">
+        <!-- Mobile Toggle Button -->
+        <button class="navbar-toggler border-0 p-0 me-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileMenu">
+          <i class="bi bi-list fs-2 text-dark"></i>
+        </button>
+
+        <!-- Brand Logo -->
+        <a class="navbar-brand brand me-4" href="/">
+          STYLE<span>HUB</span>
+        </a>
+
+        <!-- Desktop Menu Links -->
+        <div class="collapse navbar-collapse" id="desktopNav">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0 gap-1">
+            <li class="nav-item"><a class="nav-link" href="/shop">Shop All</a></li>
+            <li class="nav-item"><a class="nav-link fw-bold text-danger" href="/combos"><i class="bi bi-gift-fill me-1"></i>Combos <span class="badge bg-danger text-white rounded-pill ms-1" style="font-size: 0.65rem;">Value Packs</span></a></li>
+            <li class="nav-item"><a class="nav-link" href="/category/men">Men</a></li>
+            <li class="nav-item"><a class="nav-link" href="/category/women">Women</a></li>
+            <li class="nav-item"><a class="nav-link" href="/category/kids">Kids</a></li>
+            <li class="nav-item"><a class="nav-link" href="/category/accessories">Accessories</a></li>
+            <li class="nav-item"><a class="nav-link" href="/category/footwear">Footwear</a></li>
+          </ul>
+
+          <!-- Search Bar -->
+          <form class="d-none d-xl-flex me-4" action="/search" method="get">
+            <div class="input-group input-group-sm">
+              <input type="text" name="q" class="form-control rounded-start-pill ps-3 border-end-0 bg-light" placeholder="Search cashmere, linen..." style="width: 200px;">
+              <button class="btn btn-outline-secondary border-start-0 rounded-end-pill bg-light" type="submit">
+                <i class="bi bi-search text-muted"></i>
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Right Action Icons -->
+        <div class="d-flex align-items-center gap-3">
+          <!-- Search Icon (Mobile) -->
+          <a href="/search" class="text-dark d-xl-none fs-5"><i class="bi bi-search"></i></a>
+
+          <!-- Wishlist -->
+          <a href="/wishlist" class="text-dark position-relative fs-5 text-decoration-none" title="Wishlist">
+            <i class="bi bi-heart"></i>
+            <span id="wishlist-count-badge" class="badge-counter position-absolute top-0 start-100 translate-middle" th:text="${wishlistCount}">0</span>
+          </a>
+
+          <!-- Shopping Bag -->
+          <a href="/cart" class="text-dark position-relative fs-5 text-decoration-none" title="Shopping Bag">
+            <i class="bi bi-bag"></i>
+            <span class="badge-counter position-absolute top-0 start-100 translate-middle" th:text="${cartCount}">0</span>
+          </a>
+
+          <!-- Auth / Account Dropdown -->
+          <div class="dropdown" sec:authorize="isAuthenticated()">
+            <a class="nav-link dropdown-toggle text-dark fw-bold fs-6 p-0 d-flex align-items-center gap-1" href="#" role="button" data-bs-toggle="dropdown">
+              <i class="bi bi-person-circle fs-5"></i>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 rounded-2">
+              <li class="px-3 py-1 text-muted small border-bottom mb-1">
+                Signed in as<br><strong class="text-dark" sec:authentication="name">User</strong>
+              </li>
+              <li sec:authorize="hasRole('ADMIN')">
+                <a class="dropdown-item text-danger fw-bold" href="/admin"><i class="bi bi-speedometer2 me-2"></i>Admin Dashboard</a>
+              </li>
+              <li><a class="dropdown-item" href="/profile"><i class="bi bi-person me-2"></i>My Profile</a></li>
+              <li><a class="dropdown-item" href="/orders"><i class="bi bi-box-seam me-2"></i>My Orders</a></li>
+              <li><a class="dropdown-item" href="/wishlist"><i class="bi bi-heart me-2"></i>Wishlist</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li>
+                <form th:action="@{/logout}" method="post">
+                  <button type="submit" class="dropdown-item text-danger"><i class="bi bi-box-arrow-right me-2"></i>Sign Out</button>
+                </form>
+              </li>
+            </ul>
+          </div>
+
+          <div sec:authorize="isAnonymous()">
+            <a href="/login" class="btn btn-sm btn-fashion-dark px-3">Sign In</a>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Mobile Offcanvas Drawer -->
+    <div class="offcanvas offcanvas-start" tabindex="-1" id="mobileMenu">
+      <div class="offcanvas-header border-bottom">
+        <h5 class="brand mb-0">STYLE<span>HUB</span></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+      </div>
+      <div class="offcanvas-body">
+        <form class="mb-4" action="/search" method="get">
+          <div class="input-group">
+            <input type="text" name="q" class="form-control" placeholder="Search collection...">
+            <button class="btn btn-fashion-dark" type="submit"><i class="bi bi-search"></i></button>
+          </div>
+        </form>
+        <ul class="nav flex-column gap-2 fs-5">
+          <li class="nav-item"><a class="nav-link" href="/shop">Shop All</a></li>
+          <li class="nav-item"><a class="nav-link fw-bold text-danger" href="/combos"><i class="bi bi-gift-fill me-1"></i>Combo Packages <span class="badge bg-danger text-white rounded-pill ms-1" style="font-size: 0.7rem;">Deals</span></a></li>
+          <li class="nav-item"><a class="nav-link" href="/category/men">Men's Collection</a></li>
+          <li class="nav-item"><a class="nav-link" href="/category/women">Women's Collection</a></li>
+          <li class="nav-item"><a class="nav-link" href="/category/kids">Kids Collection</a></li>
+          <li class="nav-item"><a class="nav-link" href="/category/accessories">Accessories</a></li>
+          <li class="nav-item"><a class="nav-link" href="/category/footwear">Footwear</a></li>
+          <hr>
+          <li class="nav-item" sec:authorize="isAuthenticated()"><a class="nav-link" href="/profile">My Account</a></li>
+          <li class="nav-item" sec:authorize="isAuthenticated()"><a class="nav-link" href="/orders">My Orders</a></li>
+          <li class="nav-item" sec:authorize="hasRole('ADMIN')"><a class="nav-link text-danger fw-bold" href="/admin">Admin Control</a></li>
+          <li class="nav-item" sec:authorize="isAnonymous()"><a class="nav-link" href="/login">Sign In / Register</a></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+  <!-- Luxury Footer -->
+  <footer th:fragment="footer" class="site-footer">
+    <div class="container">
+      <div class="row g-4 justify-content-between">
+        <div class="col-lg-4 col-md-6">
+          <a class="brand fs-3 text-white d-block mb-3" href="/">STYLE<span>HUB</span></a>
+          <p class="text-secondary pe-lg-4">
+            Curated everyday luxury. Thoughtful pieces tailored for every mood, every occasion, and every chapter of your story.
+          </p>
+          <div class="d-flex gap-3 fs-5 mt-4">
+            <a href="#" class="text-secondary"><i class="bi bi-instagram"></i></a>
+            <a href="#" class="text-secondary"><i class="bi bi-pinterest"></i></a>
+            <a href="#" class="text-secondary"><i class="bi bi-twitter-x"></i></a>
+            <a href="#" class="text-secondary"><i class="bi bi-facebook"></i></a>
+          </div>
+        </div>
+
+        <div class="col-lg-2 col-6">
+          <h5>Collections</h5>
+          <ul class="list-unstyled d-flex flex-column gap-2">
+            <li><a href="/category/men">Men's Apparel</a></li>
+            <li><a href="/category/women">Women's Edit</a></li>
+            <li><a href="/category/kids">Kids & Playwear</a></li>
+            <li><a href="/category/accessories">Accessories</a></li>
+            <li><a href="/category/footwear">Footwear</a></li>
+          </ul>
+        </div>
+
+        <div class="col-lg-2 col-6">
+          <h5>Customer Care</h5>
+          <ul class="list-unstyled d-flex flex-column gap-2">
+            <li><a href="/orders">Track Order</a></li>
+            <li><a href="/contact">Concierge & FAQ</a></li>
+            <li><a href="/profile">My Account</a></li>
+            <li><a href="/cart">Shopping Bag</a></li>
+            <li><a href="/wishlist">Saved Items</a></li>
+          </ul>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+          <h5>The Style Newsletter</h5>
+          <p class="text-secondary small">Be the first to receive invitations to private seasonal sales and editorial lookbooks.</p>
+          <form class="d-flex gap-2" onsubmit="event.preventDefault(); alert('Thank you for subscribing to StyleHub.');">
+            <input type="email" class="form-control form-control-sm rounded-0 bg-dark text-white border-secondary" placeholder="Enter your email" required>
+            <button class="btn btn-sm btn-fashion-light rounded-0" type="submit">Join</button>
+          </form>
+        </div>
+      </div>
+
+      <div class="footer-bottom d-flex flex-column flex-md-row justify-content-between align-items-center">
+        <p class="mb-2 mb-md-0">© 2026 StyleHub Fashion Inc. All rights reserved. Powered by Spring Boot & AWS.</p>
+        <div class="d-flex gap-3">
+          <span class="badge bg-secondary">Razorpay Secure</span>
+          <span class="badge bg-secondary">AWS Cloud</span>
+          <span class="badge bg-secondary">100% Authentic</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script src="/js/app.js"></script>
+  </footer>
+
+</body>
+</html>

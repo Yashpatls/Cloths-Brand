@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <th:block th:replace="~{admin/admin-fragments :: admin-head('Products Management')}"></th:block>
+</head>
+<body class="admin-body">
+
+  <div th:replace="~{admin/admin-fragments :: sidebar}"></div>
+
+  <main class="admin-main">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <div>
+        <h2 class="fw-bold mb-1">Garments & Catalog</h2>
+        <span class="text-muted small">Manage items, sizing variants, inventory stock, and media</span>
+      </div>
+      <div>
+        <a href="/admin/products/new" class="btn btn-primary btn-sm"><i class="bi bi-plus-lg me-1"></i> Add New Product</a>
+      </div>
+    </div>
+
+    <!-- Alert Messages -->
+    <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+      <span th:text="${successMessage}"></span>
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <!-- Filter Bar -->
+    <div class="card border-0 shadow-sm p-3 mb-4 bg-white">
+      <form action="/admin/products" method="get" class="row g-2 align-items-center">
+        <div class="col-md-5">
+          <input type="text" name="q" class="form-control form-control-sm" placeholder="Search by garment title or SKU..." th:value="${param.q}">
+        </div>
+        <div class="col-md-4">
+          <select name="category" class="form-select form-select-sm">
+            <option value="">All Categories</option>
+            <option th:each="cat : ${categories}" th:value="${cat.name}" th:text="${cat.name}"
+                    th:selected="${cat.name == param.category}"></option>
+          </select>
+        </div>
+        <div class="col-md-3 d-flex gap-2">
+          <button type="submit" class="btn btn-sm btn-dark flex-grow-1">Filter</button>
+          <a href="/admin/products" class="btn btn-sm btn-outline-secondary">Reset</a>
+        </div>
+      </form>
+    </div>
+
+    <!-- Products Table -->
+    <div class="admin-table">
+      <div class="table-responsive">
+        <table class="table align-middle">
+          <thead>
+            <tr>
+              <th>Image</th>
+              <th>Name & SKU</th>
+              <th>Category</th>
+              <th>Price</th>
+              <th>Stock</th>
+              <th>Featured</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="p : ${products}">
+              <td style="width: 70px;">
+                <img th:src="${p.imageUrl}" class="rounded" style="width: 50px; height: 65px; object-fit: cover;" th:alt="${p.name}">
+              </td>
+              <td>
+                <strong class="d-block text-dark" th:text="${p.name}">Product Name</strong>
+                <small class="text-muted font-monospace" th:text="${p.sku != null ? p.sku : 'NO-SKU'}">SKU-000</small>
+              </td>
+              <td><span class="badge bg-light text-dark border" th:text="${p.categoryName}">Category</span></td>
+              <td>
+                <span class="fw-bold" th:text="'₹' + ${p.price}">₹0</span>
+                <small class="text-danger d-block" th:if="${p.discountPrice != null}" th:text="'Sale: ₹' + ${p.discountPrice}">Sale</small>
+              </td>
+              <td>
+                <span class="badge"
+                      th:classappend="${p.stock > 10} ? 'bg-success' : (${p.stock > 0} ? 'bg-warning text-dark' : 'bg-danger')"
+                      th:text="${p.stock} + ' units'">0 units</span>
+              </td>
+              <td>
+                <span class="badge bg-primary" th:if="${p.featured}">Featured</span>
+                <span class="text-muted small" th:unless="${p.featured}">Standard</span>
+              </td>
+              <td>
+                <div class="d-flex gap-2">
+                  <a th:href="@{/admin/products/{id}/edit(id=${p.id})}" class="btn btn-sm btn-outline-primary" title="Edit">
+                    <i class="bi bi-pencil"></i>
+                  </a>
+                  <form th:action="@{/admin/products/{id}/delete(id=${p.id})}" method="post" onsubmit="return confirm('Archive this garment?')">
+                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Archive">
+                      <i class="bi bi-archive"></i>
+                    </button>
+                  </form>
+                </div>
+              </td>
+            </tr>
+            <tr th:if="${products.isEmpty()}">
+              <td colspan="7" class="text-center py-4 text-muted">No garments found.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

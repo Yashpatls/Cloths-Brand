@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <th:block th:replace="~{admin/admin-fragments :: admin-head('Orders Management')}"></th:block>
+</head>
+<body class="admin-body">
+
+  <div th:replace="~{admin/admin-fragments :: sidebar}"></div>
+
+  <main class="admin-main">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <div>
+        <h2 class="fw-bold mb-1">Customer Orders</h2>
+        <span class="text-muted small">Manage order fulfillment, shipment tracking, and delivery confirmations</span>
+      </div>
+    </div>
+
+    <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+      <span th:text="${successMessage}"></span>
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <!-- Status Filters -->
+    <div class="d-flex gap-2 flex-wrap mb-4">
+      <a href="/admin/orders" class="btn btn-sm" th:classappend="${selectedStatus == null} ? 'btn-dark' : 'btn-outline-secondary'">All Orders</a>
+      <a th:each="st : ${orderStatuses}" th:href="@{/admin/orders(status=${st})}"
+         class="btn btn-sm"
+         th:classappend="${selectedStatus == st} ? 'btn-dark' : 'btn-outline-secondary'"
+         th:text="${st}">STATUS</a>
+    </div>
+
+    <div class="admin-table">
+      <div class="table-responsive">
+        <table class="table align-middle">
+          <thead>
+            <tr>
+              <th>Order #</th>
+              <th>Customer</th>
+              <th>Timestamp</th>
+              <th>Total</th>
+              <th>Payment</th>
+              <th>Status</th>
+              <th>Manage Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="o : ${orders}">
+              <td>
+                <a th:href="@{/admin/orders/{id}(id=${o.id})}" class="fw-bold text-primary font-monospace" th:text="${o.orderNumber}">SH-000</a>
+              </td>
+              <td>
+                <strong th:text="${o.customer.name}">Customer</strong>
+                <small class="d-block text-muted" th:text="${o.customer.email}">Email</small>
+              </td>
+              <td class="small text-muted" th:text="${o.formattedDate}">Date</td>
+              <td class="fw-bold" th:text="'₹' + ${o.total}">₹0</td>
+              <td><span class="badge bg-light text-dark border" th:text="${o.paymentMethod}">DEMO</span></td>
+              <td>
+                <span class="badge-status"
+                      th:classappend="'status-' + ${#strings.toLowerCase(o.status)}"
+                      th:text="${o.status}">PLACED</span>
+              </td>
+              <td>
+                <form th:action="@{/admin/orders/{id}/status(id=${o.id})}" method="post" class="d-flex gap-2">
+                  <select name="status" class="form-select form-select-sm" style="width: 140px;">
+                    <option th:each="st : ${orderStatuses}"
+                            th:value="${st}" th:text="${st}"
+                            th:selected="${st == o.status}"></option>
+                  </select>
+                  <button type="submit" class="btn btn-sm btn-outline-dark">Save</button>
+                </form>
+              </td>
+            </tr>
+            <tr th:if="${orders.isEmpty()}">
+              <td colspan="7" class="text-center py-4 text-muted">No orders matching this filter.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

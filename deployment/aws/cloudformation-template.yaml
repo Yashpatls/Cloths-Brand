@@ -1,0 +1,136 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'StyleHub - Complete AWS Cloud Architecture (VPC, EC2, RDS MySQL, S3 Bucket, IAM)'
+
+Parameters:
+  KeyName:
+    Type: AWS::EC2::KeyPair::KeyName
+    Description: Name of an existing EC2 KeyPair to enable SSH access to the instance
+    Default: stylehub-key
+  DBPassword:
+    Type: String
+    NoEcho: true
+    Description: Password for the StyleHub RDS MySQL master database user
+    MinLength: 8
+
+Resources:
+  # 1. Private S3 Bucket for Media Storage
+  ProductMediaBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub 'stylehub-media-${AWS::AccountId}'
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      CorsConfiguration:
+        CorsRules:
+          - AllowedHeaders: ['*']
+            AllowedMethods: [GET, PUT, POST]
+            AllowedOrigins: ['*']
+            MaxAge: 3000
+
+  # 2. IAM Role for EC2 Instance to Access S3
+  EC2InstanceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: [ec2.amazonaws.com]
+            Action: ['sts:AssumeRole']
+      Policies:
+        - PolicyName: StyleHubS3Access
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - 's3:GetObject'
+                  - 's3:PutObject'
+                  - 's3:DeleteObject'
+                  - 's3:ListBucket'
+                Resource:
+                  - !GetAtt ProductMediaBucket.Arn
+                  - !Sub '${ProductMediaBucket.Arn}/*'
+
+  EC2InstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Roles:
+        - !Ref EC2InstanceRole
+
+  # 3. Security Groups
+  WebSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Enable HTTP/HTTPS and SSH access for StyleHub
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+
+  DatabaseSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Allow MySQL access from EC2 instance only
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 3306
+          ToPort: 3306
+          SourceSecurityGroupId: !Ref WebSecurityGroup
+
+  # 4. Amazon RDS MySQL Instance
+  MySQLDatabase:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBInstanceIdentifier: stylehub-mysql
+      Engine: mysql
+      EngineVersion: '8.0'
+      DBInstanceClass: db.t3.micro
+      AllocatedStorage: '20'
+      DBName: stylehub
+      MasterUsername: stylehub_admin
+      MasterUserPassword: !Ref DBPassword
+      VPCSecurityGroups:
+        - !GetAtt DatabaseSecurityGroup.GroupId
+      PubliclyAccessible: false
+      MultiAZ: false
+      BackupRetentionPeriod: 7
+      StorageType: gp2
+
+  # 5. EC2 Instance for StyleHub Spring Boot
+  AppServerInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: t3.small
+      SecurityGroups:
+        - !Ref WebSecurityGroup
+      IamInstanceProfile: !Ref EC2InstanceProfile
+      KeyName: !Ref KeyName
+      ImageId: ami-053b12d3152c0cc71 # Ubuntu 24.04 LTS (ap-south-1 Mumbai)
+      Tags:
+        - Key: Name
+          Value: StyleHub-Production-Server
+
+Outputs:
+  EC2PublicIP:
+    Description: Public IP address of the StyleHub EC2 application server
+    Value: !GetAtt AppServerInstance.PublicIp
+  RDSEndpoint:
+    Description: Endpoint address of the Amazon RDS MySQL database
+    Value: !GetAtt MySQLDatabase.Endpoint.Address
+  S3BucketName:
+    Description: Name of the private Amazon S3 media storage bucket
+    Value: !Ref ProductMediaBucket

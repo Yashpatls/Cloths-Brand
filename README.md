@@ -96,16 +96,8 @@ The application automatically seeds initial accounts on first startup:
 
 ---
 
-## ☁️ AWS Cloud Deployment
+.
 
-Complete deployment scripts, templates, and documentation are provided in `deployment/aws/`:
-- **`deployment/aws/AWS_DEPLOYMENT_GUIDE.md`**: Step-by-step production deployment instructions.
-- **`deployment/aws/deploy-aws.sh`**: Automated provisioning script for EC2.
-- **`deployment/aws/cloudformation-template.yaml`**: One-click AWS CloudFormation stack.
-- **`deployment/aws/stylehub.service`**: Systemd unit definition.
-- **`deployment/aws/nginx-stylehub.conf`**: Nginx proxy configuration.
-
----
 
 ## 🧪 Testing
 

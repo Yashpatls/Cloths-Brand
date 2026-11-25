@@ -626,6 +626,167 @@ a:hover {
 }
 
 /* ------------------------------------------------------------------------------
+   Editorial Luxury Upgrade (Zara Cascade, Shop the Look, Shipping Meter)
+   ------------------------------------------------------------------------------ */
+.sticky-purchase-rail {
+  position: sticky;
+  top: 95px;
+  z-index: 10;
+}
+
+.zara-cascade-item {
+  position: relative;
+  overflow: hidden;
+  background-color: #f7f6f4;
+  border-radius: 4px;
+  margin-bottom: 1.5rem;
+}
+
+.zara-cascade-item img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.zara-cascade-item:hover img {
+  transform: scale(1.03);
+}
+
+/* Free Shipping Progress Meter */
+.shipping-progress-box {
+  background: var(--paper-bg);
+  border: 1px solid var(--border-line);
+  padding: 1.25rem 1.5rem;
+  border-radius: 4px;
+  margin-bottom: 1.5rem;
+}
+
+.shipping-progress-track {
+  height: 6px;
+  background-color: #e4e1db;
+  border-radius: 3px;
+  overflow: hidden;
+  margin-top: 0.6rem;
+}
+
+.shipping-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #111111 0%, #b5915f 100%);
+  border-radius: 3px;
+  transition: width 0.6s cubic-bezier(0.2, 1, 0.3, 1);
+}
+
+/* Dispatch Countdown Ribbon */
+.dispatch-countdown-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background-color: #fdfaf3;
+  border: 1px solid #eadecb;
+  color: #795548;
+  padding: 6px 12px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  border-radius: 30px;
+  letter-spacing: 0.3px;
+}
+
+/* Stock Status Dots */
+.stock-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.stock-dot.in-stock { background-color: #2e7d32; }
+.stock-dot.low-stock { background-color: #f57f17; }
+.stock-dot.out-of-stock { background-color: #c62828; }
+
+/* Shop The Look / Outfit Ensembles */
+.look-ensemble-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 6px;
+  background-color: #111;
+  min-height: 540px;
+}
+.look-ensemble-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.look-ensemble-card:hover img {
+  transform: scale(1.04);
+}
+.look-ensemble-content {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(10, 10, 10, 0.9) 0%, rgba(10, 10, 10, 0.2) 60%, transparent 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 2.5rem;
+  color: #fff;
+}
+.look-item-tag {
+  background: rgba(255, 255, 255, 0.92);
+  color: #0a0a0a;
+  padding: 6px 14px;
+  border-radius: 30px;
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.25);
+  backdrop-filter: blur(4px);
+  text-decoration: none;
+  transition: var(--transition-smooth);
+}
+.look-item-tag:hover {
+  background: #ffffff;
+  color: #000000;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.35);
+}
+
+/* Community Instagram Style Cards */
+.community-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 4px;
+  aspect-ratio: 1 / 1;
+}
+.community-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+}
+.community-card:hover img {
+  transform: scale(1.08);
+}
+.community-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  transition: opacity 0.3s ease;
+  font-size: 1.4rem;
+}
+.community-card:hover .community-overlay {
+  opacity: 1;
+}
+
+/* ------------------------------------------------------------------------------
    Site Footer (Editorial Haute Couture Black)
    ------------------------------------------------------------------------------ */
 .site-footer {

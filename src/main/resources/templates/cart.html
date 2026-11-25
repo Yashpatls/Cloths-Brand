@@ -35,6 +35,25 @@
     <div class="row g-5" th:unless="${cart.items.isEmpty()}">
       <!-- Cart Items Table -->
       <div class="col-lg-8">
+        <!-- Free Express Shipping Progress Meter -->
+        <div class="shipping-progress-box">
+          <div class="d-flex justify-content-between align-items-center mb-1">
+            <span class="small fw-semibold text-uppercase" style="letter-spacing: 0.5px;">
+              <i class="bi bi-truck text-dark me-1"></i>
+              <span th:if="${subtotal < 1500}">
+                Add <strong class="text-dark font-monospace" th:text="'₹' + ${1500 - subtotal}">₹501</strong> more for <strong>Complimentary Express Delivery</strong>
+              </span>
+              <span th:if="${subtotal >= 1500}" class="text-success fw-bold">
+                <i class="bi bi-check-circle-fill me-1"></i> You have unlocked <strong>Complimentary Express Delivery</strong>!
+              </span>
+            </span>
+            <span class="small text-muted font-monospace" th:text="${subtotal >= 1500 ? '100%' : #numbers.formatDecimal((subtotal / 1500.0) * 100, 0, 0) + '%'}">65%</span>
+          </div>
+          <div class="shipping-progress-track">
+            <div class="shipping-progress-fill" th:style="'width: ' + (${subtotal >= 1500} ? '100%' : ${#numbers.formatDecimal((subtotal / 1500.0) * 100, 0, 0)} + '%;')"></div>
+          </div>
+        </div>
+
         <div class="table-responsive">
           <table class="table align-middle">
             <thead class="table-light text-uppercase small text-muted">

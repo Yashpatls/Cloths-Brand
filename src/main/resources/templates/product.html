@@ -32,15 +32,16 @@
 
     <!-- Product Hero Row -->
     <div class="row g-5">
-      <!-- Image Gallery Column -->
-      <div class="col-lg-6">
-        <div class="position-relative bg-light rounded-3 overflow-hidden mb-3" style="max-height: 600px;">
-          <img id="main-product-image" th:src="${product.imageUrl}" th:alt="${product.name}" class="w-100 h-100 object-fit-cover" style="min-height: 480px; max-height: 600px;">
+      <!-- Left: Zara-Style Multi-Angle Image Cascade Column -->
+      <div class="col-lg-7">
+        <!-- Main Feature Image Viewport -->
+        <div class="zara-cascade-item position-relative mb-3 shadow-sm">
+          <img id="main-product-image" th:src="${product.imageUrl}" th:alt="${product.name}" class="w-100 object-fit-cover">
           <span class="product-badge sale" th:if="${product.discountPrice != null}">Special Offer</span>
         </div>
 
-        <!-- Thumbnails gallery (multiple images) -->
-        <div class="d-flex gap-2 flex-wrap mt-2" th:if="${not #lists.isEmpty(product.images)}">
+        <!-- Thumbnails Quick Switcher Strip -->
+        <div class="d-flex gap-2 flex-wrap mb-4" th:if="${not #lists.isEmpty(product.images)}">
           <div th:each="img, stat : ${product.images}"
                class="thumb-selector border rounded-2 p-1 cursor-pointer transition-all"
                th:classappend="${stat.index == 0} ? 'border-dark shadow-sm active-thumb' : 'border-secondary-subtle opacity-75'"
@@ -49,12 +50,27 @@
             <img th:src="${img.imageUrl}" class="w-100 h-100 object-fit-cover rounded-1" th:alt="${img.altText}">
           </div>
         </div>
+
+        <!-- Cascading Editorial Detail Shots (Zara Editorial Gallery) -->
+        <div class="d-none d-lg-block mt-3" th:if="${not #lists.isEmpty(product.images)}">
+          <div th:each="img, stat : ${product.images}" class="zara-cascade-item shadow-2xs mb-4">
+            <img th:src="${img.imageUrl}" class="w-100 object-fit-cover" th:alt="${img.altText}" loading="lazy">
+          </div>
+        </div>
       </div>
 
-      <!-- Product Details & Actions Column -->
-      <div class="col-lg-6">
-        <div class="ps-lg-3">
-          <span class="text-uppercase small fw-bold text-muted letter-spacing-2" th:text="${product.categoryName}">CATEGORY</span>
+      <!-- Right: Sticky Purchase Column -->
+      <div class="col-lg-5">
+        <div class="sticky-purchase-rail">
+          <!-- Dispatch Countdown Pill -->
+          <div class="mb-3 d-flex align-items-center justify-content-between flex-wrap gap-2">
+            <span class="dispatch-countdown-badge">
+              <i class="bi bi-lightning-charge-fill text-warning"></i> Order in <span id="dispatchCountdown" class="fw-bold">03h 24m 15s</span> for Same-Day Dispatch
+            </span>
+            <span class="small text-muted" style="font-size: 0.76rem;"><i class="bi bi-shield-check text-success me-1"></i>100% Authentic</span>
+          </div>
+
+          <span class="text-uppercase small fw-bold text-muted" style="letter-spacing: 2.5px; font-size: 0.74rem;" th:text="${product.categoryName}">CATEGORY</span>
           <h1 class="display-6 font-serif mt-1 mb-2" th:text="${product.name}">Product Name</h1>
           
           <!-- Rating Summary -->
@@ -101,7 +117,7 @@
           <form th:action="@{/cart/add}" method="post">
             <input type="hidden" name="productId" th:value="${product.id}">
 
-            <!-- Size Selector -->
+            <!-- Size Selector with Availability Dot -->
             <div class="mb-4" th:if="${not #lists.isEmpty(product.sizes)}">
               <label class="form-label small fw-bold text-uppercase text-dark d-flex justify-content-between mb-2">
                 <span>Select Size: <span id="selected-size-label" class="fw-bold text-dark" th:text="${product.sizes[0].sizeName}">M</span></span>
@@ -110,7 +126,10 @@
               <div class="d-flex gap-2 flex-wrap">
                 <div th:each="s, stat : ${product.sizes}">
                   <input type="radio" class="btn-check size-radio" name="size" th:id="'size-' + ${s.id}" th:value="${s.sizeName}" th:checked="${stat.index == 0}" onchange="onSizeRadioChange(this)">
-                  <label class="btn btn-outline-dark rounded-2 px-3 py-2 fw-semibold" th:for="'size-' + ${s.id}" th:text="${s.sizeName}">M</label>
+                  <label class="btn btn-outline-dark rounded-2 px-3 py-2 fw-semibold d-inline-flex align-items-center gap-2" th:for="'size-' + ${s.id}">
+                    <span th:text="${s.sizeName}">M</span>
+                    <span class="stock-dot in-stock" title="Ready to dispatch"></span>
+                  </label>
                 </div>
               </div>
             </div>
@@ -597,6 +616,21 @@
       res.style.display = 'block';
       res.innerHTML = '<span class="text-success fw-bold"><i class="bi bi-check-circle-fill me-1"></i> Delivery available to ' + pin + '! Express delivery in 2-3 days. Cash on Delivery (COD) & Online Payment available.</span>';
     }
+
+    // Live Dispatch Countdown Timer
+    function startDispatchTimer() {
+      const el = document.getElementById('dispatchCountdown');
+      if (!el) return;
+      let totalSeconds = 3 * 3600 + 24 * 60 + 15;
+      setInterval(() => {
+        if (totalSeconds > 0) totalSeconds--;
+        const h = Math.floor(totalSeconds / 3600).toString().padStart(2, '0');
+        const m = Math.floor((totalSeconds % 3600) / 60).toString().padStart(2, '0');
+        const s = (totalSeconds % 60).toString().padStart(2, '0');
+        el.textContent = `${h}h ${m}m ${s}s`;
+      }, 1000);
+    }
+    document.addEventListener('DOMContentLoaded', startDispatchTimer);
   </script>
 
   <div th:replace="~{fragments :: footer}"></div>

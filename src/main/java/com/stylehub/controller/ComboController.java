@@ -164,12 +164,17 @@ public class ComboController {
     @GetMapping(value = "/{id}/collage.jpg", produces = MediaType.IMAGE_JPEG_VALUE)
     @ResponseBody
     public ResponseEntity<byte[]> getComboCollage(
-            @PathVariable Long id,
+            @PathVariable String id,
             @RequestParam(required = false) List<Long> itemIds,
             @RequestParam(required = false) List<Long> productIds) {
 
+        if (id == null || !id.matches("\\d+")) {
+            return ResponseEntity.notFound().build();
+        }
+        Long comboId = Long.parseLong(id);
+
         try {
-            byte[] imageBytes = comboImageService.generateCollageForCombo(id, itemIds, productIds);
+            byte[] imageBytes = comboImageService.generateCollageForCombo(comboId, itemIds, productIds);
             if (imageBytes != null && imageBytes.length > 0) {
                 return ResponseEntity.ok()
                         .cacheControl(CacheControl.noCache())
@@ -179,7 +184,7 @@ public class ComboController {
         } catch (Exception ignored) {}
 
         try {
-            ComboPackage combo = comboService.getById(id);
+            ComboPackage combo = comboService.getById(comboId);
             if (combo != null && combo.getImageUrl() != null && !combo.getImageUrl().isBlank()) {
                 return ResponseEntity.status(302).location(java.net.URI.create(combo.getImageUrl())).build();
             }

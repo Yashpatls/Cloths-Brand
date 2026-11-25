@@ -62,20 +62,27 @@ public class ProductController {
     }
 
     @GetMapping("/products/{id}")
-    public String productDetail(@PathVariable Long id, Authentication auth, Model model) {
-        Product product = productService.getById(id);
+    public String productDetail(@PathVariable String id, Authentication auth, Model model) {
+        if (id == null || !id.matches("\\d+")) {
+            return "redirect:/shop";
+        }
+        Long productId = Long.parseLong(id);
+        Product product = productService.getById(productId);
+        if (product == null) {
+            return "redirect:/shop";
+        }
         boolean isWishlisted = false;
         if (auth != null && auth.isAuthenticated()) {
-            isWishlisted = wishlistService.isWishlisted(auth.getName(), id);
+            isWishlisted = wishlistService.isWishlisted(auth.getName(), productId);
         }
 
         List<Product> related = productService.getByCategory(product.getCategoryName()).stream()
-                .filter(p -> !p.getId().equals(id))
+                .filter(p -> !p.getId().equals(productId))
                 .limit(4)
                 .toList();
 
         model.addAttribute("product", product);
-        model.addAttribute("reviews", reviewService.getApprovedReviews(id));
+        model.addAttribute("reviews", reviewService.getApprovedReviews(productId));
         model.addAttribute("isWishlisted", isWishlisted);
         model.addAttribute("relatedProducts", related);
         return "product";

@@ -12,10 +12,7 @@ echo   Cust User:   customer@stylehub.local / Customer@12345
 echo ========================================================
 
 REM Free port 8085 if already in use by a previous instance
-for /f "tokens=5" %%a in ('netstat -aon ^| findstr :8085 ^| findstr LISTENING') do (
-    echo Stopping previous process on port 8085 (PID %%a)...
-    taskkill /F /PID %%a >nul 2>&1
-)
+for /f "tokens=5" %%a in ('netstat -aon ^| findstr :8085 ^| findstr LISTENING') do taskkill /F /PID %%a >nul 2>&1
 
 if exist target\stylehub-1.0.0.jar (
     java -jar target\stylehub-1.0.0.jar

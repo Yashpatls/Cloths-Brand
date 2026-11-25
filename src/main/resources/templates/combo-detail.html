@@ -37,9 +37,9 @@
       <div class="col-lg-6">
         <!-- Main Auto-Generated Combo Preview Collage Image -->
         <div class="position-relative bg-light rounded-3 overflow-hidden mb-3 shadow-sm" style="max-height: 540px;">
-          <img id="main-bundle-image" th:src="@{'/combos/' + ${combo.id} + '/collage.jpg'}" th:alt="${combo.name}"
+          <img id="main-bundle-image" th:src="${combo.imageUrl}" th:alt="${combo.name}"
                class="w-100 h-100 object-fit-cover transition-all" style="min-height: 440px; max-height: 540px;"
-               th:attr="onerror='this.src=\'' + ${combo.imageUrl != null ? combo.imageUrl : 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=600'} + '\';'">
+               onerror="this.src='https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=600';">
           
           <span class="position-absolute top-0 start-0 m-3 badge px-3 py-2 text-uppercase fw-bold shadow-sm"
                 th:classappend="${combo.tier.name() == 'BUDGET' ? 'bg-success' : (combo.tier.name() == 'STANDARD' ? 'bg-primary' : (combo.tier.name() == 'PREMIUM' ? 'bg-warning text-dark' : 'bg-dark text-white'))}"

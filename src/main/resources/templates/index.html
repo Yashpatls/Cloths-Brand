@@ -242,9 +242,9 @@
           <div class="card h-100 border rounded-3 overflow-hidden shadow-sm product-card transition-all bg-white">
             <div class="position-relative bg-light" style="height: 300px; overflow: hidden;">
               <a th:href="@{/combos/{slug}(slug=${combo.slug})}">
-                <img th:src="@{'/combos/' + ${combo.id} + '/collage.jpg'}" th:alt="${combo.name}"
-                     class="w-100 h-100 object-fit-cover"
-                     th:attr="onerror='this.src=\'' + ${combo.imageUrl != null ? combo.imageUrl : 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=600'} + '\';'">
+                <img th:src="${combo.imageUrl}" th:alt="${combo.name}"
+                     class="w-100 h-100 object-fit-cover transition-all"
+                     onerror="this.src='https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=600';">
               </a>
               <span class="position-absolute top-0 start-0 m-2 badge px-2 py-1 text-uppercase fw-bold small"
                     th:classappend="${combo.tier.name() == 'BUDGET' ? 'bg-success' : (combo.tier.name() == 'STANDARD' ? 'bg-primary' : (combo.tier.name() == 'PREMIUM' ? 'bg-warning text-dark' : 'bg-dark text-white'))}"

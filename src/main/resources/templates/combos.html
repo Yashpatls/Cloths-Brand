@@ -107,9 +107,9 @@
           <!-- Image Container with Badges -->
           <div class="position-relative bg-light" style="height: 320px; overflow: hidden;">
             <a th:href="@{/combos/{slug}(slug=${combo.slug})}">
-              <img th:src="@{'/combos/' + ${combo.id} + '/collage.jpg'}" th:alt="${combo.name}"
+              <img th:src="${combo.imageUrl}" th:alt="${combo.name}"
                    class="w-100 h-100 object-fit-cover"
-                   th:attr="onerror='this.src=\'' + ${combo.imageUrl != null ? combo.imageUrl : 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=600'} + '\';'">
+                   onerror="this.src='https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=600';">
             </a>
 
             <!-- Tier Tag -->

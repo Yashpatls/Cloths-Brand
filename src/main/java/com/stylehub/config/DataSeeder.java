@@ -518,36 +518,185 @@ public class DataSeeder {
     }
 
     private void syncProductVisuals(ProductRepository productRepo, ProductImageRepository imageRepo) {
-        for (Product p : productRepo.findAll()) {
-            String name = p.getName() != null ? p.getName().toLowerCase() : "";
-            boolean updated = false;
+        log.info("Performing precise high-fashion photography synchronization for all products...");
 
-            if (name.contains("trench coat") || (p.getId() != null && p.getId() == 6L)) {
-                p.setImageUrl("https://images.unsplash.com/photo-1539533018447-63fcce667883?w=900");
-                updated = true;
-            } else if (name.contains("denim jacket") || (p.getId() != null && p.getId() == 2L)) {
-                p.setImageUrl("https://images.unsplash.com/photo-1576995853123-5a10305d93c0?w=900");
-                updated = true;
-            } else if (name.contains("monochrome leather court") || (p.getId() != null && p.getId() == 13L)) {
-                p.setImageUrl("https://images.unsplash.com/photo-1549298916-b41d501d3772?w=900");
-                updated = true;
-            } else if (name.contains("lounge set") || (p.getId() != null && p.getId() == 9L)) {
-                p.setImageUrl("https://images.unsplash.com/photo-1519238263530-99bdd11df2ea?w=900");
-                updated = true;
-            } else if (name.contains("floral midi dress") || (p.getId() != null && p.getId() == 5L)) {
-                p.setImageUrl("https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?w=900");
-                updated = true;
+        record ProductVisualPreset(String sku, String primaryImg, List<String> galleryImgs) {}
+
+        List<ProductVisualPreset> presets = List.of(
+                // 1. Men's Oxford Shirt
+                new ProductVisualPreset("SH-M-001",
+                        "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=900",
+                        List.of("https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=900", "https://images.unsplash.com/photo-1603252109303-2751441dd157?w=900")),
+
+                // 2. Men's Selvedge Denim Jacket
+                new ProductVisualPreset("SH-M-002",
+                        "https://images.unsplash.com/photo-1576995853123-5a10305d93c0?w=900",
+                        List.of("https://images.unsplash.com/photo-1551028719-00167b16eac5?w=900", "https://images.unsplash.com/photo-1544441893-675973e31985?w=900")),
+
+                // 3. Men's Turtleneck Knit
+                new ProductVisualPreset("SH-M-003",
+                        "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?w=900",
+                        List.of("https://images.unsplash.com/photo-1614975058789-41316d0e2e9c?w=900")),
+
+                // 4. Men's Pleated Chino Trousers
+                new ProductVisualPreset("SH-M-004",
+                        "https://images.unsplash.com/photo-1479064555552-3ef4979f8908?w=900",
+                        List.of("https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=900")),
+
+                // 5. Women's Floral Midi Dress
+                new ProductVisualPreset("SH-W-005",
+                        "https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?w=900",
+                        List.of("https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=900", "https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=900")),
+
+                // 6. Women's Oversized Wool Trench Coat
+                new ProductVisualPreset("SH-W-006",
+                        "https://images.unsplash.com/photo-1539533018447-63fcce667883?w=900",
+                        List.of("https://images.unsplash.com/photo-1548624149-f9b1859aa7d0?w=900", "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=900")),
+
+                // 7. Women's Cashmere Cardigan
+                new ProductVisualPreset("SH-W-007",
+                        "https://images.unsplash.com/photo-1434389677669-e08b4cac3105?w=900",
+                        List.of("https://images.unsplash.com/photo-1608256246200-53e635b5b65f?w=900")),
+
+                // 8. Women's High-Rise Crop Jeans
+                new ProductVisualPreset("SH-W-008",
+                        "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=900",
+                        List.of("https://images.unsplash.com/photo-1584370848010-d7fe6bc767ec?w=900")),
+
+                // 9. Kids Pure Cotton 2-Piece Lounge Set
+                new ProductVisualPreset("SH-K-009",
+                        "https://images.unsplash.com/photo-1519238263530-99bdd11df2ea?w=900",
+                        List.of("https://images.unsplash.com/photo-1622290291468-a28f7a7dc6a8?w=900")),
+
+                // 10. Kids Hooded Windbreaker Jacket
+                new ProductVisualPreset("SH-K-010",
+                        "https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=900",
+                        List.of("https://images.unsplash.com/photo-1518831959646-742c3a14ebf7?w=900")),
+
+                // 11. Minimal Structured Canvas Tote
+                new ProductVisualPreset("SH-ACC-011",
+                        "https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=900",
+                        List.of("https://images.unsplash.com/photo-1544816155-12df9643f363?w=900")),
+
+                // 12. Classic Full-Grain Leather Belt
+                new ProductVisualPreset("SH-ACC-012",
+                        "https://images.unsplash.com/photo-1624222247344-550fb60583dc?w=900",
+                        List.of("https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=900")),
+
+                // 13. Footwear: Monochrome Leather Court Sneakers
+                new ProductVisualPreset("SH-FT-013",
+                        "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=900",
+                        List.of("https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=900", "https://images.unsplash.com/photo-1600185365926-3a2ce3cdb9eb?w=900")),
+
+                // 14. Footwear: Suede Chelsea Boots
+                new ProductVisualPreset("SH-FT-014",
+                        "https://images.unsplash.com/photo-1638247025967-b4e38f787b76?w=900",
+                        List.of("https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=900")),
+
+                // 16. Men's Straight-Leg Denim Jeans
+                new ProductVisualPreset("SH-M-015",
+                        "https://images.unsplash.com/photo-1542272604-780c96856592?w=900",
+                        List.of("https://images.unsplash.com/photo-1576995853123-5a10305d93c0?w=900")),
+
+                // 17. Handcrafted Leather Belt
+                new ProductVisualPreset("SH-ACC-016",
+                        "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=900",
+                        List.of("https://images.unsplash.com/photo-1624222247344-550fb60583dc?w=900")),
+
+                // 18. Minimal Low-Top Leather Sneakers
+                new ProductVisualPreset("SH-FT-017",
+                        "https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?w=900",
+                        List.of("https://images.unsplash.com/photo-1549298916-b41d501d3772?w=900")),
+
+                // 19. Women's Hand-Block Printed Kurti
+                new ProductVisualPreset("SH-W-018",
+                        "https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=900",
+                        List.of("https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=900")),
+
+                // 20. Women's Stretch Comfort Cotton Leggings
+                new ProductVisualPreset("SH-W-019",
+                        "https://images.unsplash.com/photo-1506619216599-9d16d0903dfd?w=900",
+                        List.of("https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=900")),
+
+                // 21. Pure Chiffon Gold Border Dupatta (Elegant festive sheer stole - NOT A COFFEE CUP!)
+                new ProductVisualPreset("SH-W-020",
+                        "https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?w=900",
+                        List.of("https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=900")),
+
+                // 22. Italian Leather Crossbody Bag (ONLY authentic luxury crossbody bag angles - NO random backpacks/wicker!)
+                new ProductVisualPreset("SH-ACC-021",
+                        "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=900",
+                        List.of("https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=900", "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=900")),
+
+                // 23. Tailored Wool-Blend Evening Blazer (Men)
+                new ProductVisualPreset("SH-M-022",
+                        "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=900",
+                        List.of("https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=900")),
+
+                // 24. Kids Active Drawstring Shorts (Cute organic cotton play shorts - NOT a bearded man!)
+                new ProductVisualPreset("SH-K-023",
+                        "https://images.unsplash.com/photo-1519238263530-99bdd11df2ea?w=900",
+                        List.of("https://images.unsplash.com/photo-1622290291468-a28f7a7dc6a8?w=900")),
+
+                // 25. Classic Crew Neck Cotton T-Shirt (Men's pure white combed cotton jersey tee - NOT a bearded face!)
+                new ProductVisualPreset("SH-M-007",
+                        "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=900",
+                        List.of("https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=900", "https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?w=900")),
+
+                // 26. Round Toe Pivot Pro Sneakers (U.S. Polo Assn. high-tech lifestyle athletic footwear)
+                new ProductVisualPreset("SH-FT-031",
+                        "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=900",
+                        List.of("https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?w=900", "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=900", "https://images.unsplash.com/photo-1600185365926-3a2ce3cdb9eb?w=900"))
+        );
+
+        for (ProductVisualPreset preset : presets) {
+            Product p = productRepo.findBySku(preset.sku).orElse(null);
+            if (p == null) {
+                // Try to find by ID or name
+                String searchPattern = preset.sku.toLowerCase();
+                for (Product existing : productRepo.findAll()) {
+                    String existingName = existing.getName() != null ? existing.getName().toLowerCase() : "";
+                    if (searchPattern.contains("031") && existingName.contains("pivot pro")) { p = existing; break; }
+                    if (searchPattern.contains("007") && existingName.contains("crew neck")) { p = existing; break; }
+                    if (searchPattern.contains("023") && existingName.contains("drawstring shorts")) { p = existing; break; }
+                    if (searchPattern.contains("022") && existingName.contains("blazer")) { p = existing; break; }
+                    if (searchPattern.contains("021") && existingName.contains("crossbody bag")) { p = existing; break; }
+                    if (searchPattern.contains("020") && existingName.contains("dupatta")) { p = existing; break; }
+                    if (searchPattern.contains("019") && existingName.contains("leggings")) { p = existing; break; }
+                    if (searchPattern.contains("018") && existingName.contains("kurti")) { p = existing; break; }
+                    if (searchPattern.contains("017") && existingName.contains("low-top")) { p = existing; break; }
+                    if (searchPattern.contains("016") && existingName.contains("handcrafted leather belt")) { p = existing; break; }
+                    if (searchPattern.contains("015") && existingName.contains("straight-leg denim")) { p = existing; break; }
+                    if (searchPattern.contains("014") && existingName.contains("chelsea boots")) { p = existing; break; }
+                    if (searchPattern.contains("013") && existingName.contains("court sneakers")) { p = existing; break; }
+                    if (searchPattern.contains("012") && existingName.contains("classic full-grain")) { p = existing; break; }
+                    if (searchPattern.contains("011") && existingName.contains("canvas tote")) { p = existing; break; }
+                    if (searchPattern.contains("010") && existingName.contains("windbreaker")) { p = existing; break; }
+                    if (searchPattern.contains("009") && existingName.contains("lounge set")) { p = existing; break; }
+                    if (searchPattern.contains("008") && existingName.contains("high-rise")) { p = existing; break; }
+                    if (searchPattern.contains("007") && existingName.contains("cardigan")) { p = existing; break; }
+                    if (searchPattern.contains("006") && existingName.contains("trench coat")) { p = existing; break; }
+                    if (searchPattern.contains("005") && existingName.contains("slip dress")) { p = existing; break; }
+                    if (searchPattern.contains("004") && existingName.contains("chino trousers")) { p = existing; break; }
+                    if (searchPattern.contains("003") && existingName.contains("turtleneck")) { p = existing; break; }
+                    if (searchPattern.contains("002") && existingName.contains("denim jacket")) { p = existing; break; }
+                    if (searchPattern.contains("001") && existingName.contains("oxford")) { p = existing; break; }
+                }
             }
 
-            if (updated) {
+            if (p != null) {
+                p.setImageUrl(preset.primaryImg);
+                p.setSku(preset.sku);
                 productRepo.save(p);
+
+                // Overwrite gallery images with only authentic angles
                 List<ProductImage> imgs = imageRepo.findByProductIdOrderBySortOrderAsc(p.getId());
-                if (!imgs.isEmpty()) {
-                    ProductImage primary = imgs.get(0);
-                    primary.setImageUrl(p.getImageUrl());
-                    imageRepo.save(primary);
-                } else {
-                    imageRepo.save(new ProductImage(p, p.getImageUrl(), p.getName(), true, 0));
+                imageRepo.deleteAll(imgs);
+
+                imageRepo.save(new ProductImage(p, preset.primaryImg, p.getName() + " - Primary Profile", true, 0));
+                int order = 1;
+                for (String gUrl : preset.galleryImgs) {
+                    imageRepo.save(new ProductImage(p, gUrl, p.getName() + " - Angle " + order, false, order++));
                 }
             }
         }

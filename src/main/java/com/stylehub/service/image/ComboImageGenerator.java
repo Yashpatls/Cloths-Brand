@@ -40,18 +40,22 @@ public class ComboImageGenerator {
         Graphics2D g2 = canvas.createGraphics();
 
         try {
-            // High Quality Rendering Hints
+            // High Quality Rendering Hints (Bicubic Luxury Interpolation)
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-            g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+            g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
             g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 
-            // Studio Background
-            g2.setColor(new Color(248, 248, 248));
+            // Studio Background (Luxury Soft Photography Gradient)
+            GradientPaint studioGrad = new GradientPaint(
+                    0, 0, new Color(250, 251, 253),
+                    0, height, new Color(238, 240, 245)
+            );
+            g2.setPaint(studioGrad);
             g2.fillRect(0, 0, width, height);
 
             // Outer Frame Accent
-            g2.setColor(new Color(230, 230, 230));
+            g2.setColor(new Color(225, 228, 235));
             g2.drawRect(0, 0, width - 1, height - 1);
 
             int count = (garments != null) ? garments.size() : 0;
@@ -86,7 +90,13 @@ public class ComboImageGenerator {
         int cornerRadius = 16;
         Shape cardShape = new RoundRectangle2D.Float(box.x, box.y, box.width, box.height, cornerRadius, cornerRadius);
 
-        // Card Drop Shadow / Border
+        // Soft Studio Elevated Drop Shadow
+        g2.setColor(new Color(0, 0, 0, 14));
+        g2.fillRoundRect(box.x - 2, box.y + 4, box.width + 4, box.height + 6, cornerRadius + 4, cornerRadius + 4);
+        g2.setColor(new Color(0, 0, 0, 22));
+        g2.fillRoundRect(box.x - 1, box.y + 2, box.width + 2, box.height + 3, cornerRadius + 2, cornerRadius + 2);
+
+        // Crisp White Card Canvas
         g2.setColor(Color.WHITE);
         g2.fill(cardShape);
 

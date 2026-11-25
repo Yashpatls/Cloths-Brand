@@ -72,9 +72,36 @@
       </div>
     </div>
 
+    <!-- Category-Wise Filter Bar -->
+    <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-4 pb-2">
+      <div class="d-flex align-items-center gap-2 flex-wrap">
+        <span class="small fw-bold text-uppercase text-secondary letter-spacing-1 me-1"><i class="bi bi-funnel-fill me-1"></i> Category:</span>
+        <button type="button" class="btn btn-sm btn-dark rounded-pill px-3 filter-cat-btn active" onclick="filterComboCategory('ALL', this)">
+          All Collections
+        </button>
+        <button type="button" class="btn btn-sm btn-outline-dark rounded-pill px-3 filter-cat-btn" onclick="filterComboCategory('men', this)">
+          <i class="bi bi-gender-male me-1"></i> Men's Combos
+        </button>
+        <button type="button" class="btn btn-sm btn-outline-dark rounded-pill px-3 filter-cat-btn" onclick="filterComboCategory('women', this)">
+          <i class="bi bi-gender-female me-1"></i> Women's Combos
+        </button>
+        <button type="button" class="btn btn-sm btn-outline-dark rounded-pill px-3 filter-cat-btn" onclick="filterComboCategory('kids', this)">
+          <i class="bi bi-emoji-smile me-1"></i> Kids' Combos
+        </button>
+        <button type="button" class="btn btn-sm btn-outline-dark rounded-pill px-3 filter-cat-btn" onclick="filterComboCategory('ethnic', this)">
+          <i class="bi bi-stars me-1 text-warning"></i> Ethnic & Wedding
+        </button>
+      </div>
+      <span id="visible-combos-count" class="badge bg-light text-dark border small fw-normal">
+        Showing all packages
+      </span>
+    </div>
+
     <!-- Combos Grid -->
-    <div class="row g-4" th:if="${not #lists.isEmpty(combos)}">
-      <div class="col-sm-6 col-lg-4 col-xl-3" th:each="combo : ${combos}">
+    <div class="row g-4" id="combos-grid-row" th:if="${not #lists.isEmpty(combos)}">
+      <div class="col-sm-6 col-lg-4 col-xl-3 combo-card-col transition-all"
+           th:each="combo : ${combos}"
+           th:attr="data-category=${#strings.containsIgnoreCase(combo.name, 'Kids') ? 'kids' : (#strings.containsIgnoreCase(combo.name, 'Women') ? 'women' : (#strings.containsIgnoreCase(combo.name, 'Ethnic') or #strings.containsIgnoreCase(combo.name, 'Wedding') ? 'ethnic' : 'men'))}">
         <div class="card h-100 border rounded-3 overflow-hidden shadow-sm product-card transition-all">
           
           <!-- Image Container with Badges -->
@@ -165,6 +192,39 @@
     </div>
 
   </main>
+
+  <script>
+    function filterComboCategory(cat, btn) {
+      document.querySelectorAll('.filter-cat-btn').forEach(b => {
+        b.classList.remove('btn-dark', 'active');
+        b.classList.add('btn-outline-dark');
+      });
+      if (btn) {
+        btn.classList.remove('btn-outline-dark');
+        btn.classList.add('btn-dark', 'active');
+      }
+
+      const cards = document.querySelectorAll('.combo-card-col');
+      let visibleCount = 0;
+
+      cards.forEach(card => {
+        const itemCat = card.getAttribute('data-category');
+        if (cat === 'ALL' || itemCat === cat) {
+          card.style.display = 'block';
+          card.style.opacity = '1';
+          visibleCount++;
+        } else {
+          card.style.display = 'none';
+          card.style.opacity = '0';
+        }
+      });
+
+      const countBadge = document.getElementById('visible-combos-count');
+      if (countBadge) {
+        countBadge.textContent = visibleCount + ' package' + (visibleCount !== 1 ? 's' : '') + ' in view';
+      }
+    }
+  </script>
 
   <!-- Storefront Footer -->
   <div th:replace="~{fragments :: footer}"></div>

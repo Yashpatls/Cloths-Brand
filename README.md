@@ -47,15 +47,6 @@ A production-grade, full-stack clothing e-commerce web application built using *
 Normalized 16-table relational schema with foreign key constraints, indexes, and cascading rules:
 - `users`, `addresses`, `categories`, `products`, `product_images`, `product_sizes`, `product_colors`, `cart`, `cart_items`, `customer_orders`, `order_items`, `payments`, `wishlist`, `coupons`, `reviews`, `store_settings`.
 
-### 3. AWS Cloud Infrastructure
-- **EC2 (Ubuntu 24.04 LTS)**: Runs Spring Boot JAR as a resilient `systemd` service.
-- **Amazon RDS (MySQL 8.0)**: Private managed database.
-- **Amazon S3**: Private media bucket for product image uploads.
-- **Amazon CloudFront**: Low-latency HTTPS content delivery network.
-- **Nginx**: Reverse proxy with Gzip compression and SSL/TLS termination.
-- **CloudFormation**: Infrastructure-as-Code deployment template (`deployment/aws/cloudformation-template.yaml`).
-
----
 
 ## 🚀 Running Locally
 

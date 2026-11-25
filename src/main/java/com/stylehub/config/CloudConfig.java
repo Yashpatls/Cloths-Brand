@@ -27,24 +27,19 @@ public class CloudConfig {
 
     @Bean
     public S3Client s3Client() {
+        if (accessKeyId == null || accessKeyId.isBlank() || secretKey == null || secretKey.isBlank()) {
+            log.info("AWS S3 credentials not configured. Operating in local storage mode (uploads/ directory).");
+            return null;
+        }
         try {
-            if (accessKeyId != null && !accessKeyId.isBlank() && secretKey != null && !secretKey.isBlank()) {
-                log.info("Initializing S3Client with explicit credentials for region: {}", region);
-                return S3Client.builder()
-                        .region(Region.of(region))
-                        .credentialsProvider(StaticCredentialsProvider.create(
-                                AwsBasicCredentials.create(accessKeyId, secretKey)))
-                        .build();
-            } else {
-                log.info("Initializing S3Client with DefaultCredentialsProvider for region: {}", region);
-                return S3Client.builder()
-                        .region(Region.of(region))
-                        .credentialsProvider(DefaultCredentialsProvider.create())
-                        .build();
-            }
+            log.info("Initializing S3Client with explicit credentials for region: {}", region);
+            return S3Client.builder()
+                    .region(Region.of(region))
+                    .credentialsProvider(StaticCredentialsProvider.create(
+                            AwsBasicCredentials.create(accessKeyId, secretKey)))
+                    .build();
         } catch (Exception e) {
-            log.warn("AWS S3Client could not be initialized with cloud credentials (falling back to local storage handler): {}", e.getMessage());
-            // Return null or unconfigured client; S3StorageService gracefully handles this by falling back to local file storage
+            log.warn("AWS S3Client could not be initialized (falling back to local storage handler): {}", e.getMessage());
             return null;
         }
     }

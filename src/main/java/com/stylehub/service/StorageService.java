@@ -33,7 +33,7 @@ public class StorageService {
     @Value("${stylehub.upload.dir:uploads}")
     private String localUploadDir;
 
-    public StorageService(S3Client s3Client) {
+    public StorageService(@org.springframework.beans.factory.annotation.Autowired(required = false) S3Client s3Client) {
         this.s3Client = s3Client;
     }
 

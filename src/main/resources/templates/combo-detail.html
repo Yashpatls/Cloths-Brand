@@ -282,6 +282,7 @@
   <!-- Dynamic Combo Product Management & Price Recalculation Script -->
   <script th:inline="javascript">
     /*<![CDATA[*/
+    const defaultComboImg = /*[[${combo.imageUrl != null ? combo.imageUrl : 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=600'}]]*/ 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=600';
     const comboData = {
       id: /*[[${combo.id}]]*/ 0,
       baseComboPrice: /*[[${combo.effectivePrice}]]*/ 1499,
@@ -362,6 +363,7 @@
               mainImg.style.opacity = '1';
             };
             preload.onerror = function() {
+              mainImg.src = defaultComboImg;
               mainImg.style.opacity = '1';
             };
             preload.src = newSrc;

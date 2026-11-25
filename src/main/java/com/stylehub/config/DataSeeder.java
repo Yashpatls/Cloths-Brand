@@ -11,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Configuration
@@ -100,7 +101,7 @@ public class DataSeeder {
             Category footCat = categoryRepo.findBySlugIgnoreCase("footwear").orElseGet(() ->
                     categoryRepo.save(new Category("Footwear", "footwear", "Architectural minimal sneakers, Chelsea boots, and everyday loafers.", "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=900", 5)));
 
-            // 4. Seed Rich Product Catalog
+            // 4. Seed Rich Product Catalog & Reference Products
             if (productRepo.count() == 0) {
                 createProduct(productRepo, imageRepo, sizeRepo, colorRepo,
                         "Tailored Oxford Cotton Shirt", "SH-M-001",
@@ -116,8 +117,11 @@ public class DataSeeder {
                         "Vintage Washed Denim Jacket", "SH-M-002",
                         "Heavyweight 13.5oz Japanese selvedge denim jacket finished with subtle distressed abrasions.",
                         2899, 2499, menCat,
-                        "https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=900",
-                        List.of(),
+                        "https://images.unsplash.com/photo-1576995853123-5a10305d93c0?w=900",
+                        List.of(
+                                "https://images.unsplash.com/photo-1551028719-00167b16eac5?w=900",
+                                "https://images.unsplash.com/photo-1544441893-675973e31985?w=900"
+                        ),
                         List.of("M", "L", "XL"),
                         List.of("Indigo Wash", "Charcoal Black"),
                         28, true);
@@ -157,11 +161,45 @@ public class DataSeeder {
                         60, false);
             }
 
-            // Ensure we have helper products for bundles
-            Product shirt = productRepo.findBySku("SH-M-001").orElse(null);
-            Product jacket = productRepo.findBySku("SH-M-002").orElse(null);
-            Product trousers = productRepo.findBySku("SH-M-004").orElse(null);
-            Product dress = productRepo.findBySku("SH-W-001").orElse(null);
+            // Reference Product: Round Toe Pivot Pro Sneakers (U.S. Polo Assn. inspired high-tech footwear)
+            Product pivotSneakers = productRepo.findBySku("SH-FT-031").orElseGet(() -> {
+                Product p = new Product();
+                p.setName("Round Toe Pivot Pro Sneakers");
+                p.setSku("SH-FT-031");
+                p.setDescription("Engineered for all-day athletic comfort and urban sophistication. The Round Toe Pivot Pro Sneakers combine breathable high-density engineered mesh with premium microfiber leather overlays, an ergonomic shock-absorbing pivot-traction outsole, and dual-density memory foam footbed for maximum durability and effortless styling.");
+                p.setPrice(BigDecimal.valueOf(5999));
+                p.setDiscountPrice(BigDecimal.valueOf(3999));
+                p.setCategory(footCat);
+                p.setCategoryName(footCat.getName());
+                p.setImageUrl("https://images.unsplash.com/photo-1549298916-b41d501d3772?w=900");
+                p.setStock(35);
+                p.setFeatured(true);
+                p.setActive(true);
+                Product saved = productRepo.save(p);
+
+                imageRepo.save(new ProductImage(saved, "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=900", "Round Toe Pivot Pro Sneakers - Lateral Profile", true, 0));
+                imageRepo.save(new ProductImage(saved, "https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?w=900", "Round Toe Pivot Pro Sneakers - Top Angle View", false, 1));
+                imageRepo.save(new ProductImage(saved, "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=900", "Round Toe Pivot Pro Sneakers - Ergonomic Sole & Tech Mesh", false, 2));
+                imageRepo.save(new ProductImage(saved, "https://images.unsplash.com/photo-1600185365926-3a2ce3cdb9eb?w=900", "Round Toe Pivot Pro Sneakers - Heel Counter & Cushioning", false, 3));
+
+                for (String sz : List.of("UK 6", "UK 7", "UK 8", "UK 9", "UK 10", "UK 11")) {
+                    sizeRepo.save(new ProductSize(saved, sz, 30));
+                }
+
+                colorRepo.save(new ProductColor(saved, "Optic White", "#ffffff"));
+                colorRepo.save(new ProductColor(saved, "Triple Black", "#111111"));
+                colorRepo.save(new ProductColor(saved, "Navy Tech", "#1a237e"));
+                return saved;
+            });
+
+            // Ensure helper products exist for bundles
+            Product shirt = productRepo.findBySku("SH-M-001").orElseGet(() ->
+                    productRepo.findAll().stream().filter(p -> "men".equalsIgnoreCase(p.getCategoryName())).findFirst().orElse(null));
+            Product jacket = productRepo.findBySku("SH-M-002").orElseGet(() -> shirt);
+            Product trousers = productRepo.findBySku("SH-M-004").orElseGet(() -> shirt);
+            Product dress = productRepo.findBySku("SH-W-005").orElseGet(() ->
+                    productRepo.findBySku("SH-W-001").orElseGet(() ->
+                            productRepo.findAll().stream().filter(p -> "women".equalsIgnoreCase(p.getCategoryName())).findFirst().orElse(null)));
             Product tshirt = productRepo.findBySku("SH-M-007").orElseGet(() -> {
                 Product p = new Product();
                 p.setName("Classic Crew Neck Cotton T-Shirt");
@@ -470,9 +508,182 @@ public class DataSeeder {
                 log.info("Successfully seeded {} Combo Packages across all budget tiers.", comboRepo.count());
             }
 
+            // 7. Active Catalog Synchronization & Image Repair (Ensures zero mismatched photos and full combo bundles)
+            syncProductVisuals(productRepo, imageRepo);
+            syncComboPackages(comboRepo, comboItemRepo, productRepo);
+
             log.info("StyleHub database seeding complete. Active products: {}, Categories: {}, Combos: {}",
                     productRepo.count(), categoryRepo.count(), comboRepo.count());
         };
+    }
+
+    private void syncProductVisuals(ProductRepository productRepo, ProductImageRepository imageRepo) {
+        for (Product p : productRepo.findAll()) {
+            String name = p.getName() != null ? p.getName().toLowerCase() : "";
+            boolean updated = false;
+
+            if (name.contains("trench coat") || (p.getId() != null && p.getId() == 6L)) {
+                p.setImageUrl("https://images.unsplash.com/photo-1539533018447-63fcce667883?w=900");
+                updated = true;
+            } else if (name.contains("denim jacket") || (p.getId() != null && p.getId() == 2L)) {
+                p.setImageUrl("https://images.unsplash.com/photo-1576995853123-5a10305d93c0?w=900");
+                updated = true;
+            } else if (name.contains("monochrome leather court") || (p.getId() != null && p.getId() == 13L)) {
+                p.setImageUrl("https://images.unsplash.com/photo-1549298916-b41d501d3772?w=900");
+                updated = true;
+            } else if (name.contains("lounge set") || (p.getId() != null && p.getId() == 9L)) {
+                p.setImageUrl("https://images.unsplash.com/photo-1519238263530-99bdd11df2ea?w=900");
+                updated = true;
+            } else if (name.contains("floral midi dress") || (p.getId() != null && p.getId() == 5L)) {
+                p.setImageUrl("https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?w=900");
+                updated = true;
+            }
+
+            if (updated) {
+                productRepo.save(p);
+                List<ProductImage> imgs = imageRepo.findByProductIdOrderBySortOrderAsc(p.getId());
+                if (!imgs.isEmpty()) {
+                    ProductImage primary = imgs.get(0);
+                    primary.setImageUrl(p.getImageUrl());
+                    imageRepo.save(primary);
+                } else {
+                    imageRepo.save(new ProductImage(p, p.getImageUrl(), p.getName(), true, 0));
+                }
+            }
+        }
+    }
+
+    private void syncComboPackages(ComboPackageRepository comboRepo, ComboItemRepository comboItemRepo, ProductRepository productRepo) {
+        List<ComboPackage> allCombos = comboRepo.findAll();
+
+        Product shirt = productRepo.findBySku("SH-M-001").orElseGet(() -> productRepo.findAll().stream().filter(p -> "men".equalsIgnoreCase(p.getCategoryName())).findFirst().orElse(null));
+        Product jacket = productRepo.findBySku("SH-M-002").orElseGet(() -> shirt);
+        Product trousers = productRepo.findBySku("SH-M-004").orElseGet(() -> shirt);
+        Product dress = productRepo.findBySku("SH-W-005").orElseGet(() -> productRepo.findAll().stream().filter(p -> "women".equalsIgnoreCase(p.getCategoryName())).findFirst().orElse(null));
+        Product tshirt = productRepo.findBySku("SH-M-007").orElseGet(() -> shirt);
+        Product jeans = productRepo.findBySku("SH-M-015").orElseGet(() -> shirt);
+        Product belt = productRepo.findBySku("SH-ACC-016").orElseGet(() -> shirt);
+        Product sneakers = productRepo.findBySku("SH-FT-017").orElseGet(() -> productRepo.findBySku("SH-FT-031").orElseGet(() -> shirt));
+        Product kurti = productRepo.findBySku("SH-W-018").orElseGet(() -> dress);
+        Product leggings = productRepo.findBySku("SH-W-019").orElseGet(() -> dress);
+        Product dupatta = productRepo.findBySku("SH-W-020").orElseGet(() -> dress);
+        Product handbag = productRepo.findBySku("SH-ACC-021").orElseGet(() -> belt);
+        Product blazer = productRepo.findBySku("SH-M-022").orElseGet(() -> jacket);
+        Product kidsShorts = productRepo.findBySku("SH-K-023").orElseGet(() -> tshirt);
+
+        for (ComboPackage cp : allCombos) {
+            String slug = cp.getSlug() != null ? cp.getSlug() : "";
+            String img = cp.getImageUrl();
+
+            // Replace any expired or temporary openai links with permanent curated flat-lay photography
+            if (img == null || img.contains("openai.com") || img.isBlank()) {
+                if (slug.contains("t-shirt-pack") || slug.contains("combo-1")) {
+                    cp.setImageUrl("https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=900");
+                } else if (slug.contains("daily-wear") && !slug.contains("women")) {
+                    cp.setImageUrl("https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?w=900");
+                } else if (slug.contains("womens-daily-wear") || slug.contains("combo-3")) {
+                    cp.setImageUrl("https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=900");
+                } else if (slug.contains("kids-wear") || slug.contains("combo-4")) {
+                    cp.setImageUrl("https://images.unsplash.com/photo-1519238263530-99bdd11df2ea?w=900");
+                } else if (slug.contains("mens-casual") || slug.contains("combo-5")) {
+                    cp.setImageUrl("https://images.unsplash.com/photo-1490114538077-0a7f8cb49891?w=900");
+                } else if (slug.contains("womens-ethnic") || slug.contains("combo-6")) {
+                    cp.setImageUrl("https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=900");
+                } else if (slug.contains("smart-casual") || slug.contains("combo-7")) {
+                    cp.setImageUrl("https://images.unsplash.com/photo-1479064555552-3ef4979f8908?w=900");
+                } else if (slug.contains("fashion-pack") || slug.contains("combo-8")) {
+                    cp.setImageUrl("https://images.unsplash.com/photo-1483985988355-763728e1935b?w=900");
+                } else if (slug.contains("mens-premium") || slug.contains("combo-9")) {
+                    cp.setImageUrl("https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=900");
+                } else if (slug.contains("womens-premium") || slug.contains("combo-10")) {
+                    cp.setImageUrl("https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=900");
+                } else if (slug.contains("complete-look") || slug.contains("combo-11")) {
+                    cp.setImageUrl("https://images.unsplash.com/photo-1576995853123-5a10305d93c0?w=900");
+                } else if (slug.contains("luxury-ethnic") || slug.contains("combo-12")) {
+                    cp.setImageUrl("https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=900");
+                } else {
+                    cp.setImageUrl("https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=900");
+                }
+                comboRepo.save(cp);
+            }
+
+            // Ensure constituent items exist and are not empty
+            List<ComboItem> existingItems = comboItemRepo.findByComboPackageIdOrderByDisplayOrderAsc(cp.getId());
+            int requiredCount = 2;
+            if (slug.contains("combo-5") || slug.contains("combo-6") || slug.contains("combo-7") || slug.contains("combo-8") || slug.contains("combo-10") || slug.contains("combo-12")) {
+                requiredCount = 3;
+            } else if (slug.contains("combo-9") || slug.contains("combo-11") || slug.contains("combo-13")) {
+                requiredCount = 4;
+            }
+
+            if (existingItems.size() < requiredCount) {
+                // Re-seed constituent garments
+                comboItemRepo.deleteAll(existingItems);
+                List<BundleItemSpec> specs = new ArrayList<>();
+
+                if (slug.contains("combo-1") || slug.contains("t-shirt-pack")) {
+                    specs.add(new BundleItemSpec(tshirt, "1 Classic Crew T-Shirt", 1, BigDecimal.valueOf(249)));
+                    specs.add(new BundleItemSpec(tshirt, "1 Contrast Crew T-Shirt", 1, BigDecimal.valueOf(250)));
+                } else if (slug.contains("combo-2") || slug.contains("daily-wear")) {
+                    specs.add(new BundleItemSpec(shirt, "1 Oxford Casual Shirt", 1, BigDecimal.valueOf(449)));
+                    specs.add(new BundleItemSpec(tshirt, "1 Pima Cotton T-Shirt", 1, BigDecimal.valueOf(250)));
+                } else if (slug.contains("combo-3") || slug.contains("womens-daily-wear")) {
+                    specs.add(new BundleItemSpec(tshirt, "1 Relaxed Cotton Top", 1, BigDecimal.valueOf(399)));
+                    specs.add(new BundleItemSpec(leggings, "1 Stretch Cotton Leggings", 1, BigDecimal.valueOf(400)));
+                } else if (slug.contains("combo-4") || slug.contains("kids-wear")) {
+                    specs.add(new BundleItemSpec(tshirt, "1 Organic Cotton T-Shirt", 1, BigDecimal.valueOf(299)));
+                    specs.add(new BundleItemSpec(kidsShorts, "1 Active Drawstring Shorts", 1, BigDecimal.valueOf(300)));
+                } else if (slug.contains("combo-5") || slug.contains("mens-casual")) {
+                    specs.add(new BundleItemSpec(shirt, "1 Oxford Cotton Shirt", 1, BigDecimal.valueOf(699)));
+                    specs.add(new BundleItemSpec(jeans, "1 Straight-Leg Denim Jeans", 1, BigDecimal.valueOf(500)));
+                    specs.add(new BundleItemSpec(belt, "1 Full-Grain Leather Belt", 1, BigDecimal.valueOf(300)));
+                } else if (slug.contains("combo-6") || slug.contains("womens-ethnic")) {
+                    specs.add(new BundleItemSpec(kurti, "1 Hand-Block Printed Kurti", 1, BigDecimal.valueOf(899)));
+                    specs.add(new BundleItemSpec(leggings, "1 Ankle Leggings", 1, BigDecimal.valueOf(400)));
+                    specs.add(new BundleItemSpec(dupatta, "1 Pure Chiffon Dupatta", 1, BigDecimal.valueOf(500)));
+                } else if (slug.contains("combo-7") || slug.contains("smart-casual")) {
+                    specs.add(new BundleItemSpec(shirt, "1 Pique Cotton Polo", 1, BigDecimal.valueOf(799)));
+                    specs.add(new BundleItemSpec(jeans, "1 Dark Indigo Jeans", 1, BigDecimal.valueOf(800)));
+                    specs.add(new BundleItemSpec(sneakers, "1 Pair Minimal Leather Sneakers", 1, BigDecimal.valueOf(700)));
+                } else if (slug.contains("combo-8") || slug.contains("fashion-pack")) {
+                    specs.add(new BundleItemSpec(tshirt, "1 Ribbed Modal Top", 1, BigDecimal.valueOf(599)));
+                    specs.add(new BundleItemSpec(jeans, "1 Tapered Denim Jeans", 1, BigDecimal.valueOf(800)));
+                    specs.add(new BundleItemSpec(handbag, "1 Leather Crossbody Bag", 1, BigDecimal.valueOf(800)));
+                } else if (slug.contains("combo-9") || slug.contains("mens-premium")) {
+                    specs.add(new BundleItemSpec(blazer, "1 Tailored Wool-Blend Blazer", 1, BigDecimal.valueOf(1899)));
+                    specs.add(new BundleItemSpec(shirt, "1 Formal Twill Shirt", 1, BigDecimal.valueOf(700)));
+                    specs.add(new BundleItemSpec(trousers, "1 Pleated Chino Trousers", 1, BigDecimal.valueOf(900)));
+                    specs.add(new BundleItemSpec(belt, "1 Classic Leather Belt", 1, BigDecimal.valueOf(500)));
+                } else if (slug.contains("combo-10") || slug.contains("womens-premium")) {
+                    specs.add(new BundleItemSpec(dress, "1 Silk Satin Midi Slip Dress", 1, BigDecimal.valueOf(2199)));
+                    specs.add(new BundleItemSpec(handbag, "1 Italian Leather Shoulder Bag", 1, BigDecimal.valueOf(1300)));
+                    specs.add(new BundleItemSpec(sneakers, "1 Pair Designer Heels/Shoes", 1, BigDecimal.valueOf(1000)));
+                } else if (slug.contains("combo-11") || slug.contains("complete-look")) {
+                    specs.add(new BundleItemSpec(jacket, "1 Vintage Denim Jacket", 1, BigDecimal.valueOf(1999)));
+                    specs.add(new BundleItemSpec(shirt, "1 Oxford Shirt", 1, BigDecimal.valueOf(900)));
+                    specs.add(new BundleItemSpec(jeans, "1 Raw Denim Jeans", 1, BigDecimal.valueOf(1300)));
+                    specs.add(new BundleItemSpec(sneakers, "1 Pair Leather Sneakers", 1, BigDecimal.valueOf(1300)));
+                } else if (slug.contains("combo-12") || slug.contains("luxury-ethnic")) {
+                    specs.add(new BundleItemSpec(kurti, "1 Chanderi Silk Suit", 1, BigDecimal.valueOf(2599)));
+                    specs.add(new BundleItemSpec(dupatta, "1 Zari Border Dupatta", 1, BigDecimal.valueOf(1400)));
+                    specs.add(new BundleItemSpec(handbag, "1 Embellished Handbag", 1, BigDecimal.valueOf(2000)));
+                } else if (slug.contains("combo-13") || slug.contains("wedding")) {
+                    specs.add(new BundleItemSpec(blazer, "1 Silk Ceremonial Sherwani Jacket", 1, BigDecimal.valueOf(3299)));
+                    specs.add(new BundleItemSpec(trousers, "1 Silk Blend Trousers", 1, BigDecimal.valueOf(1400)));
+                    specs.add(new BundleItemSpec(dupatta, "1 Velvet Embellished Stole", 1, BigDecimal.valueOf(1300)));
+                    specs.add(new BundleItemSpec(sneakers, "1 Pair Handcrafted Footwear", 1, BigDecimal.valueOf(1500)));
+                }
+
+                int order = 0;
+                for (BundleItemSpec s : specs) {
+                    if (s.product() != null) {
+                        ComboItem ci = new ComboItem(s.product(), s.title(), s.qty(), s.itemPrice(), "M", "Default", order++);
+                        ci.setComboPackage(cp);
+                        comboItemRepo.save(ci);
+                    }
+                }
+            }
+        }
     }
 
     private record BundleItemSpec(Product product, String title, int qty, BigDecimal itemPrice) {

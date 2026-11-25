@@ -1,147 +1,210 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <th:block th:replace="~{fragments :: head('Wear Your Story')}"></th:block>
+  <th:block th:replace="~{fragments :: head('Modern Fashion & Curated Wardrobes')}"></th:block>
+  <style>
+    /* H&M-Inspired Modern Fashion Aesthetics */
+    .hm-hero {
+      position: relative;
+      min-height: 85vh;
+      background: linear-gradient(to right, rgba(10, 10, 10, 0.72) 0%, rgba(10, 10, 10, 0.35) 55%, rgba(10, 10, 10, 0.15) 100%),
+                  url('https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=1800') center/cover no-repeat;
+      display: flex;
+      align-items: center;
+      color: #ffffff;
+    }
+    .hm-hero-badge {
+      display: inline-block;
+      font-size: 0.75rem;
+      letter-spacing: 3px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: #d4af37;
+      margin-bottom: 1.2rem;
+      padding: 6px 14px;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(212, 175, 55, 0.5);
+      border-radius: 30px;
+      backdrop-filter: blur(4px);
+    }
+    .hm-hero-title {
+      font-size: clamp(2.6rem, 5.5vw, 4.8rem);
+      font-family: var(--font-serif);
+      line-height: 1.08;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      margin-bottom: 1.4rem;
+    }
+    .hm-hero-desc {
+      font-size: 1.1rem;
+      line-height: 1.7;
+      max-width: 520px;
+      color: rgba(255, 255, 255, 0.88);
+      margin-bottom: 2.2rem;
+    }
+    .hm-category-card {
+      position: relative;
+      overflow: hidden;
+      border-radius: 6px;
+      height: 420px;
+      display: block;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      text-decoration: none;
+    }
+    .hm-category-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.7s cubic-bezier(0.2, 1, 0.3, 1);
+    }
+    .hm-category-card:hover img {
+      transform: scale(1.06);
+    }
+    .hm-category-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.78) 0%, rgba(0, 0, 0, 0.15) 50%, transparent 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 2rem;
+      color: #ffffff;
+    }
+    .hm-category-overlay h3 {
+      font-family: var(--font-serif);
+      font-size: 1.9rem;
+      font-weight: 700;
+      margin-bottom: 0.3rem;
+    }
+    .hm-category-overlay p {
+      font-size: 0.88rem;
+      color: rgba(255, 255, 255, 0.8);
+      margin-bottom: 0.8rem;
+    }
+    .hm-category-overlay span {
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: #d4af37;
+    }
+    .product-thumb {
+      position: relative;
+      overflow: hidden;
+      background-color: #f7f7f8;
+      border-radius: 6px;
+      aspect-ratio: 3 / 4;
+      height: auto;
+    }
+    .product-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+    .product-card:hover .product-thumb img {
+      transform: scale(1.05);
+    }
+  </style>
 </head>
 <body>
 
   <!-- Header -->
   <div th:replace="~{fragments :: header}"></div>
 
-  <!-- Editorial Hero Section -->
-  <section class="hero-editorial">
-    <div class="container">
-      <div class="row align-items-center g-4">
-        <div class="col-lg-6 hero-copy">
-          <span class="hero-tag">AUTUMN / WINTER 2026 COLLECTION</span>
-          <h1 class="hero-title">
-            Wear your<br><em>own story.</em>
+  <!-- 1. H&M-Inspired Large Editorial Hero Section -->
+  <section class="hm-hero">
+    <div class="container py-5">
+      <div class="row align-items-center">
+        <div class="col-lg-8 col-xl-7">
+          <span class="hm-hero-badge"><i class="bi bi-stars me-1"></i> AUTUMN / WINTER 2026 CAMPAIGN</span>
+          <h1 class="hm-hero-title">
+            The New Season Edit.<br>Modern Elegance.
           </h1>
-          <p class="hero-description">
-            Thoughtfully tailored pieces in Egyptian cotton, lightweight merino wool, and French linen. Elevated essentials designed for everyday distinction.
+          <p class="hm-hero-desc">
+            Discover thoughtfully tailored silhouettes, pure organic cotton basics, French linen chinos, and hand-block kurtis. Minimalist aesthetics engineered for distinction.
           </p>
-          <div class="d-flex gap-3 flex-wrap">
-            <a href="/shop" class="btn btn-fashion-dark">Explore The Shop</a>
-            <a href="/combos" class="btn btn-fashion-gold"><i class="bi bi-gift-fill me-1"></i> Combo Packages</a>
-            <a href="/category/women" class="btn btn-fashion-light">Women's Edit</a>
-          </div>
-        </div>
-        <div class="col-lg-6 d-none d-lg-block">
-          <div class="hero-image-wrap" style="background-image: url('https://images.unsplash.com/photo-1483985988355-763728e1935b?w=1400');"></div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Black Friday Mega Sale Feature Banner -->
-  <section class="py-5 text-white position-relative overflow-hidden" style="background: linear-gradient(135deg, #090909 0%, #171717 50%, #201a15 100%); border-top: 2px solid #d4af37; border-bottom: 2px solid #d4af37;">
-    <div class="container py-3">
-      <div class="row align-items-center g-4">
-        <div class="col-lg-8">
-          <div class="d-flex align-items-center gap-2 mb-2">
-            <span class="badge bg-danger text-uppercase px-3 py-2 fw-bold letter-spacing-2" style="font-size: 0.75rem; box-shadow: 0 0 15px rgba(220, 53, 69, 0.7);">
-              ⚡ BLACK FRIDAY MEGA SALE
-            </span>
-            <span class="text-warning small fw-bold"><i class="bi bi-fire me-1"></i>Limited Time Offer</span>
-          </div>
-          <h2 class="display-5 font-serif text-white mb-2">
-            Extra <span style="color: #d4af37;">30% OFF</span> Sitewide + Price-Wise Combos
-          </h2>
-          <p class="text-light opacity-75 mb-3" style="max-width: 650px;">
-            Save big on curated wardrobe packages, designer apparel, and seasonal essentials. Enter coupon code <strong class="text-warning font-monospace fs-5">BLACKFRIDAY</strong> at checkout!
-          </p>
-          <div class="d-flex flex-wrap gap-3 align-items-center">
-            <a href="/combos" class="btn btn-fashion-gold px-4 py-2 fs-6 fw-bold">
-              <i class="bi bi-gift-fill me-1"></i> Shop Combo Bundles (From ₹499)
+          <div class="d-flex gap-3 flex-wrap align-items-center">
+            <a href="/category/women" class="btn btn-fashion-light px-4 py-3 fw-bold">Shop Ladies</a>
+            <a href="/category/men" class="btn btn-fashion-light px-4 py-3 fw-bold">Shop Men</a>
+            <a href="/category/kids" class="btn btn-outline-light px-4 py-3 fw-bold">Shop Kids</a>
+            <a href="/combos" class="btn btn-fashion-gold px-4 py-3 fw-bold shadow">
+              <i class="bi bi-gift-fill me-1"></i> Combo Packages (Save up to 50%)
             </a>
-            <a href="/shop" class="btn btn-outline-light px-4 py-2 fs-6">
-              Browse All Deals →
-            </a>
-            <div class="d-flex align-items-center gap-2 ms-lg-2 bg-dark p-2 rounded-2 border border-secondary">
-              <span class="small text-muted">Coupon:</span>
-              <span class="badge bg-black text-warning font-monospace fs-6 px-2 py-1">BLACKFRIDAY</span>
-              <button class="btn btn-sm btn-outline-warning py-0 px-2" onclick="navigator.clipboard.writeText('BLACKFRIDAY'); alert('Coupon BLACKFRIDAY copied!');">Copy</button>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-lg-4">
-          <div class="row g-2">
-            <div class="col-6">
-              <div class="p-3 rounded-2 text-center" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);">
-                <div class="fs-4 fw-bold text-warning font-serif">₹299+</div>
-                <div class="small text-white-50">Budget Combos</div>
-                <a href="/combos?tier=BUDGET" class="small text-warning text-decoration-underline d-block mt-1">View Sets →</a>
-              </div>
-            </div>
-            <div class="col-6">
-              <div class="p-3 rounded-2 text-center" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);">
-                <div class="fs-4 fw-bold text-warning font-serif">₹1,000+</div>
-                <div class="small text-white-50">Standard Value</div>
-                <a href="/combos?tier=STANDARD" class="small text-warning text-decoration-underline d-block mt-1">View Sets →</a>
-              </div>
-            </div>
-            <div class="col-6">
-              <div class="p-3 rounded-2 text-center" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);">
-                <div class="fs-4 fw-bold text-warning font-serif">₹2,500+</div>
-                <div class="small text-white-50">Premium Looks</div>
-                <a href="/combos?tier=PREMIUM" class="small text-warning text-decoration-underline d-block mt-1">View Sets →</a>
-              </div>
-            </div>
-            <div class="col-6">
-              <div class="p-3 rounded-2 text-center" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);">
-                <div class="fs-4 fw-bold text-warning font-serif">₹6,000+</div>
-                <div class="small text-white-50">Luxury Festive</div>
-                <a href="/combos?tier=LUXURY" class="small text-warning text-decoration-underline d-block mt-1">View Sets →</a>
-              </div>
-            </div>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Curated Collection Highlights -->
+  <!-- 2. Black Friday Mega Offer Callout Bar -->
+  <section class="py-4 text-white" style="background: linear-gradient(135deg, #090909 0%, #151515 50%, #1a1612 100%); border-top: 2px solid #d4af37; border-bottom: 2px solid #d4af37;">
+    <div class="container">
+      <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+        <div class="d-flex align-items-center gap-3">
+          <span class="badge bg-danger text-uppercase px-3 py-2 fw-bold letter-spacing-1" style="font-size: 0.72rem;">
+            ⚡ BLACK FRIDAY LIVE
+          </span>
+          <div>
+            <span class="fw-bold fs-6 text-white me-2">Extra 30% OFF Sitewide + Free Express Delivery</span>
+            <span class="text-white-50 small d-none d-md-inline">Applies to individual items and curated combo packages.</span>
+          </div>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+          <span class="small text-white-50">Coupon Code:</span>
+          <span class="badge bg-black border border-warning text-warning font-monospace px-3 py-2 fs-6">BLACKFRIDAY</span>
+          <button type="button" class="btn btn-sm btn-outline-warning px-3 py-1" onclick="navigator.clipboard.writeText('BLACKFRIDAY'); alert('Coupon code BLACKFRIDAY copied to clipboard!');">
+            Copy
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. H&M-Inspired 3-Column Category Split Banners -->
   <section class="py-5 bg-white">
-    <div class="container py-4">
+    <div class="container py-3">
       <div class="d-flex justify-content-between align-items-end mb-4">
         <div>
-          <span class="text-uppercase small fw-bold text-muted letter-spacing-2">Curated Categories</span>
+          <span class="text-uppercase small fw-bold text-muted letter-spacing-2">Curated Collections</span>
           <h2 class="display-6 font-serif mt-1 mb-0">Shop by Wardrobe</h2>
         </div>
-        <a href="/shop" class="text-decoration-underline text-dark fw-bold small">Browse All Collections →</a>
+        <a href="/shop" class="text-dark fw-bold small text-decoration-underline">View All Garments →</a>
       </div>
 
       <div class="row g-4">
-        <!-- Men -->
+        <!-- Ladies Collection -->
         <div class="col-md-4">
-          <a href="/category/men" class="category-card">
-            <img src="https://images.unsplash.com/photo-1617137984095-74e4e5e3613f?w=900" alt="Men's Collection">
-            <div class="category-card-overlay">
-              <h3>Men's Collection</h3>
-              <p>Tailored oxfords, selvedge denim & knitwear</p>
+          <a href="/category/women" class="hm-category-card">
+            <img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?w=900" alt="Ladies Collection">
+            <div class="hm-category-overlay">
+              <h3>Ladies</h3>
+              <p>Silk midi slips, wool trench coats & hand-block kurtis</p>
               <span>Explore Collection <i class="bi bi-arrow-right"></i></span>
             </div>
           </a>
         </div>
-        <!-- Women -->
+        <!-- Men's Collection -->
         <div class="col-md-4">
-          <a href="/category/women" class="category-card">
-            <img src="https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=900" alt="Women's Collection">
-            <div class="category-card-overlay">
-              <h3>Women's Edit</h3>
-              <p>Floral midi dresses, wool coats & cardigans</p>
+          <a href="/category/men" class="hm-category-card">
+            <img src="https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=900" alt="Men's Collection">
+            <div class="hm-category-overlay">
+              <h3>Men</h3>
+              <p>Tailored Oxford shirts, linen chinos & selvedge denim</p>
               <span>Explore Collection <i class="bi bi-arrow-right"></i></span>
             </div>
           </a>
         </div>
-        <!-- Kids & Accessories -->
+        <!-- Kids Collection -->
         <div class="col-md-4">
-          <a href="/category/kids" class="category-card">
+          <a href="/category/kids" class="hm-category-card">
             <img src="https://images.unsplash.com/photo-1519238263530-99bdd11df2ea?w=900" alt="Kids Collection">
-            <div class="category-card-overlay">
-              <h3>Kids & Playwear</h3>
-              <p>Organic cotton sets & weather-ready layers</p>
+            <div class="hm-category-overlay">
+              <h3>Kids</h3>
+              <p>Organic cotton 2-piece sets & weather-ready jackets</p>
               <span>Explore Collection <i class="bi bi-arrow-right"></i></span>
             </div>
           </a>
@@ -150,22 +213,122 @@
     </div>
   </section>
 
-  <!-- Featured Products Section -->
-  <section class="py-5" style="background-color: var(--paper-bg);">
-    <div class="container py-4">
-      <div class="d-flex justify-content-between align-items-end mb-4">
+  <!-- 4. Price-Wise Clothing Combo Packages Showcase -->
+  <section class="py-5" style="background: #fbfbfc; border-top: 1px solid #ededed; border-bottom: 1px solid #ededed;">
+    <div class="container py-3">
+      <div class="d-flex justify-content-between align-items-end flex-wrap gap-2 mb-4">
         <div>
-          <span class="text-uppercase small fw-bold text-muted">Handpicked Highlights</span>
-          <h2 class="display-6 font-serif mt-1 mb-0">Featured Pieces</h2>
+          <div class="d-flex align-items-center gap-2 mb-1">
+            <span class="badge bg-danger text-uppercase fw-bold letter-spacing-1" style="font-size: 0.65rem;">
+              BESTSELLER VALUE
+            </span>
+            <span class="small fw-bold text-muted text-uppercase letter-spacing-1">Smart Wardrobe Packages</span>
+          </div>
+          <h2 class="display-6 font-serif mt-1 mb-0">Price-Wise Combo Collections</h2>
+          <p class="text-secondary small mb-0 mt-1">
+            Complete coordinated looks combining matching shirts, bottoms, and accessories. Save up to 50% with dynamic price recalculation.
+          </p>
         </div>
-        <a href="/shop" class="text-dark fw-bold small text-decoration-underline">View Catalog →</a>
+        <div class="d-flex gap-2 align-items-center">
+          <a href="/combos" class="btn btn-sm btn-fashion-dark px-4 py-2">
+            View All 13 Packages →
+          </a>
+        </div>
       </div>
 
-      <div class="row g-4">
-        <div class="col-6 col-md-4 col-lg-3" th:each="product : ${featuredProducts}">
+      <!-- Featured Combo Cards Grid -->
+      <div class="row g-4" th:if="${featuredCombos != null and not #lists.isEmpty(featuredCombos)}">
+        <div class="col-sm-6 col-lg-3" th:each="combo : ${featuredCombos}">
+          <div class="card h-100 border rounded-3 overflow-hidden shadow-sm product-card transition-all bg-white">
+            <div class="position-relative bg-light" style="height: 300px; overflow: hidden;">
+              <a th:href="@{/combos/{slug}(slug=${combo.slug})}">
+                <img th:src="@{'/combos/' + ${combo.id} + '/collage.jpg'}" th:alt="${combo.name}"
+                     class="w-100 h-100 object-fit-cover"
+                     th:attr="onerror='this.src=\'' + ${combo.imageUrl != null ? combo.imageUrl : 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=600'} + '\';'">
+              </a>
+              <span class="position-absolute top-0 start-0 m-2 badge px-2 py-1 text-uppercase fw-bold small"
+                    th:classappend="${combo.tier.name() == 'BUDGET' ? 'bg-success' : (combo.tier.name() == 'STANDARD' ? 'bg-primary' : (combo.tier.name() == 'PREMIUM' ? 'bg-warning text-dark' : 'bg-dark text-white'))}"
+                    th:text="${combo.tier.displayName}" style="font-size: 0.68rem;">
+                Tier
+              </span>
+              <span class="position-absolute top-0 end-0 m-2 badge bg-danger text-white fw-bold px-2 py-1 small"
+                    th:if="${combo.savingsPercentage > 0}"
+                    th:text="'Save ' + ${combo.savingsPercentage} + '%'" style="font-size: 0.68rem;">
+                Save 35%
+              </span>
+            </div>
+            <div class="card-body p-3 d-flex flex-column justify-content-between">
+              <div>
+                <span class="text-uppercase small fw-bold text-muted letter-spacing-1 d-block mb-1" style="font-size: 0.68rem;">
+                  <i class="bi bi-box-seam me-1"></i><span th:text="${#lists.size(combo.items)} + ' Garments Bundle'">2 Garments</span>
+                </span>
+                <h6 class="card-title font-serif mb-2 text-truncate">
+                  <a th:href="@{/combos/{slug}(slug=${combo.slug})}" class="text-dark text-decoration-none" th:text="${combo.name}">
+                    Combo Name
+                  </a>
+                </h6>
+              </div>
+              <div class="border-top pt-2 mt-2">
+                <div class="d-flex align-items-baseline gap-2 mb-2">
+                  <span class="fs-5 fw-bold font-serif text-dark" th:text="'₹' + ${combo.effectivePrice}">₹499</span>
+                  <span class="small text-muted text-decoration-line-through"
+                        th:if="${combo.originalPrice != null and combo.originalPrice > combo.effectivePrice}"
+                        th:text="'₹' + ${combo.originalPrice}">₹999</span>
+                  <span class="badge bg-success-subtle text-success small ms-auto"
+                        th:if="${combo.savingsAmount > 0}"
+                        th:text="'Save ₹' + ${combo.savingsAmount}">Save ₹300</span>
+                </div>
+                <a th:href="@{/combos/{slug}(slug=${combo.slug})}" class="btn btn-sm btn-fashion-dark w-100 py-2">
+                  <i class="bi bi-sliders me-1"></i> Customize & Order
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. Trending Pieces & New Arrivals (Tabbed Modern Fashion Grid) -->
+  <section class="py-5 bg-white">
+    <div class="container py-3">
+      <div class="d-flex justify-content-between align-items-end flex-wrap gap-2 mb-4 pb-2 border-bottom">
+        <div>
+          <span class="text-uppercase small fw-bold text-muted letter-spacing-2">Seasonal Highlights</span>
+          <h2 class="display-6 font-serif mt-1 mb-0">Trending New Arrivals</h2>
+        </div>
+        
+        <!-- Category Filter Tabs -->
+        <div class="d-flex gap-2 flex-wrap" id="home-cat-tabs">
+          <button type="button" class="btn btn-sm btn-dark rounded-pill px-3 home-filter-btn active" onclick="filterHomeCategory('ALL', this)">
+            All Pieces
+          </button>
+          <button type="button" class="btn btn-sm btn-outline-dark rounded-pill px-3 home-filter-btn" onclick="filterHomeCategory('women', this)">
+            Ladies
+          </button>
+          <button type="button" class="btn btn-sm btn-outline-dark rounded-pill px-3 home-filter-btn" onclick="filterHomeCategory('men', this)">
+            Men
+          </button>
+          <button type="button" class="btn btn-sm btn-outline-dark rounded-pill px-3 home-filter-btn" onclick="filterHomeCategory('kids', this)">
+            Kids
+          </button>
+          <button type="button" class="btn btn-sm btn-outline-dark rounded-pill px-3 home-filter-btn" onclick="filterHomeCategory('accessories', this)">
+            Accessories
+          </button>
+          <button type="button" class="btn btn-sm btn-outline-dark rounded-pill px-3 home-filter-btn" onclick="filterHomeCategory('footwear', this)">
+            Footwear
+          </button>
+        </div>
+      </div>
+
+      <!-- Product Cards Grid with 3:4 Fashion Portrait Ratio -->
+      <div class="row g-4" id="home-products-grid">
+        <div class="col-6 col-md-4 col-lg-3 home-prod-col"
+             th:each="product : ${allProducts != null ? allProducts : featuredProducts}"
+             th:attr="data-category=${#strings.toLowerCase(product.categoryName != null ? product.categoryName : 'all')}">
           <div class="product-card">
             <div class="product-thumb">
-              <span class="product-badge sale" th:if="${product.discountPrice != null}">Sale</span>
+              <span class="product-badge sale" th:if="${product.discountPrice != null}">Special Offer</span>
               <button class="btn-wishlist btn-wishlist-toggle" th:attr="data-product-id=${product.id}" title="Save to wishlist">
                 <i class="bi bi-heart"></i>
               </button>
@@ -173,14 +336,15 @@
                 <img th:src="${product.imageUrl}" th:alt="${product.name}" loading="lazy">
               </a>
             </div>
-            <div class="product-info">
-              <div class="product-cat" th:text="${product.categoryName}">Category</div>
-              <a th:href="@{/products/{id}(id=${product.id})}">
-                <h3 class="product-title" th:text="${product.name}">Product Name</h3>
+            <div class="product-info pt-3">
+              <div class="product-cat small text-muted text-uppercase letter-spacing-1 mb-1" style="font-size: 0.72rem;" th:text="${product.categoryName}">Category</div>
+              <a th:href="@{/products/{id}(id=${product.id})}" class="text-decoration-none">
+                <h3 class="product-title font-serif fs-6 mb-1 text-dark" th:text="${product.name}">Product Name</h3>
               </a>
-              <div class="product-price">
-                <span th:if="${product.discountPrice != null}" th:text="'₹' + ${product.discountPrice}">₹0</span>
-                <span th:classappend="${product.discountPrice != null} ? 'price-original' : ''" th:text="'₹' + ${product.price}">₹0</span>
+              <div class="product-price d-flex align-items-baseline gap-2">
+                <span class="fw-bold text-dark" th:if="${product.discountPrice != null}" th:text="'₹' + ${product.discountPrice}">₹0</span>
+                <span th:classappend="${product.discountPrice != null} ? 'price-original text-muted text-decoration-line-through small' : 'fw-bold text-dark'" th:text="'₹' + ${product.price}">₹0</span>
+                <span class="badge bg-danger-subtle text-danger small ms-auto" th:if="${product.discountPrice != null}">Sale</span>
               </div>
             </div>
           </div>
@@ -189,45 +353,59 @@
     </div>
   </section>
 
-  <!-- Promotional Banner -->
-  <section class="py-5 text-white text-center" style="background-color: var(--primary);">
-    <div class="container py-4">
-      <span class="text-uppercase small letter-spacing-3 fw-bold" style="color: var(--accent);">SPECIAL INTRODUCTORY PRIVILEGE</span>
-      <h2 class="display-5 font-serif my-3">Enjoy 20% Off Your Curated Order</h2>
-      <p class="text-secondary max-w-500 mx-auto mb-4" style="max-width: 500px;">
-        Use coupon code <span class="badge bg-light text-dark px-3 py-2 fw-bold font-monospace fs-6">STYLE20</span> during checkout on orders over ₹1,200.
-      </p>
-      <a href="/shop" class="btn btn-fashion-light">Claim Your Offer</a>
-    </div>
-  </section>
-
-  <!-- Brand Value Props -->
+  <!-- 6. H&M-Standard Customer Value Proposition -->
   <section class="py-5 bg-white border-top">
     <div class="container py-3">
       <div class="row g-4 text-center">
-        <div class="col-md-3">
-          <i class="bi bi-box-seam fs-2 text-dark mb-2 d-inline-block"></i>
-          <h6 class="fw-bold mb-1">Complimentary Shipping</h6>
-          <p class="text-muted small mb-0">Free express shipping on all orders over ₹1,500.</p>
+        <div class="col-6 col-md-3">
+          <i class="bi bi-truck fs-2 text-dark mb-2 d-inline-block"></i>
+          <h6 class="fw-bold mb-1">Express Delivery</h6>
+          <p class="text-muted small mb-0">Complimentary fast shipping on orders over ₹1,500.</p>
         </div>
-        <div class="col-md-3">
-          <i class="bi bi-arrow-counterclockwise fs-2 text-dark mb-2 d-inline-block"></i>
-          <h6 class="fw-bold mb-1">Seamless 15-Day Returns</h6>
-          <p class="text-muted small mb-0">Effortless exchanges or full refunds at your doorstep.</p>
+        <div class="col-6 col-md-3">
+          <i class="bi bi-arrow-repeat fs-2 text-dark mb-2 d-inline-block"></i>
+          <h6 class="fw-bold mb-1">15-Day Doorstep Returns</h6>
+          <p class="text-muted small mb-0">Hassle-free size exchanges and doorstep returns.</p>
         </div>
-        <div class="col-md-3">
+        <div class="col-6 col-md-3">
           <i class="bi bi-shield-check fs-2 text-dark mb-2 d-inline-block"></i>
-          <h6 class="fw-bold mb-1">Certified Authenticity</h6>
+          <h6 class="fw-bold mb-1">Certified Authentic Fabrics</h6>
           <p class="text-muted small mb-0">100% pure organic cotton, genuine leather & merino wool.</p>
         </div>
-        <div class="col-md-3">
-          <i class="bi bi-credit-card fs-2 text-dark mb-2 d-inline-block"></i>
-          <h6 class="fw-bold mb-1">Secure Checkout</h6>
-          <p class="text-muted small mb-0">Encrypted transactions powered by Razorpay & AWS.</p>
+        <div class="col-6 col-md-3">
+          <i class="bi bi-cash-coin fs-2 text-dark mb-2 d-inline-block"></i>
+          <h6 class="fw-bold mb-1">COD & Online Payments</h6>
+          <p class="text-muted small mb-0">Cash on Delivery or instant online payments via Razorpay.</p>
         </div>
       </div>
     </div>
   </section>
+
+  <!-- JavaScript for Home Category Filtering -->
+  <script>
+    function filterHomeCategory(cat, btn) {
+      document.querySelectorAll('.home-filter-btn').forEach(b => {
+        b.classList.remove('btn-dark', 'active');
+        b.classList.add('btn-outline-dark');
+      });
+      if (btn) {
+        btn.classList.remove('btn-outline-dark');
+        btn.classList.add('btn-dark', 'active');
+      }
+
+      const prods = document.querySelectorAll('.home-prod-col');
+      prods.forEach(col => {
+        const pCat = (col.getAttribute('data-category') || '').toLowerCase();
+        if (cat === 'ALL' || pCat === cat.toLowerCase()) {
+          col.style.display = 'block';
+          col.style.opacity = '1';
+        } else {
+          col.style.display = 'none';
+          col.style.opacity = '0';
+        }
+      });
+    }
+  </script>
 
   <!-- Footer -->
   <div th:replace="~{fragments :: footer}"></div>

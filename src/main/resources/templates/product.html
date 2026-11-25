@@ -126,16 +126,31 @@
               </div>
             </div>
 
-            <!-- Quantity & Stock Indicator -->
+            <!-- Quantity & Stock Indicator with Stepper -->
             <div class="row g-3 align-items-center mb-4">
-              <div class="col-4 col-sm-3">
-                <label class="form-label small fw-bold text-uppercase text-dark">Quantity</label>
-                <input type="number" name="quantity" class="form-control" value="1" min="1" th:max="${product.stock}">
+              <div class="col-6 col-sm-4">
+                <label class="form-label small fw-bold text-uppercase text-dark mb-1">Quantity</label>
+                <div class="input-group">
+                  <button class="btn btn-outline-dark rounded-0 px-3" type="button" onclick="changeQty(-1)">
+                    <i class="bi bi-dash-lg"></i>
+                  </button>
+                  <input type="number" id="product-qty-input" name="quantity" class="form-control text-center fw-bold rounded-0"
+                         value="1" min="1" th:max="${product.stock}" readonly>
+                  <button class="btn btn-outline-dark rounded-0 px-3" type="button" onclick="changeQty(1)">
+                    <i class="bi bi-plus-lg"></i>
+                  </button>
+                </div>
               </div>
-              <div class="col-8 col-sm-9 pt-4">
-                <span class="small" th:if="${product.stock > 5}" th:text="'In stock (' + ${product.stock} + ' available)'" style="color: var(--success);">In stock</span>
-                <span class="small text-danger fw-bold" th:if="${product.stock > 0 and product.stock <= 5}" th:text="'Only ' + ${product.stock} + ' left in stock - order soon!'">Only 2 left</span>
-                <span class="small text-danger fw-bold" th:if="${product.stock <= 0}">Currently Sold Out</span>
+              <div class="col-6 col-sm-8 pt-4">
+                <span class="small fw-semibold" th:if="${product.stock > 5}" style="color: var(--success);">
+                  <i class="bi bi-check-circle-fill me-1"></i> In stock (<span th:text="${product.stock}">35</span> units ready to dispatch)
+                </span>
+                <span class="small text-danger fw-bold" th:if="${product.stock > 0 and product.stock <= 5}">
+                  <i class="bi bi-exclamation-triangle-fill me-1"></i> Only <span th:text="${product.stock}">2</span> left in stock - order soon!
+                </span>
+                <span class="small text-danger fw-bold" th:if="${product.stock <= 0}">
+                  <i class="bi bi-x-circle-fill me-1"></i> Currently Sold Out
+                </span>
               </div>
             </div>
 
@@ -163,8 +178,84 @@
             <div id="pincodeResult" class="small mt-2" style="display:none;"></div>
           </div>
 
+          <!-- Product Specifications & Information Accordion (U.S. Polo Assn. Reference Layout) -->
+          <div class="accordion accordion-flush border rounded-3 mb-4 overflow-hidden" id="productInfoAccordion">
+            <!-- Accordion 1: Technical Specifications -->
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="headingSpecs">
+                <button class="accordion-button collapsed fw-bold font-serif py-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSpecs">
+                  <i class="bi bi-sliders me-2 text-dark"></i> Technical Specifications & Details
+                </button>
+              </h2>
+              <div id="collapseSpecs" class="accordion-collapse collapse" data-bs-parent="#productInfoAccordion">
+                <div class="accordion-body small text-secondary">
+                  <div class="row g-2">
+                    <div class="col-6">
+                      <span class="text-muted d-block" style="font-size: 0.72rem;">SKU CODE</span>
+                      <strong class="text-dark font-monospace" th:text="${product.sku != null ? product.sku : 'SH-PROD-' + product.id}">SH-FT-031</strong>
+                    </div>
+                    <div class="col-6">
+                      <span class="text-muted d-block" style="font-size: 0.72rem;">CATEGORY</span>
+                      <strong class="text-dark" th:text="${product.categoryName}">Footwear</strong>
+                    </div>
+                    <div class="col-6 pt-2">
+                      <span class="text-muted d-block" style="font-size: 0.72rem;">UPPER MATERIAL</span>
+                      <strong class="text-dark">High-Density Tech Mesh & Microfiber</strong>
+                    </div>
+                    <div class="col-6 pt-2">
+                      <span class="text-muted d-block" style="font-size: 0.72rem;">OUTSOLE / SOLE</span>
+                      <strong class="text-dark">Pivot-Traction Ergonomic Rubber</strong>
+                    </div>
+                    <div class="col-6 pt-2">
+                      <span class="text-muted d-block" style="font-size: 0.72rem;">TOE STYLE</span>
+                      <strong class="text-dark">Round Toe (Reinforced Bumper)</strong>
+                    </div>
+                    <div class="col-6 pt-2">
+                      <span class="text-muted d-block" style="font-size: 0.72rem;">OCCASION</span>
+                      <strong class="text-dark">All-Day Athleisure, Casual & Streetwear</strong>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Accordion 2: Material & Care -->
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="headingCare">
+                <button class="accordion-button collapsed fw-bold font-serif py-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCare">
+                  <i class="bi bi-shield-check me-2 text-dark"></i> Material Composition & Care
+                </button>
+              </h2>
+              <div id="collapseCare" class="accordion-collapse collapse" data-bs-parent="#productInfoAccordion">
+                <div class="accordion-body small text-secondary">
+                  <ul class="mb-0 ps-3">
+                    <li>Engineered with breathable dual-zone airflow mesh and reinforced heel counter.</li>
+                    <li>Dual-density memory foam insole provides dynamic arch cushioning.</li>
+                    <li><strong>Care Instructions:</strong> Wipe exterior gently with a clean damp microfiber cloth or soft sneaker brush. Air dry away from direct heat or intense sunlight. Do not machine wash or soak.</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <!-- Accordion 3: Shipping, COD & Returns -->
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="headingShipping">
+                <button class="accordion-button collapsed fw-bold font-serif py-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseShipping">
+                  <i class="bi bi-truck me-2 text-dark"></i> Shipping, COD & 15-Day Doorstep Returns
+                </button>
+              </h2>
+              <div id="collapseShipping" class="accordion-collapse collapse" data-bs-parent="#productInfoAccordion">
+                <div class="accordion-body small text-secondary">
+                  <p class="mb-2"><strong>Express Shipping:</strong> Complimentary doorstep delivery on all orders over ₹1,500 across 24,000+ Indian postal codes. Dispatched within 24 hours.</p>
+                  <p class="mb-2"><strong>Payment Options:</strong> Cash on Delivery (COD) and all major Online Payment modes (UPI, Credit/Debit Cards, NetBanking).</p>
+                  <p class="mb-0"><strong>15-Day Easy Returns:</strong> If you are not completely satisfied or need a different size, request a free doorstep exchange or return within 15 days of delivery.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <!-- Highlights Checklist -->
-          <div class="border-top mt-5 pt-4">
+          <div class="border-top mt-4 pt-4">
             <ul class="list-unstyled small d-flex flex-column gap-2 text-muted">
               <li><i class="bi bi-truck me-2 text-dark"></i> Free express shipping on orders over ₹1,500</li>
               <li><i class="bi bi-arrow-repeat me-2 text-dark"></i> 15-day complimentary returns & doorstep pickups</li>
@@ -208,68 +299,129 @@
         <p class="text-muted mb-0">Be the first to share your experience with this piece.</p>
       </div>
     </section>
+
+    <!-- Related Products Section (U.S. Polo Assn. & H&M Modern Recommendations) -->
+    <section class="mt-5 pt-5 border-top" th:if="${not #lists.isEmpty(relatedProducts)}">
+      <div class="d-flex justify-content-between align-items-end mb-4">
+        <div>
+          <span class="text-uppercase small fw-bold text-muted letter-spacing-1">Complete Your Wardrobe</span>
+          <h3 class="font-serif display-6 mb-0">You May Also Like</h3>
+        </div>
+        <a th:href="@{/category/{slug}(slug=${product.category != null ? product.category.slug : 'all'})}"
+           class="btn btn-sm btn-link text-dark fw-bold text-decoration-none">
+          Explore Category <i class="bi bi-arrow-right"></i>
+        </a>
+      </div>
+
+      <div class="row g-4">
+        <div class="col-6 col-md-3" th:each="rel : ${relatedProducts}">
+          <div class="card h-100 border-0 rounded-0 shadow-none product-card">
+            <div class="position-relative bg-light overflow-hidden rounded-2 mb-2" style="aspect-ratio: 3 / 4;">
+              <span class="badge bg-danger position-absolute top-0 start-0 m-2 px-2 py-1 small fw-bold"
+                    th:if="${rel.discountPrice != null}">Special Offer</span>
+              <a th:href="@{/products/{id}(id=${rel.id})}">
+                <img th:src="${rel.imageUrl}" th:alt="${rel.name}"
+                     class="w-100 h-100 object-fit-cover transition-all" loading="lazy">
+              </a>
+            </div>
+            <div class="pt-2">
+              <span class="text-uppercase small text-muted d-block" style="font-size: 0.7rem;" th:text="${rel.categoryName}">CATEGORY</span>
+              <a th:href="@{/products/{id}(id=${rel.id})}" class="text-decoration-none text-dark">
+                <h6 class="font-serif text-truncate mb-1" th:text="${rel.name}">Related Product</h6>
+              </a>
+              <div class="d-flex align-items-baseline gap-2">
+                <span class="fw-bold text-dark" th:if="${rel.discountPrice != null}" th:text="'₹' + ${rel.discountPrice}">₹0</span>
+                <span th:classappend="${rel.discountPrice != null} ? 'text-muted text-decoration-line-through small' : 'fw-bold text-dark'"
+                      th:text="'₹' + ${rel.price}">₹0</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
   </main>
 
-  <!-- Size Guide Modal -->
+  <!-- Comprehensive Size Guide Modal (Footwear & Apparel) -->
   <div class="modal fade" id="sizeGuideModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
       <div class="modal-content">
         <div class="modal-header border-bottom">
-          <h5 class="modal-title font-serif">Garment Size Guide</h5>
+          <h5 class="modal-title font-serif">StyleHub Official Sizing Guide</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
-        <div class="modal-body">
-          <p class="small text-muted mb-3">All measurements are provided in inches for a standard tailored fit.</p>
-          <div class="table-responsive">
-            <table class="table table-bordered table-sm text-center small align-middle mb-0">
-              <thead class="table-dark">
-                <tr>
-                  <th>Size</th>
-                  <th>Chest (in)</th>
-                  <th>Waist (in)</th>
-                  <th>Length (in)</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td class="fw-bold">S</td>
-                  <td>36 - 38</td>
-                  <td>28 - 30</td>
-                  <td>27.5</td>
-                </tr>
-                <tr class="table-active">
-                  <td class="fw-bold">M</td>
-                  <td>39 - 41</td>
-                  <td>31 - 33</td>
-                  <td>28.5</td>
-                </tr>
-                <tr>
-                  <td class="fw-bold">L</td>
-                  <td>42 - 44</td>
-                  <td>34 - 36</td>
-                  <td>29.5</td>
-                </tr>
-                <tr>
-                  <td class="fw-bold">XL</td>
-                  <td>45 - 47</td>
-                  <td>37 - 39</td>
-                  <td>30.5</td>
-                </tr>
-                <tr>
-                  <td class="fw-bold">XXL</td>
-                  <td>48 - 50</td>
-                  <td>40 - 42</td>
-                  <td>31.5</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <div class="alert alert-light border small mt-3 mb-0">
-            <i class="bi bi-info-circle me-1 text-primary"></i> <strong>Fit Tip:</strong> For an oversized or relaxed look, order one size up. Doorstep size exchanges are complimentary within 15 days.
+        <div class="modal-body p-4">
+          <!-- Size Guide Tabs -->
+          <ul class="nav nav-pills mb-3 gap-2" id="sizeGuideTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button class="nav-link active px-4 py-2 fw-semibold rounded-pill" id="footwear-tab" data-bs-toggle="pill" data-bs-target="#footwearSizePanel" type="button" role="tab">
+                <i class="bi bi-box me-1"></i> Footwear Sizes (UK / India)
+              </button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link px-4 py-2 fw-semibold rounded-pill" id="apparel-tab" data-bs-toggle="pill" data-bs-target="#apparelSizePanel" type="button" role="tab">
+                <i class="bi bi-tag me-1"></i> Apparel Sizes (Clothing)
+              </button>
+            </li>
+          </ul>
+
+          <div class="tab-content" id="sizeGuideTabsContent">
+            <!-- Footwear Size Chart Tab -->
+            <div class="tab-pane fade show active" id="footwearSizePanel" role="tabpanel">
+              <p class="small text-muted mb-3">Footwear conversions for sneakers, court shoes, and loafers. Measure heel to toe.</p>
+              <div class="table-responsive">
+                <table class="table table-bordered table-hover table-sm text-center small align-middle mb-0">
+                  <thead class="table-dark">
+                    <tr>
+                      <th>UK / India Size</th>
+                      <th>EU Size</th>
+                      <th>US Size</th>
+                      <th>Foot Length (CM)</th>
+                      <th>Foot Length (Inches)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr><td class="fw-bold">UK 6</td><td>39.5</td><td>7</td><td>25.0 cm</td><td>9.8 in</td></tr>
+                    <tr class="table-active"><td class="fw-bold">UK 7</td><td>41</td><td>8</td><td>25.8 cm</td><td>10.1 in</td></tr>
+                    <tr class="table-primary"><td class="fw-bold">UK 8 (Standard)</td><td>42.5</td><td>9</td><td>26.7 cm</td><td>10.5 in</td></tr>
+                    <tr class="table-active"><td class="fw-bold">UK 9</td><td>43.5</td><td>10</td><td>27.5 cm</td><td>10.8 in</td></tr>
+                    <tr><td class="fw-bold">UK 10</td><td>45</td><td>11</td><td>28.3 cm</td><td>11.1 in</td></tr>
+                    <tr><td class="fw-bold">UK 11</td><td>46</td><td>12</td><td>29.2 cm</td><td>11.5 in</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="alert alert-light border small mt-3 mb-0">
+                <i class="bi bi-info-circle me-1 text-primary"></i> <strong>Sneaker Fit Note:</strong> The Round Toe Pivot Pro Sneakers run true to UK/India sizing. If you have broader feet or prefer a relaxed toe box, we recommend choosing one size up.
+              </div>
+            </div>
+
+            <!-- Apparel Size Chart Tab -->
+            <div class="tab-pane fade" id="apparelSizePanel" role="tabpanel">
+              <p class="small text-muted mb-3">All garment measurements are provided in inches for a modern tailored silhouette.</p>
+              <div class="table-responsive">
+                <table class="table table-bordered table-hover table-sm text-center small align-middle mb-0">
+                  <thead class="table-dark">
+                    <tr>
+                      <th>Size</th>
+                      <th>Chest (in)</th>
+                      <th>Waist (in)</th>
+                      <th>Length (in)</th>
+                      <th>Shoulder (in)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr><td class="fw-bold">S</td><td>36 - 38</td><td>28 - 30</td><td>27.5</td><td>17.0</td></tr>
+                    <tr class="table-active"><td class="fw-bold">M</td><td>39 - 41</td><td>31 - 33</td><td>28.5</td><td>18.0</td></tr>
+                    <tr><td class="fw-bold">L</td><td>42 - 44</td><td>34 - 36</td><td>29.5</td><td>19.0</td></tr>
+                    <tr><td class="fw-bold">XL</td><td>45 - 47</td><td>37 - 39</td><td>30.5</td><td>20.0</td></tr>
+                    <tr><td class="fw-bold">XXL</td><td>48 - 50</td><td>40 - 42</td><td>31.5</td><td>21.0</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
           </div>
         </div>
         <div class="modal-footer border-top">
-          <button type="button" class="btn btn-sm btn-dark" data-bs-dismiss="modal">Close Guide</button>
+          <button type="button" class="btn btn-sm btn-dark px-4" data-bs-dismiss="modal">Close Guide</button>
         </div>
       </div>
     </div>
@@ -333,6 +485,18 @@
         thumbElement.classList.remove('border-secondary-subtle', 'opacity-75');
         thumbElement.classList.add('border-dark', 'shadow-sm', 'active-thumb');
       }
+    }
+
+    function changeQty(delta) {
+      const input = document.getElementById('product-qty-input');
+      if (!input) return;
+      let val = parseInt(input.value) || 1;
+      const max = parseInt(input.getAttribute('max')) || 99;
+      const min = parseInt(input.getAttribute('min')) || 1;
+      val += delta;
+      if (val < min) val = min;
+      if (val > max) val = max;
+      input.value = val;
     }
 
     function checkPincode() {

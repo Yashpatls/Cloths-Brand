@@ -2,6 +2,7 @@ package com.stylehub.controller;
 
 import com.stylehub.model.Product;
 import com.stylehub.service.CategoryService;
+import com.stylehub.service.ComboService;
 import com.stylehub.service.ProductService;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -15,10 +16,12 @@ public class HomeController {
 
     private final ProductService productService;
     private final CategoryService categoryService;
+    private final ComboService comboService;
 
-    public HomeController(ProductService productService, CategoryService categoryService) {
+    public HomeController(ProductService productService, CategoryService categoryService, ComboService comboService) {
         this.productService = productService;
         this.categoryService = categoryService;
+        this.comboService = comboService;
     }
 
     @GetMapping("/")
@@ -28,8 +31,10 @@ public class HomeController {
             featured = productService.getAllActive().stream().limit(8).toList();
         }
         model.addAttribute("featuredProducts", featured);
+        model.addAttribute("allProducts", productService.getAllActive());
         model.addAttribute("categories", categoryService.getAllActive());
         model.addAttribute("newArrivals", productService.getAllActive().stream().limit(4).toList());
+        model.addAttribute("featuredCombos", comboService.getAllActive(null, null, null).stream().limit(4).toList());
         return "index";
     }
 

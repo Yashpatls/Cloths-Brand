@@ -227,9 +227,16 @@ public class ComboImageGenerator {
         g2.drawString(text, (width - fm.stringWidth(text)) / 2, height / 2);
     }
 
+    private static final java.util.Map<String, BufferedImage> IMAGE_MEM_CACHE = new java.util.concurrent.ConcurrentHashMap<>();
+
     private BufferedImage fetchImage(String urlStr) {
         if (urlStr == null || urlStr.isBlank()) {
             return null;
+        }
+
+        BufferedImage cached = IMAGE_MEM_CACHE.get(urlStr);
+        if (cached != null) {
+            return cached;
         }
 
         try {
@@ -238,7 +245,9 @@ public class ComboImageGenerator {
                 String relative = urlStr.substring("/uploads/".length());
                 File localFile = new File("uploads", relative);
                 if (localFile.exists() && localFile.isFile()) {
-                    return ImageIO.read(localFile);
+                    BufferedImage img = ImageIO.read(localFile);
+                    if (img != null) IMAGE_MEM_CACHE.put(urlStr, img);
+                    return img;
                 }
                 return null;
             }
@@ -247,7 +256,9 @@ public class ComboImageGenerator {
             if (urlStr.startsWith("/images/")) {
                 try (InputStream in = getClass().getResourceAsStream("/static" + urlStr)) {
                     if (in != null) {
-                        return ImageIO.read(in);
+                        BufferedImage img = ImageIO.read(in);
+                        if (img != null) IMAGE_MEM_CACHE.put(urlStr, img);
+                        return img;
                     }
                 }
                 return null;
@@ -262,15 +273,19 @@ public class ComboImageGenerator {
             URI uri = URI.create(targetUrl);
             URL url = uri.toURL();
             URLConnection conn = url.openConnection();
-            conn.setConnectTimeout(3000);
-            conn.setReadTimeout(3000);
+            conn.setConnectTimeout(1500);
+            conn.setReadTimeout(1500);
             conn.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36");
             conn.setRequestProperty("Accept", "image/jpeg,image/png,image/*;q=0.9");
 
             try (InputStream in = conn.getInputStream()) {
                 byte[] data = in.readAllBytes();
                 try (java.io.ByteArrayInputStream bais = new java.io.ByteArrayInputStream(data)) {
-                    return ImageIO.read(bais);
+                    BufferedImage img = ImageIO.read(bais);
+                    if (img != null) {
+                        IMAGE_MEM_CACHE.put(urlStr, img);
+                    }
+                    return img;
                 }
             }
         } catch (Exception e) {

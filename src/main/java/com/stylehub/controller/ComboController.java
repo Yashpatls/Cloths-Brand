@@ -168,11 +168,24 @@ public class ComboController {
             @RequestParam(required = false) List<Long> itemIds,
             @RequestParam(required = false) List<Long> productIds) {
 
-        byte[] imageBytes = comboImageService.generateCollageForCombo(id, itemIds, productIds);
-        return ResponseEntity.ok()
-                .cacheControl(CacheControl.noCache())
-                .contentType(MediaType.IMAGE_JPEG)
-                .body(imageBytes);
+        try {
+            byte[] imageBytes = comboImageService.generateCollageForCombo(id, itemIds, productIds);
+            if (imageBytes != null && imageBytes.length > 0) {
+                return ResponseEntity.ok()
+                        .cacheControl(CacheControl.noCache())
+                        .contentType(MediaType.IMAGE_JPEG)
+                        .body(imageBytes);
+            }
+        } catch (Exception ignored) {}
+
+        try {
+            ComboPackage combo = comboService.getById(id);
+            if (combo != null && combo.getImageUrl() != null && !combo.getImageUrl().isBlank()) {
+                return ResponseEntity.status(302).location(java.net.URI.create(combo.getImageUrl())).build();
+            }
+        } catch (Exception ignored) {}
+
+        return ResponseEntity.notFound().build();
     }
 
     /**

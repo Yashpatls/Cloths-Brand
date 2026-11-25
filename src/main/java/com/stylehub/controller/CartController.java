@@ -109,6 +109,9 @@ public class CartController {
     public String removeItem(
             @RequestParam(required = false) Long itemId,
             @PathVariable(value = "itemId", required = false) Long itemIdPath,
+            @RequestParam(required = false, defaultValue = "/cart") String redirect,
+            Authentication auth,
+            HttpSession session,
             RedirectAttributes redirectAttributes) {
 
         Long targetId = itemId != null ? itemId : itemIdPath;
@@ -120,6 +123,17 @@ public class CartController {
                 redirectAttributes.addFlashAttribute("errorMessage", "Could not remove item: " + e.getMessage());
             }
         }
+
+        if ("/checkout".equalsIgnoreCase(redirect)) {
+            String email = auth != null ? auth.getName() : null;
+            Cart cart = cartService.getOrCreateCart(email, session.getId());
+            if (cart.getItems().isEmpty()) {
+                redirectAttributes.addFlashAttribute("errorMessage", "Your shopping bag is empty. Please add items to proceed with checkout.");
+                return "redirect:/cart";
+            }
+            return "redirect:/checkout";
+        }
+
         return "redirect:/cart";
     }
 

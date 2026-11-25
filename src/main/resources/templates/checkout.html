@@ -121,7 +121,17 @@
                 <small class="text-muted d-block" style="font-size: 0.75rem;" th:if="${item.isCombo}" th:text="${item.comboSelections} + ' · Qty ' + ${item.quantity}"></small>
                 <small class="text-muted" th:unless="${item.isCombo}" th:text="${item.selectedSize} + ' · ' + ${item.selectedColor} + ' · Qty ' + ${item.quantity}"></small>
               </div>
-              <strong class="small" th:text="'₹' + ${item.totalPrice}">₹0</strong>
+              <div class="text-end d-flex flex-column align-items-end justify-content-center">
+                <strong class="small" th:text="'₹' + ${item.totalPrice}">₹0</strong>
+                <form th:action="@{/cart/remove}" method="post" class="mt-1 d-inline">
+                  <input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                  <input type="hidden" name="itemId" th:value="${item.id}">
+                  <input type="hidden" name="redirect" value="/checkout">
+                  <button type="submit" class="btn btn-sm btn-link text-danger p-0 text-decoration-none" title="Remove item from bag" style="font-size: 0.78rem;">
+                    <i class="bi bi-trash3 me-1"></i>Remove
+                  </button>
+                </form>
+              </div>
             </div>
           </div>
 

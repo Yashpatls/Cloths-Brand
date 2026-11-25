@@ -7,7 +7,13 @@
 
   <div th:replace="~{fragments :: header}"></div>
 
-  <main class="container py-5 d-flex justify-content-center align-items-center" style="min-height: 75vh;">
+  <main class="container py-5 d-flex flex-column justify-content-center align-items-center" style="min-height: 75vh;">
+    <div class="mb-3 text-start" style="max-width: 500px; width: 100%;">
+      <button type="button" class="btn-luxury-back ripple-effect" onclick="handlePageBack(event)">
+        <i class="bi bi-arrow-left arrow-icon"></i>
+        <span>Back</span>
+      </button>
+    </div>
     <div class="card border-0 shadow-sm p-4 p-md-5 rounded-3 bg-white" style="max-width: 500px; width: 100%;">
       <div class="text-center mb-4">
         <span class="text-uppercase small fw-bold text-muted">NEW CLIENT REGISTRATION</span>

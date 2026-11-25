@@ -8,9 +8,15 @@
   <div th:replace="~{fragments :: header}"></div>
 
   <main class="container py-5">
-    <div class="mb-4 text-center">
-      <span class="text-uppercase small fw-bold text-muted">SECURE TRANSACTION</span>
-      <h1 class="display-6 font-serif mt-1">Express Checkout</h1>
+    <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-4 pb-2 border-bottom">
+      <button type="button" class="btn-luxury-back ripple-effect" onclick="handlePageBack(event)">
+        <i class="bi bi-arrow-left arrow-icon"></i>
+        <span>Back to Bag</span>
+      </button>
+      <div class="text-end">
+        <span class="text-uppercase small fw-bold text-muted">SECURE TRANSACTION</span>
+        <h1 class="display-6 font-serif mt-1 mb-0">Express Checkout</h1>
+      </div>
     </div>
 
     <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">

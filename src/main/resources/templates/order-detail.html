@@ -8,14 +8,20 @@
   <div th:replace="~{fragments :: header}"></div>
 
   <main class="container py-5" style="max-width: 900px;">
-    <!-- Breadcrumb -->
-    <nav aria-label="breadcrumb" class="mb-4">
-      <ol class="breadcrumb small">
-        <li class="breadcrumb-item"><a href="/">Home</a></li>
-        <li class="breadcrumb-item"><a href="/orders">My Orders</a></li>
-        <li class="breadcrumb-item active" th:text="${order.orderNumber}">SH-0000</li>
-      </ol>
-    </nav>
+    <!-- Top Back Navigation & Breadcrumb -->
+    <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-4 pb-2 border-bottom">
+      <button type="button" class="btn-luxury-back ripple-effect" onclick="handlePageBack(event)">
+        <i class="bi bi-arrow-left arrow-icon"></i>
+        <span>Back to Orders</span>
+      </button>
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb mb-0 small">
+          <li class="breadcrumb-item"><a href="/" class="text-decoration-none text-muted">Home</a></li>
+          <li class="breadcrumb-item"><a href="/orders" class="text-decoration-none text-muted">My Orders</a></li>
+          <li class="breadcrumb-item active text-dark fw-semibold" th:text="${order.orderNumber}">SH-0000</li>
+        </ol>
+      </nav>
+    </div>
 
     <!-- Header Box -->
     <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 border-bottom pb-3 mb-4">

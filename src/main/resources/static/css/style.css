@@ -1119,3 +1119,183 @@ a:hover {
   flex-grow: 1;
 }
 
+/* ==============================================================================
+   Luxury Page Back Option & Micro-Interactions
+   ============================================================================== */
+
+/* In-page Back Button */
+.btn-luxury-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 1.15rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #1a1a1a;
+  background-color: #ffffff;
+  border: 1px solid #e5e5e5;
+  border-radius: 9999px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  user-select: none;
+  text-decoration: none !important;
+}
+
+.btn-luxury-back .arrow-icon {
+  font-size: 0.95rem;
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-luxury-back:hover {
+  background-color: #0a0a0a;
+  color: #ffffff !important;
+  border-color: #0a0a0a;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(10, 10, 10, 0.15);
+}
+
+.btn-luxury-back:hover .arrow-icon {
+  transform: translateX(-4px);
+}
+
+.btn-luxury-back:active {
+  transform: translateY(0) scale(0.96);
+}
+
+/* Global Floating Navigation Container (Available on every page) */
+.floating-nav-container {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.75rem;
+  z-index: 1050;
+  pointer-events: none;
+}
+
+.floating-nav-container * {
+  pointer-events: auto;
+}
+
+/* Floating Action Buttons */
+.floating-nav-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  height: 46px;
+  border-radius: 9999px;
+  background-color: rgba(10, 10, 10, 0.92);
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+  padding: 0 1.15rem;
+}
+
+.floating-nav-btn .arrow-icon {
+  font-size: 1rem;
+  transition: transform 0.25s ease;
+}
+
+.floating-back-btn:hover {
+  background-color: #000000;
+  transform: translateY(-3px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.3);
+}
+
+.floating-back-btn:hover .arrow-icon {
+  transform: translateX(-4px);
+}
+
+.floating-top-btn {
+  width: 46px;
+  padding: 0;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(12px) scale(0.85);
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.floating-top-btn.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+}
+
+.floating-top-btn:hover {
+  background-color: #000000;
+  transform: translateY(-3px) scale(1.05);
+}
+
+.floating-top-btn:hover .arrow-icon {
+  transform: translateY(-3px);
+}
+
+.floating-nav-btn:active {
+  transform: scale(0.92);
+}
+
+/* Material Click Ripple Effect */
+.ripple {
+  position: absolute;
+  border-radius: 50%;
+  transform: scale(0);
+  animation: rippleAnimation 0.6s linear;
+  background-color: rgba(255, 255, 255, 0.4);
+  pointer-events: none;
+}
+
+.btn-luxury-back .ripple {
+  background-color: rgba(10, 10, 10, 0.15);
+}
+
+.btn-luxury-back:hover .ripple {
+  background-color: rgba(255, 255, 255, 0.4);
+}
+
+@keyframes rippleAnimation {
+  to {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+/* Page Transition Effects */
+body {
+  animation: pageFadeIn 0.35s ease-out;
+}
+
+@keyframes pageFadeIn {
+  from {
+    opacity: 0.6;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+body.page-exit-back {
+  opacity: 0;
+  transform: translateX(12px);
+  transition: opacity 0.22s ease-out, transform 0.22s ease-out;
+}
+

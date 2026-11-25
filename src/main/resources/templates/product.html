@@ -8,17 +8,23 @@
   <div th:replace="~{fragments :: header}"></div>
 
   <main class="container py-5">
-    <!-- Breadcrumb -->
-    <nav aria-label="breadcrumb" class="mb-4">
-      <ol class="breadcrumb small">
-        <li class="breadcrumb-item"><a href="/">Home</a></li>
-        <li class="breadcrumb-item"><a href="/shop">Shop</a></li>
-        <li class="breadcrumb-item" th:if="${product.category != null}">
-          <a th:href="@{/category/{slug}(slug=${product.category.slug})}" th:text="${product.categoryName}">Category</a>
-        </li>
-        <li class="breadcrumb-item active" th:text="${product.name}">Product Name</li>
-      </ol>
-    </nav>
+    <!-- Top Back Navigation & Breadcrumb -->
+    <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-4 pb-2 border-bottom">
+      <button type="button" class="btn-luxury-back ripple-effect" onclick="handlePageBack(event)">
+        <i class="bi bi-arrow-left arrow-icon"></i>
+        <span>Back to Products</span>
+      </button>
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb mb-0 small">
+          <li class="breadcrumb-item"><a href="/" class="text-decoration-none text-muted">Home</a></li>
+          <li class="breadcrumb-item"><a href="/shop" class="text-decoration-none text-muted">Shop</a></li>
+          <li class="breadcrumb-item" th:if="${product.category != null}">
+            <a th:href="@{/category/{slug}(slug=${product.category.slug})}" th:text="${product.categoryName}" class="text-decoration-none text-muted">Category</a>
+          </li>
+          <li class="breadcrumb-item active text-dark fw-semibold" th:text="${product.name}">Product Name</li>
+        </ol>
+      </nav>
+    </div>
 
     <!-- Feedback messages -->
     <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">

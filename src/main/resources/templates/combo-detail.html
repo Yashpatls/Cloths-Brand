@@ -9,17 +9,23 @@
   <div th:replace="~{fragments :: header}"></div>
 
   <main class="container py-5">
-    <!-- Breadcrumb -->
-    <nav aria-label="breadcrumb" class="mb-4">
-      <ol class="breadcrumb small">
-        <li class="breadcrumb-item"><a href="/">Home</a></li>
-        <li class="breadcrumb-item"><a href="/combos">Combo Packages</a></li>
-        <li class="breadcrumb-item">
-          <a th:href="@{/combos(tier=${combo.tier.name()})}" th:text="${combo.tier.displayName}">Budget Combos</a>
-        </li>
-        <li class="breadcrumb-item active" th:text="${combo.name}">Combo Name</li>
-      </ol>
-    </nav>
+    <!-- Top Back Navigation & Breadcrumb -->
+    <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-4 pb-2 border-bottom">
+      <button type="button" class="btn-luxury-back ripple-effect" onclick="handlePageBack(event)">
+        <i class="bi bi-arrow-left arrow-icon"></i>
+        <span>Back to Combos</span>
+      </button>
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb mb-0 small">
+          <li class="breadcrumb-item"><a href="/" class="text-decoration-none text-muted">Home</a></li>
+          <li class="breadcrumb-item"><a href="/combos" class="text-decoration-none text-muted">Combo Packages</a></li>
+          <li class="breadcrumb-item">
+            <a th:href="@{/combos(tier=${combo.tier.name()})}" th:text="${combo.tier.displayName}" class="text-decoration-none text-muted">Budget Combos</a>
+          </li>
+          <li class="breadcrumb-item active text-dark fw-semibold" th:text="${combo.name}">Combo Name</li>
+        </ol>
+      </nav>
+    </div>
 
     <!-- Feedback alerts -->
     <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">

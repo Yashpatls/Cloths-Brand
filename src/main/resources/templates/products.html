@@ -11,13 +11,19 @@
   <main class="container py-4">
     <!-- Breadcrumb & Header Banner -->
     <div class="mb-4">
-      <nav aria-label="breadcrumb">
-        <ol class="breadcrumb small">
-          <li class="breadcrumb-item"><a href="/" class="text-decoration-none text-muted">Home</a></li>
-          <li class="breadcrumb-item"><a href="/shop" class="text-decoration-none text-muted">Shop</a></li>
-          <li class="breadcrumb-item active text-dark fw-semibold" aria-current="page" th:text="${category != null ? category.name : (selectedCategory != null ? selectedCategory : 'All Categories')}">Catalog</li>
-        </ol>
-      </nav>
+      <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
+        <button type="button" class="btn-luxury-back ripple-effect" onclick="handlePageBack(event)">
+          <i class="bi bi-arrow-left arrow-icon"></i>
+          <span>Back</span>
+        </button>
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb mb-0 small">
+            <li class="breadcrumb-item"><a href="/" class="text-decoration-none text-muted">Home</a></li>
+            <li class="breadcrumb-item"><a href="/shop" class="text-decoration-none text-muted">Shop</a></li>
+            <li class="breadcrumb-item active text-dark fw-semibold" aria-current="page" th:text="${category != null ? category.name : (selectedCategory != null ? selectedCategory : 'All Categories')}">Catalog</li>
+          </ol>
+        </nav>
+      </div>
 
       <!-- Category Banner Card if Category is selected -->
       <div th:if="${category != null}" class="card border-0 rounded-4 overflow-hidden mb-4 shadow-sm position-relative bg-light">

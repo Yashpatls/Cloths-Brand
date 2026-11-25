@@ -1,5 +1,56 @@
 // StyleHub Client-side JavaScript enhancements
 
+// Global Smart Back Navigation with Ripple and Page Exit Transition Effect
+function handlePageBack(e) {
+  if (e) createRipple(e);
+
+  // Add smooth exit animation effect to page body
+  document.body.classList.add('page-exit-back');
+
+  setTimeout(() => {
+    // If there is browser history and referrer belongs to same host, go back
+    if (window.history.length > 1 && document.referrer && document.referrer.includes(window.location.host)) {
+      window.history.back();
+    } else {
+      // Fallback default
+      window.location.href = '/shop';
+    }
+  }, 180);
+}
+
+// Global Scroll to Top with Smooth Gliding Effect
+function handleScrollToTop(e) {
+  if (e) createRipple(e);
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth'
+  });
+}
+
+// Ripple Effect generator
+function createRipple(event) {
+  const button = event.currentTarget || (event.target ? event.target.closest('button, a') : null);
+  if (!button) return;
+  const circle = document.createElement('span');
+  const diameter = Math.max(button.clientWidth, button.clientHeight);
+  const radius = diameter / 2;
+  const rect = button.getBoundingClientRect();
+
+  const clientX = (event.clientX && event.clientX > 0) ? event.clientX : (rect.left + radius);
+  const clientY = (event.clientY && event.clientY > 0) ? event.clientY : (rect.top + radius);
+
+  circle.style.width = circle.style.height = `${diameter}px`;
+  circle.style.left = `${clientX - rect.left - radius}px`;
+  circle.style.top = `${clientY - rect.top - radius}px`;
+  circle.classList.add('ripple');
+
+  const existingRipple = button.querySelector('.ripple');
+  if (existingRipple) {
+    existingRipple.remove();
+  }
+  button.appendChild(circle);
+}
+
 document.addEventListener('DOMContentLoaded', () => {
 
   // 1. Wishlist Toggle Handlers
@@ -167,4 +218,41 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }
+
+  // 4. Floating Back & Scroll-to-Top Handlers
+  const backToTopBtn = document.getElementById('globalBackToTopBtn');
+  const floatingBackBtn = document.getElementById('globalFloatingBackBtn');
+
+  // Only show floating back button on subpages (not on homepage root '/')
+  if (floatingBackBtn) {
+    const isHome = window.location.pathname === '/' || window.location.pathname === '';
+    if (isHome) {
+      floatingBackBtn.style.display = 'none';
+    } else {
+      floatingBackBtn.style.display = 'inline-flex';
+    }
+  }
+
+  // Scroll listener for Back to Top visibility
+  let isScrolling = false;
+  window.addEventListener('scroll', () => {
+    if (!isScrolling) {
+      window.requestAnimationFrame(() => {
+        if (backToTopBtn) {
+          if (window.scrollY > 220) {
+            backToTopBtn.classList.add('show');
+          } else {
+            backToTopBtn.classList.remove('show');
+          }
+        }
+        isScrolling = false;
+      });
+      isScrolling = true;
+    }
+  }, { passive: true });
+
+  // Attach ripple effect to all ripple-effect and back buttons automatically
+  document.querySelectorAll('.ripple-effect, .btn-luxury-back, .floating-nav-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => createRipple(e));
+  });
 });

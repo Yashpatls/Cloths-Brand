@@ -220,6 +220,20 @@
       </div>
     </div>
 
+    <!-- Global Floating Action Buttons (Back to Top & Quick Back on all pages) -->
+    <div class="floating-nav-container" id="floatingNavContainer">
+      <!-- Quick Back Button (auto-hidden on home, visible on all subpages) -->
+      <button type="button" class="floating-nav-btn floating-back-btn ripple-effect" id="globalFloatingBackBtn" onclick="handlePageBack(event)" title="Go Back">
+        <i class="bi bi-arrow-left arrow-icon"></i>
+        <span class="btn-label d-none d-sm-inline">Back</span>
+      </button>
+
+      <!-- Back to Top Button (smoothly slides in on scroll) -->
+      <button type="button" class="floating-nav-btn floating-top-btn ripple-effect" id="globalBackToTopBtn" onclick="handleScrollToTop(event)" title="Back to Top">
+        <i class="bi bi-arrow-up arrow-icon"></i>
+      </button>
+    </div>
+
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>

@@ -8,6 +8,12 @@
   <div th:replace="~{fragments :: header}"></div>
 
   <main class="container py-5">
+    <div class="d-flex justify-content-start mb-3">
+      <button type="button" class="btn-luxury-back ripple-effect" onclick="handlePageBack(event)">
+        <i class="bi bi-arrow-left arrow-icon"></i>
+        <span>Back</span>
+      </button>
+    </div>
     <div class="mb-5 text-center">
       <span class="text-uppercase small fw-bold text-muted letter-spacing-2">AT YOUR SERVICE</span>
       <h1 class="display-5 font-serif mt-1">Concierge & Contact</h1>

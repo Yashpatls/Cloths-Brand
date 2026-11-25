@@ -225,7 +225,7 @@ public class DataSeeder {
                 p.setPrice(BigDecimal.valueOf(1799));
                 p.setCategory(menCat);
                 p.setCategoryName(menCat.getName());
-                p.setImageUrl("https://images.unsplash.com/photo-1542272604-780c96856592?w=900");
+                p.setImageUrl("https://images.unsplash.com/photo-1714143136372-ddaf8b606da7?w=900");
                 p.setStock(40);
                 p.setActive(true);
                 Product saved = productRepo.save(p);
@@ -293,7 +293,7 @@ public class DataSeeder {
                 p.setPrice(BigDecimal.valueOf(499));
                 p.setCategory(womenCat);
                 p.setCategoryName(womenCat.getName());
-                p.setImageUrl("https://images.unsplash.com/photo-1506619216599-9d16d0903dfd?w=900");
+                p.setImageUrl("https://images.unsplash.com/photo-1789111161057-90c5ce12dc21?w=900");
                 p.setStock(50);
                 p.setActive(true);
                 Product saved = productRepo.save(p);
@@ -548,10 +548,10 @@ public class DataSeeder {
                         "https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?w=900",
                         List.of("https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=900", "https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=900")),
 
-                // 6. Women's Oversized Wool Trench Coat (Elegant camel wool coat on model - NOT A MAN IN A HAT!)
+                // 6. Women's Oversized Wool Trench Coat (Elegant camel wool coat on model)
                 new ProductVisualPreset("SH-W-006",
-                        "https://images.unsplash.com/photo-1544441893-675973e31985?w=900",
-                        List.of("https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=900", "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=900")),
+                        "https://images.unsplash.com/photo-1539533018447-63fcce2678e3?w=900",
+                        List.of("https://images.unsplash.com/photo-1592327877233-90b9bfd92e48?w=900", "https://images.unsplash.com/photo-1617391258031-f8d80b22fb35?w=900")),
 
                 // 7. Women's Cashmere Cardigan
                 new ProductVisualPreset("SH-W-007",
@@ -573,10 +573,10 @@ public class DataSeeder {
                         "https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=900",
                         List.of("https://images.unsplash.com/photo-1518831959646-742c3a14ebf7?w=900")),
 
-                // 11. Minimal Structured Canvas Tote (Structured minimalist cream canvas bag - NOT A WICKER BASKET!)
+                // 11. Minimal Structured Canvas Tote (Structured minimalist cream canvas bag)
                 new ProductVisualPreset("SH-ACC-011",
-                        "https://images.unsplash.com/photo-1544816155-12df9643f363?w=900",
-                        List.of("https://images.unsplash.com/photo-1591561954557-26941169b49e?w=900", "https://images.unsplash.com/photo-1544816155-12df9643f363?w=900")),
+                        "https://images.unsplash.com/photo-1574365569389-a10d488ca3fb?w=900",
+                        List.of("https://images.unsplash.com/photo-1544816155-12df9643f363?w=900", "https://images.unsplash.com/photo-1578237493287-8d4d2b03591a?w=900")),
 
                 // 12. Classic Full-Grain Leather Belt
                 new ProductVisualPreset("SH-ACC-012",
@@ -593,10 +593,10 @@ public class DataSeeder {
                         "https://images.unsplash.com/photo-1638247025967-b4e38f787b76?w=900",
                         List.of("https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=900")),
 
-                // 16. Men's Straight-Leg Denim Jeans
+                // 16. Men's Straight-Leg Denim Jeans (Clean folded studio and on-model denim photography)
                 new ProductVisualPreset("SH-M-015",
-                        "https://images.unsplash.com/photo-1542272604-780c96856592?w=900",
-                        List.of("https://images.unsplash.com/photo-1576995853123-5a10305d93c0?w=900")),
+                        "https://images.unsplash.com/photo-1714143136372-ddaf8b606da7?w=900",
+                        List.of("https://images.unsplash.com/photo-1617114919297-3c8ddb01f599?w=900", "https://images.unsplash.com/photo-1542272604-787c3835535d?w=900", "https://images.unsplash.com/photo-1555689502-c4b22d76c56f?w=900")),
 
                 // 17. Handcrafted Leather Belt
                 new ProductVisualPreset("SH-ACC-016",
@@ -613,10 +613,10 @@ public class DataSeeder {
                         "https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=900",
                         List.of("https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=900")),
 
-                // 20. Women's Stretch Comfort Cotton Leggings
+                // 20. Women's Stretch Comfort Cotton Leggings (Pristine studio black leggings photography)
                 new ProductVisualPreset("SH-W-019",
-                        "https://images.unsplash.com/photo-1506619216599-9d16d0903dfd?w=900",
-                        List.of("https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=900")),
+                        "https://images.unsplash.com/photo-1789111161057-90c5ce12dc21?w=900",
+                        List.of("https://images.unsplash.com/photo-1789111161024-14711920a5b0?w=900", "https://images.unsplash.com/photo-1762331658023-794dd6a002eb?w=900", "https://images.unsplash.com/photo-1762331651871-76ae345a365f?w=900")),
 
                 // 21. Pure Chiffon Gold Border Dupatta (Elegant festive sheer stole - NOT A COFFEE CUP!)
                 new ProductVisualPreset("SH-W-020",
@@ -724,18 +724,18 @@ public class DataSeeder {
             String slug = cp.getSlug() != null ? cp.getSlug() : "";
             String img = cp.getImageUrl();
 
-            // Replace any expired or temporary openai links with permanent curated flat-lay photography
-            if (img == null || img.contains("openai.com") || img.isBlank()) {
+            // Replace any expired or temporary openai links or mismatched placeholders with permanent curated flat-lay photography
+            if (img == null || img.contains("openai.com") || img.contains("1506619216599") || img.contains("1542272604-780c96856592") || img.contains("1521572267360") || img.isBlank()) {
                 if (slug.contains("t-shirt-pack") || slug.contains("combo-1")) {
                     cp.setImageUrl("https://images.unsplash.com/photo-1581655353564-df123a1eb820?w=900");
                 } else if (slug.contains("daily-wear") && !slug.contains("women")) {
                     cp.setImageUrl("https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?w=900");
                 } else if (slug.contains("womens-daily-wear") || slug.contains("combo-3")) {
-                    cp.setImageUrl("https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=900");
+                    cp.setImageUrl("https://images.unsplash.com/photo-1789111161057-90c5ce12dc21?w=900");
                 } else if (slug.contains("kids-wear") || slug.contains("combo-4")) {
-                    cp.setImageUrl("https://images.unsplash.com/photo-1519238263530-99bdd11df2ea?w=900");
+                    cp.setImageUrl("https://images.unsplash.com/photo-1622290291468-a28f7a7dc6a8?w=900");
                 } else if (slug.contains("mens-casual") || slug.contains("combo-5")) {
-                    cp.setImageUrl("https://images.unsplash.com/photo-1490114538077-0a7f8cb49891?w=900");
+                    cp.setImageUrl("https://images.unsplash.com/photo-1714143136372-ddaf8b606da7?w=900");
                 } else if (slug.contains("womens-ethnic") || slug.contains("combo-6")) {
                     cp.setImageUrl("https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=900");
                 } else if (slug.contains("smart-casual") || slug.contains("combo-7")) {

@@ -236,6 +236,7 @@ public class OrderService {
                 orderItem.setUnitPrice(ci.getUnitPrice());
                 orderItem.setSelectedSize(ci.getSelectedSize());
                 orderItem.setSelectedColor(ci.getSelectedColor());
+                orderItem.setProductImage(ci.getItemImageUrl());
                 order.getItems().add(orderItem);
             }
         }

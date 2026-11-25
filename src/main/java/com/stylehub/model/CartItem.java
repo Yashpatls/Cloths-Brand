@@ -90,6 +90,17 @@ public class CartItem {
         if (isCombo && comboPackage != null) {
             return comboPackage.getImageUrl();
         }
-        return product != null ? product.getImageUrl() : "/images/placeholder.jpg";
+        if (product != null) {
+            if (selectedColor != null && product.getColors() != null) {
+                for (ProductColor c : product.getColors()) {
+                    if (c.getColorName() != null && c.getColorName().equalsIgnoreCase(selectedColor)
+                            && c.getImageUrl() != null && !c.getImageUrl().isBlank()) {
+                        return c.getImageUrl();
+                    }
+                }
+            }
+            return product.getImageUrl();
+        }
+        return "/images/placeholder.jpg";
     }
 }

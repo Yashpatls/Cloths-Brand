@@ -44,7 +44,7 @@
           <div th:each="img, stat : ${product.images}"
                class="thumb-selector border rounded-2 p-1 cursor-pointer transition-all"
                th:classappend="${stat.index == 0} ? 'border-dark shadow-sm active-thumb' : 'border-secondary-subtle opacity-75'"
-               th:attr="onclick='switchMainProductImage(this, \'' + ${img.imageUrl} + '\')'"
+               th:attr="data-image-url=${img.imageUrl}, data-thumb-index=${stat.index}, onclick='onThumbnailClick(this, \'' + ${img.imageUrl} + '\')'"
                style="width: 78px; height: 96px; overflow: hidden; cursor: pointer;">
             <img th:src="${img.imageUrl}" class="w-100 h-100 object-fit-cover rounded-1" th:alt="${img.altText}">
           </div>
@@ -103,25 +103,40 @@
 
             <!-- Size Selector -->
             <div class="mb-4" th:if="${not #lists.isEmpty(product.sizes)}">
-              <label class="form-label small fw-bold text-uppercase text-dark d-flex justify-content-between">
-                <span>Select Size</span>
+              <label class="form-label small fw-bold text-uppercase text-dark d-flex justify-content-between mb-2">
+                <span>Select Size: <span id="selected-size-label" class="fw-bold text-dark" th:text="${product.sizes[0].sizeName}">M</span></span>
                 <a href="#sizeGuideModal" data-bs-toggle="modal" class="text-muted text-decoration-underline font-normal">Size Guide</a>
               </label>
               <div class="d-flex gap-2 flex-wrap">
                 <div th:each="s, stat : ${product.sizes}">
-                  <input type="radio" class="btn-check" name="size" th:id="'size-' + ${s.id}" th:value="${s.sizeName}" th:checked="${stat.index == 0}">
-                  <label class="btn btn-outline-dark rounded-0 px-3 py-2 fw-semibold" th:for="'size-' + ${s.id}" th:text="${s.sizeName}">M</label>
+                  <input type="radio" class="btn-check size-radio" name="size" th:id="'size-' + ${s.id}" th:value="${s.sizeName}" th:checked="${stat.index == 0}" onchange="onSizeRadioChange(this)">
+                  <label class="btn btn-outline-dark rounded-2 px-3 py-2 fw-semibold" th:for="'size-' + ${s.id}" th:text="${s.sizeName}">M</label>
                 </div>
               </div>
             </div>
 
-            <!-- Color Selector -->
+            <!-- Color Selector (Interactive multi-color shade switcher) -->
             <div class="mb-4" th:if="${not #lists.isEmpty(product.colors)}">
-              <label class="form-label small fw-bold text-uppercase text-dark">Select Shade</label>
-              <div class="d-flex gap-2 flex-wrap">
+              <label class="form-label small fw-bold text-uppercase text-dark d-flex justify-content-between mb-2">
+                <span>Select Shade: <span id="selected-shade-label" class="fw-bold text-dark" th:text="${product.colors[0].colorName}">Black</span></span>
+                <span class="text-muted small fw-normal" th:text="${product.colors.size()} + ' Shades Available'">2 Shades</span>
+              </label>
+              <div class="d-flex gap-2 flex-wrap" id="color-swatches-container">
                 <div th:each="c, stat : ${product.colors}">
-                  <input type="radio" class="btn-check" name="color" th:id="'col-' + ${c.id}" th:value="${c.colorName}" th:checked="${stat.index == 0}">
-                  <label class="btn btn-outline-secondary rounded-0 px-3 py-2 small" th:for="'col-' + ${c.id}" th:text="${c.colorName}">Black</label>
+                  <input type="radio" class="btn-check color-radio" name="color"
+                         th:id="'col-' + ${c.id}"
+                         th:value="${c.colorName}"
+                         th:checked="${stat.index == 0}"
+                         th:attr="data-image=${c.imageUrl != null ? c.imageUrl : ''}, data-color-name=${c.colorName}"
+                         onchange="onColorRadioChange(this)">
+                  <label class="btn btn-outline-dark rounded-2 px-3 py-2 d-flex align-items-center gap-2 text-capitalize color-swatch-btn shadow-2xs"
+                         th:for="'col-' + ${c.id}"
+                         th:id="'swatch-label-' + ${c.id}"
+                         th:style="${stat.index == 0 ? 'border-width: 2px; border-color: #000; box-shadow: 0 0 0 2px rgba(0,0,0,0.15);' : ''}">
+                    <span class="rounded-circle d-inline-block border"
+                          th:style="'width: 18px; height: 18px; background-color: ' + (${c.hexCode != null ? c.hexCode : '#000000'}) + ';'"></span>
+                    <span class="fw-semibold small" th:text="${c.colorName}">Black</span>
+                  </label>
                 </div>
               </div>
             </div>
@@ -485,6 +500,78 @@
         thumbElement.classList.remove('border-secondary-subtle', 'opacity-75');
         thumbElement.classList.add('border-dark', 'shadow-sm', 'active-thumb');
       }
+    }
+
+    function onThumbnailClick(thumbElement, imgUrl) {
+      switchMainProductImage(thumbElement, imgUrl);
+
+      // Check if a color radio matches this image
+      let matchedRadio = null;
+      document.querySelectorAll('.color-radio').forEach(radio => {
+        const radioImg = radio.getAttribute('data-image');
+        if (radioImg && imgUrl && (radioImg === imgUrl || radioImg.split('?')[0] === imgUrl.split('?')[0])) {
+          matchedRadio = radio;
+        }
+      });
+
+      // If no direct image URL match, match by thumbnail index to shade radio index
+      if (!matchedRadio) {
+        const thumbIndex = parseInt(thumbElement.getAttribute('data-thumb-index'));
+        const allRadios = document.querySelectorAll('.color-radio');
+        if (allRadios && allRadios.length > thumbIndex && thumbIndex >= 0) {
+          matchedRadio = allRadios[thumbIndex];
+        }
+      }
+
+      if (matchedRadio) {
+        matchedRadio.checked = true;
+        updateColorUI(matchedRadio);
+      }
+    }
+
+    function onColorRadioChange(radioInput) {
+      updateColorUI(radioInput);
+      const imgUrl = radioInput.getAttribute('data-image');
+      if (imgUrl && imgUrl.trim().length > 0) {
+        // Switch main image to this color variant
+        switchMainProductImage(null, imgUrl);
+
+        // Highlight matching thumbnail in the gallery
+        document.querySelectorAll('.thumb-selector').forEach(thumb => {
+          const thumbUrl = thumb.getAttribute('data-image-url');
+          if (thumbUrl && (thumbUrl === imgUrl || thumbUrl.split('?')[0] === imgUrl.split('?')[0])) {
+            document.querySelectorAll('.thumb-selector').forEach(el => {
+              el.classList.remove('border-dark', 'shadow-sm', 'active-thumb');
+              el.classList.add('border-secondary-subtle', 'opacity-75');
+            });
+            thumb.classList.remove('border-secondary-subtle', 'opacity-75');
+            thumb.classList.add('border-dark', 'shadow-sm', 'active-thumb');
+          }
+        });
+      }
+    }
+
+    function updateColorUI(radioInput) {
+      const colorName = radioInput.getAttribute('data-color-name') || radioInput.value;
+      const labelEl = document.getElementById('selected-shade-label');
+      if (labelEl) labelEl.textContent = colorName;
+
+      document.querySelectorAll('.color-swatch-btn').forEach(btn => {
+        btn.style.borderWidth = '1px';
+        btn.style.borderColor = '#ced4da';
+        btn.style.boxShadow = 'none';
+      });
+      const activeLabel = document.querySelector('label[for="' + radioInput.id + '"]');
+      if (activeLabel) {
+        activeLabel.style.borderWidth = '2px';
+        activeLabel.style.borderColor = '#000';
+        activeLabel.style.boxShadow = '0 0 0 2px rgba(0,0,0,0.15)';
+      }
+    }
+
+    function onSizeRadioChange(radioInput) {
+      const labelEl = document.getElementById('selected-size-label');
+      if (labelEl) labelEl.textContent = radioInput.value;
     }
 
     function changeQty(delta) {

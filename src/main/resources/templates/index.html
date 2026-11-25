@@ -259,15 +259,32 @@
                 <i class="bi bi-heart"></i>
               </button>
               <a th:href="@{/products/{id}(id=${product.id})}">
-                <img th:src="${product.imageUrl}" th:alt="${product.name}" loading="lazy">
+                <img th:id="'home-prod-img-' + ${product.id}" th:src="${product.imageUrl}" th:alt="${product.name}" loading="lazy">
               </a>
             </div>
             <div class="product-info pt-3">
-              <div class="product-cat small text-muted text-uppercase letter-spacing-1 mb-1" style="font-size: 0.72rem;" th:text="${product.categoryName}">Category</div>
+              <div class="d-flex justify-content-between align-items-center mb-1">
+                <span class="product-cat small text-muted text-uppercase letter-spacing-1" style="font-size: 0.72rem;" th:text="${product.categoryName}">Category</span>
+                <span th:if="${product.stock > 5}" class="badge bg-success-subtle text-success small" style="font-size: 0.65rem;"><i class="bi bi-check2"></i> In Stock</span>
+                <span th:if="${product.stock > 0 and product.stock <= 5}" class="badge bg-warning-subtle text-warning-emphasis small" style="font-size: 0.65rem;">Only <span th:text="${product.stock}">2</span> left</span>
+                <span th:if="${product.stock <= 0}" class="badge bg-secondary-subtle text-secondary small" style="font-size: 0.65rem;">Sold Out</span>
+              </div>
               <a th:href="@{/products/{id}(id=${product.id})}" class="text-decoration-none">
                 <h3 class="product-title font-serif fs-6 mb-1 text-dark" th:text="${product.name}">Product Name</h3>
               </a>
-              <div class="product-price d-flex align-items-baseline gap-2">
+              <!-- Interactive Color Swatches on Product Card -->
+              <div class="d-flex gap-1 align-items-center flex-wrap my-1" th:if="${not #lists.isEmpty(product.colors)}">
+                <span th:each="c, cStat : ${product.colors}"
+                      class="card-color-swatch rounded-circle border cursor-pointer"
+                      th:style="'width: 14px; height: 14px; background-color: ' + (${c.hexCode != null ? c.hexCode : '#111111'}) + '; display: inline-block; cursor: pointer; transition: transform 0.15s;'"
+                      th:attr="data-variant-img=${c.imageUrl != null ? c.imageUrl : product.imageUrl}, data-target-id='home-prod-img-' + ${product.id}, data-color-name=${c.colorName}"
+                      th:title="${c.colorName}"
+                      onclick="onCardColorClick(this)"
+                      onmouseover="onCardColorHover(this)">
+                </span>
+                <span class="text-muted ms-1" style="font-size: 0.7rem;" th:if="${product.colors.size() > 1}" th:text="${product.colors.size()} + ' shades'">2 shades</span>
+              </div>
+              <div class="product-price d-flex align-items-baseline gap-2 mt-1">
                 <span class="fw-bold text-dark" th:if="${product.discountPrice != null}" th:text="'₹' + ${product.discountPrice}">₹0</span>
                 <span th:classappend="${product.discountPrice != null} ? 'price-original text-muted text-decoration-line-through small' : 'fw-bold text-dark'" th:text="'₹' + ${product.price}">₹0</span>
                 <span class="badge bg-danger-subtle text-danger small ms-auto" th:if="${product.discountPrice != null}">Sale</span>
@@ -330,6 +347,24 @@
           col.style.opacity = '0';
         }
       });
+    }
+
+    function onCardColorClick(el) {
+      const imgUrl = el.getAttribute('data-variant-img');
+      const targetId = el.getAttribute('data-target-id');
+      if (imgUrl && targetId) {
+        const imgEl = document.getElementById(targetId);
+        if (imgEl) imgEl.src = imgUrl;
+      }
+    }
+
+    function onCardColorHover(el) {
+      const imgUrl = el.getAttribute('data-variant-img');
+      const targetId = el.getAttribute('data-target-id');
+      if (imgUrl && targetId) {
+        const imgEl = document.getElementById(targetId);
+        if (imgEl) imgEl.src = imgUrl;
+      }
     }
   </script>
 

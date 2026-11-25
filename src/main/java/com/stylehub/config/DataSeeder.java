@@ -242,7 +242,7 @@ public class DataSeeder {
                 p.setPrice(BigDecimal.valueOf(899));
                 p.setCategory(accCat);
                 p.setCategoryName(accCat.getName());
-                p.setImageUrl("https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=900");
+                p.setImageUrl("https://images.unsplash.com/photo-1624222247344-550fb60583dc?w=900");
                 p.setStock(50);
                 p.setActive(true);
                 Product saved = productRepo.save(p);
@@ -367,6 +367,57 @@ public class DataSeeder {
                 Product saved = productRepo.save(p);
                 sizeRepo.save(new ProductSize(saved, "4-5Y", 30));
                 colorRepo.save(new ProductColor(saved, "Heather Grey", "#9e9e9e"));
+                return saved;
+            });
+
+            Product kidsDungarees = productRepo.findBySku("SH-K-024").orElseGet(() -> {
+                Product p = new Product();
+                p.setName("Kids Denim Dungarees & Striped Tee");
+                p.setSku("SH-K-024");
+                p.setDescription("Durable washed denim overalls paired with a breathable striped cotton t-shirt.");
+                p.setPrice(BigDecimal.valueOf(1299));
+                p.setCategory(kidsCat);
+                p.setCategoryName(kidsCat.getName());
+                p.setImageUrl("https://images.unsplash.com/photo-1519457431-44ccd64a579b?w=900");
+                p.setStock(25);
+                p.setActive(true);
+                Product saved = productRepo.save(p);
+                sizeRepo.save(new ProductSize(saved, "3-4Y", 25));
+                colorRepo.save(new ProductColor(saved, "Classic Indigo", "#2b3e50"));
+                return saved;
+            });
+
+            Product kidsDress = productRepo.findBySku("SH-K-025").orElseGet(() -> {
+                Product p = new Product();
+                p.setName("Kids Floral Organic Cotton Dress");
+                p.setSku("SH-K-025");
+                p.setDescription("Airy A-line summer dress crafted in pure organic cotton with hand-drawn florals.");
+                p.setPrice(BigDecimal.valueOf(899));
+                p.setCategory(kidsCat);
+                p.setCategoryName(kidsCat.getName());
+                p.setImageUrl("https://images.unsplash.com/photo-1518831959646-742c3a14ebf7?w=900");
+                p.setStock(30);
+                p.setActive(true);
+                Product saved = productRepo.save(p);
+                sizeRepo.save(new ProductSize(saved, "4-5Y", 30));
+                colorRepo.save(new ProductColor(saved, "Pastel Floral", "#f8bbd0"));
+                return saved;
+            });
+
+            Product kidsSweater = productRepo.findBySku("SH-K-026").orElseGet(() -> {
+                Product p = new Product();
+                p.setName("Kids Cozy Knit Colorblock Pullover");
+                p.setSku("SH-K-026");
+                p.setDescription("Chunky warm knit sweater with ribbed cuffs and contrast earthy colorblocking.");
+                p.setPrice(BigDecimal.valueOf(999));
+                p.setCategory(kidsCat);
+                p.setCategoryName(kidsCat.getName());
+                p.setImageUrl("https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=900");
+                p.setStock(25);
+                p.setActive(true);
+                Product saved = productRepo.save(p);
+                sizeRepo.save(new ProductSize(saved, "4-5Y", 25));
+                colorRepo.save(new ProductColor(saved, "Mustard & Cream", "#e0a96d"));
                 return saved;
             });
 
@@ -509,7 +560,7 @@ public class DataSeeder {
             }
 
             // 7. Active Catalog Synchronization & Image Repair (Ensures zero mismatched photos and full combo bundles)
-            syncProductVisuals(productRepo, imageRepo);
+            syncProductVisuals(productRepo, imageRepo, colorRepo);
             syncComboPackages(comboRepo, comboItemRepo, productRepo);
 
             log.info("StyleHub database seeding complete. Active products: {}, Categories: {}, Combos: {}",
@@ -517,10 +568,8 @@ public class DataSeeder {
         };
     }
 
-    private void syncProductVisuals(ProductRepository productRepo, ProductImageRepository imageRepo) {
+    private void syncProductVisuals(ProductRepository productRepo, ProductImageRepository imageRepo, ProductColorRepository colorRepo) {
         log.info("Performing precise high-fashion photography synchronization for all products...");
-
-        record ProductVisualPreset(String sku, String primaryImg, List<String> galleryImgs) {}
 
         List<ProductVisualPreset> presets = List.of(
                 // 1. Men's Oxford Shirt
@@ -600,13 +649,20 @@ public class DataSeeder {
 
                 // 17. Handcrafted Leather Belt
                 new ProductVisualPreset("SH-ACC-016",
-                        "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=900",
-                        List.of("https://images.unsplash.com/photo-1624222247344-550fb60583dc?w=900")),
+                        "https://images.unsplash.com/photo-1624222247344-550fb60583dc?w=900",
+                        List.of(),
+                        List.of(
+                                new ColorVariantPreset("Cognac Brown", "#795548", "https://images.unsplash.com/photo-1624222247344-550fb60583dc?w=900")
+                        )),
 
                 // 18. Minimal Low-Top Leather Sneakers
                 new ProductVisualPreset("SH-FT-017",
-                        "https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?w=900",
-                        List.of("https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=900")),
+                        "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=900",
+                        List.of("https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?w=900"),
+                        List.of(
+                                new ColorVariantPreset("Optic White", "#ffffff", "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=900"),
+                                new ColorVariantPreset("Triple Black", "#111111", "https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?w=900")
+                        )),
 
                 // 19. Women's Hand-Block Printed Kurti
                 new ProductVisualPreset("SH-W-018",
@@ -620,33 +676,85 @@ public class DataSeeder {
 
                 // 21. Pure Chiffon Gold Border Dupatta (Elegant festive sheer stole - NOT A COFFEE CUP!)
                 new ProductVisualPreset("SH-W-020",
-                        "https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?w=900",
-                        List.of("https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=900")),
+                        "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=900",
+                        List.of("https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?w=900"),
+                        List.of(
+                                new ColorVariantPreset("Gold Ivory", "#d4af37", "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=900"),
+                                new ColorVariantPreset("Rani Pink & Gold", "#c2185b", "https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?w=900")
+                        )),
 
                 // 22. Italian Leather Crossbody Bag (ONLY authentic luxury red leather handbag angles - NO random backpacks/wicker!)
                 new ProductVisualPreset("SH-ACC-021",
                         "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=900",
-                        List.of("https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d?w=900", "https://images.unsplash.com/photo-1594223274512-ad4803739b7c?w=900")),
+                        List.of("https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d?w=900", "https://images.unsplash.com/photo-1594223274512-ad4803739b7c?w=900"),
+                        List.of(
+                                new ColorVariantPreset("Cognac Brown", "#8d4925", "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=900"),
+                                new ColorVariantPreset("Saddle Tan", "#c68642", "https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d?w=900"),
+                                new ColorVariantPreset("Noir Black", "#1a1a1a", "https://images.unsplash.com/photo-1594223274512-ad4803739b7c?w=900")
+                        )),
 
                 // 23. Tailored Wool-Blend Evening Blazer (Men)
                 new ProductVisualPreset("SH-M-022",
                         "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=900",
-                        List.of("https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=900")),
+                        List.of("https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=900"),
+                        List.of(
+                                new ColorVariantPreset("Charcoal Grey", "#37474f", "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=900"),
+                                new ColorVariantPreset("Sky Blue Tweed", "#7ba2c2", "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=900")
+                        )),
 
                 // 24. Kids Active Drawstring Shorts (Cute organic cotton playwear shorts)
                 new ProductVisualPreset("SH-K-023",
                         "https://images.unsplash.com/photo-1622290291468-a28f7a7dc6a8?w=900",
-                        List.of("https://images.unsplash.com/photo-1519238263530-99bdd11df2ea?w=900")),
+                        List.of("https://images.unsplash.com/photo-1519238263530-99bdd11df2ea?w=900"),
+                        List.of(
+                                new ColorVariantPreset("Electric Blue", "#1976d2", "https://images.unsplash.com/photo-1622290291468-a28f7a7dc6a8?w=900"),
+                                new ColorVariantPreset("Navy Blue", "#0d47a1", "https://images.unsplash.com/photo-1519238263530-99bdd11df2ea?w=900")
+                        )),
 
                 // 25. Classic Crew Neck Cotton T-Shirt (Crisp pure white combed cotton jersey tee on minimal hanger)
                 new ProductVisualPreset("SH-M-007",
                         "https://images.unsplash.com/photo-1581655353564-df123a1eb820?w=900",
-                        List.of("https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=900", "https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=900")),
+                        List.of("https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=900", "https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=900"),
+                        List.of(
+                                new ColorVariantPreset("Optic White", "#ffffff", "https://images.unsplash.com/photo-1581655353564-df123a1eb820?w=900"),
+                                new ColorVariantPreset("Charcoal Heather", "#333333", "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=900"),
+                                new ColorVariantPreset("Classic Black", "#111111", "https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=900")
+                        )),
 
                 // 26. Round Toe Pivot Pro Sneakers (U.S. Polo Assn. high-tech lifestyle athletic footwear)
                 new ProductVisualPreset("SH-FT-031",
                         "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=900",
-                        List.of("https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?w=900", "https://images.unsplash.com/photo-1560769629-975ec94e6a86?w=900", "https://images.unsplash.com/photo-1600185365926-3a2ce3cdb9eb?w=900"))
+                        List.of("https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?w=900", "https://images.unsplash.com/photo-1560769629-975ec94e6a86?w=900", "https://images.unsplash.com/photo-1600185365926-3a2ce3cdb9eb?w=900"),
+                        List.of(
+                                new ColorVariantPreset("Optic White", "#f4f4f4", "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=900"),
+                                new ColorVariantPreset("Triple Black", "#1a1a1a", "https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?w=900"),
+                                new ColorVariantPreset("Navy Tech", "#1f2a44", "https://images.unsplash.com/photo-1560769629-975ec94e6a86?w=900"),
+                                new ColorVariantPreset("Solar Orange", "#e65100", "https://images.unsplash.com/photo-1600185365926-3a2ce3cdb9eb?w=900")
+                        )),
+
+                // 27. Kids Denim Dungarees & Striped Tee
+                new ProductVisualPreset("SH-K-024",
+                        "https://images.unsplash.com/photo-1519457431-44ccd64a579b?w=900",
+                        List.of(),
+                        List.of(
+                                new ColorVariantPreset("Classic Indigo", "#2b3e50", "https://images.unsplash.com/photo-1519457431-44ccd64a579b?w=900")
+                        )),
+
+                // 28. Kids Floral Organic Cotton Dress
+                new ProductVisualPreset("SH-K-025",
+                        "https://images.unsplash.com/photo-1518831959646-742c3a14ebf7?w=900",
+                        List.of(),
+                        List.of(
+                                new ColorVariantPreset("Pastel Floral", "#f8bbd0", "https://images.unsplash.com/photo-1518831959646-742c3a14ebf7?w=900")
+                        )),
+
+                // 29. Kids Cozy Knit Colorblock Pullover
+                new ProductVisualPreset("SH-K-026",
+                        "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=900",
+                        List.of(),
+                        List.of(
+                                new ColorVariantPreset("Mustard & Cream", "#e0a96d", "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=900")
+                        ))
         );
 
         for (ProductVisualPreset preset : presets) {
@@ -656,6 +764,9 @@ public class DataSeeder {
                 String searchPattern = preset.sku.toLowerCase();
                 for (Product existing : productRepo.findAll()) {
                     String existingName = existing.getName() != null ? existing.getName().toLowerCase() : "";
+                    if (searchPattern.contains("026") && existingName.contains("pullover")) { p = existing; break; }
+                    if (searchPattern.contains("025") && existingName.contains("floral")) { p = existing; break; }
+                    if (searchPattern.contains("024") && existingName.contains("dungarees")) { p = existing; break; }
                     if (searchPattern.contains("031") && existingName.contains("pivot pro")) { p = existing; break; }
                     if (searchPattern.contains("007") && existingName.contains("crew neck")) { p = existing; break; }
                     if (searchPattern.contains("023") && existingName.contains("drawstring shorts")) { p = existing; break; }
@@ -832,6 +943,14 @@ public class DataSeeder {
                     }
                 }
             }
+        }
+    }
+
+    private record ColorVariantPreset(String colorName, String hexCode, String imageUrl) {}
+
+    private record ProductVisualPreset(String sku, String primaryImg, List<String> galleryImgs, List<ColorVariantPreset> colors) {
+        public ProductVisualPreset(String sku, String primaryImg, List<String> galleryImgs) {
+            this(sku, primaryImg, galleryImgs, List.of());
         }
     }
 

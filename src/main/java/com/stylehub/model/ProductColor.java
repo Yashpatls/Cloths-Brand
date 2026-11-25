@@ -19,12 +19,22 @@ public class ProductColor {
 
     private String hexCode; // #000000, #ffffff, etc.
 
+    @Column(length = 1000)
+    private String imageUrl;
+
     public ProductColor() {}
 
     public ProductColor(Product product, String colorName, String hexCode) {
         this.product = product;
         this.colorName = colorName;
         this.hexCode = hexCode;
+    }
+
+    public ProductColor(Product product, String colorName, String hexCode, String imageUrl) {
+        this.product = product;
+        this.colorName = colorName;
+        this.hexCode = hexCode;
+        this.imageUrl = imageUrl;
     }
 
     public Long getId() { return id; }
@@ -38,4 +48,7 @@ public class ProductColor {
 
     public String getHexCode() { return hexCode; }
     public void setHexCode(String hexCode) { this.hexCode = hexCode; }
+
+    public String getImageUrl() { return imageUrl; }
+    public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
 }

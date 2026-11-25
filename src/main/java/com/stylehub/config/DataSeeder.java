@@ -389,7 +389,7 @@ public class DataSeeder {
                 seedCombo(comboRepo, comboItemRepo,
                         "Combo 1 – T-Shirt Pack", "combo-1-t-shirt-pack", ComboTier.BUDGET,
                         "Twin pack of 100% combed cotton crew-neck tees with choice of sizes and colours. Perfect everyday basic layering.",
-                        "https://images.openai.com/static-rsc-4/cW_Vp0ejCEu0gPRfgCd8GTRktsLrhUJJDoZErLi_MBL_bB6drClprhajaurFhVQRYVTNRSII9h8BjXDfQfKmx8T89-4KYvzLWBVeOKHxojo3iknWDCg8BzgZ8NmSf9jZgHmHSSX0dHpwyG8lFkaFaPuTJdCfj-MfEANGgnc8AfM?purpose=inline",
+                        "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=900",
                         499, 998, "Save 50% (Bestseller)",
                         List.of(new BundleItemSpec(tshirt, "1 Classic Crew T-Shirt", 1),
                                 new BundleItemSpec(tshirt, "1 Contrast Crew T-Shirt", 1)));
@@ -397,7 +397,7 @@ public class DataSeeder {
                 seedCombo(comboRepo, comboItemRepo,
                         "Combo 2 – Daily Wear", "combo-2-daily-wear", ComboTier.BUDGET,
                         "Essential daily rotation featuring 1 button-down casual shirt and 1 breathable cotton tee.",
-                        "https://images.openai.com/static-rsc-4/SXkm0-9HpJucAxICTZPrDtMrE7NGboAkZW4cYsb_ARuW6Qj6QEXSVcTrzHb-nNH1lgAn7RfWAh6bpb3ov6G9U5a-P0tK8mGf9-tzKDnCstLiyFnIOFOzEg38TTxgarw9IhvRF4Yoc1F4KPGhc9if7LN7AxDPUwo9XuJRTDMSsnQ?purpose=inline",
+                        "https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?w=900",
                         699, 1499, "Essential Value",
                         List.of(new BundleItemSpec(shirt, "1 Oxford Casual Shirt", 1),
                                 new BundleItemSpec(tshirt, "1 Pima Cotton T-Shirt", 1)));
@@ -405,7 +405,7 @@ public class DataSeeder {
                 seedCombo(comboRepo, comboItemRepo,
                         "Combo 3 – Women's Daily Wear", "combo-3-womens-daily-wear", ComboTier.BUDGET,
                         "Effortless daily set pairing a soft relaxed top with high-stretch comfort cotton leggings.",
-                        "https://images.openai.com/static-rsc-4/rSJxM6HL4OFS3-ts7wi98quL2BGONI-VjLIe8Lp2YJYzdPNx4fe2ydLzW10tGR68_m2L3ZtGCNKy0Jz3wPdNxUq_TfqfQSp_ufIgaDiEuJKUG_OWWuPsPVX9Nl8NnwI08ZSDE41BkWKcI32hi9ihHaHLryMZkmExfSIQYQvOj80?purpose=inline",
+                        "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=900",
                         799, 1599, "Popular Daily",
                         List.of(new BundleItemSpec(tshirt, "1 Relaxed Cotton Top", 1),
                                 new BundleItemSpec(leggings, "1 Stretch Cotton Leggings", 1)));
@@ -413,7 +413,7 @@ public class DataSeeder {
                 seedCombo(comboRepo, comboItemRepo,
                         "Combo 4 – Kids Wear", "combo-4-kids-wear", ComboTier.BUDGET,
                         "Comfort-first playwear pairing an organic cotton graphic tee with elasticated drawstring shorts.",
-                        "https://images.openai.com/static-rsc-4/dWT7vK5vZbXGSlosOE5t7oT0wC_q-bfsskVnBQOZ3ftBFP1MbyS5cgyGX4wGTdqXZApU0moK-DKWn0-Dul0-6dKNEJpuvIpxmok48Qdl6oTYm8buqDD8G5x6T-yzfeBln5KspaqMBa_NgYYUiP8jmc1HIJlCh1uaibQuQ2pTLiw?purpose=inline",
+                        "https://images.unsplash.com/photo-1519238263530-99bdd11df2ea?w=900",
                         599, 1098, "Kids Favourite",
                         List.of(new BundleItemSpec(tshirt, "1 Organic Cotton T-Shirt", 1),
                                 new BundleItemSpec(kidsShorts, "1 Active Drawstring Shorts", 1)));
@@ -422,7 +422,7 @@ public class DataSeeder {
                 seedCombo(comboRepo, comboItemRepo,
                         "Combo 5 – Men's Casual", "combo-5-mens-casual", ComboTier.STANDARD,
                         "Classic weekend trio combining a crisp button-down shirt, dark indigo jeans, and a full-grain leather belt.",
-                        "https://images.openai.com/static-rsc-4/mSWD5lE9rZ8BYLWwI56tUK5DFxfSot5Noqt71Xs7GxT0UduQXwrbVcRZyCZBDUO8ctIvSTpd0Ia3nppnJb2vDswDTzQePywOWvnSH9Gg5Nleb4XA9g28tKWHXzfvyzt4I_nCuIg2MD6J3N5i5onI-dGg8Z6C9_yp_-GG3V5QwDc?purpose=inline",
+                        "https://images.unsplash.com/photo-1490114538077-0a7f8cb49891?w=900",
                         1499, 2999, "3-Piece Classic (Save 50%)",
                         List.of(new BundleItemSpec(shirt, "1 Oxford Cotton Shirt", 1, BigDecimal.valueOf(699)),
                                 new BundleItemSpec(jeans, "1 Straight-Leg Denim Jeans", 1, BigDecimal.valueOf(500)),
@@ -431,7 +431,7 @@ public class DataSeeder {
                 seedCombo(comboRepo, comboItemRepo,
                         "Combo 6 – Women's Ethnic", "combo-6-womens-ethnic", ComboTier.STANDARD,
                         "Graceful 3-piece ethnic set including a hand-block printed cotton kurti, ankle-length leggings, and gold-bordered chiffon dupatta.",
-                        "https://images.openai.com/static-rsc-4/LpLZ8QP6I4Ee0R-DW22m1sNHnswYIfzhxYiAsmIhcUR1xPNiGiXAt9PmOVh2bu4h8uHNNtSWs6VKeIUXXT9pFADiTnobuu5nca_V8HSzvTJj2CczT8BOfsdyDOv5Q_4d2_KehYEj8uLyDC0bt8Taq0-LS-l6VAJmsiV48eZNx4E?purpose=inline",
+                        "https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=900",
                         1799, 3299, "Festive Ready",
                         List.of(new BundleItemSpec(kurti, "1 Hand-Block Printed Kurti", 1),
                                 new BundleItemSpec(leggings, "1 Ankle Leggings", 1),
@@ -440,7 +440,7 @@ public class DataSeeder {
                 seedCombo(comboRepo, comboItemRepo,
                         "Combo 7 – Smart Casual", "combo-7-smart-casual", ComboTier.STANDARD,
                         "Sharp smart-casual ensemble: structured polo shirt, raw selvedge denim jeans, and pristine white low-top leather sneakers.",
-                        "https://images.openai.com/static-rsc-4/JgOdzsuU0YLu1_L08nj5VCDRh4e5AFJjUdGfLMUiMt_GZbq2RAc1cYKewNlpxVNLeRH3ZbfxMzRW6yoJ_K3Gd7h_slVaN9xHLVBfptg74QkP3zoLb07hssKo-D4NhT4D59vlhdc7kvuFX4L2B_KwtA4JOu8cGiRXum5I1rAUhzg?purpose=inline",
+                        "https://images.unsplash.com/photo-1479064555552-3ef4979f8908?w=900",
                         2299, 4199, "Weekend Smart",
                         List.of(new BundleItemSpec(shirt, "1 Pique Cotton Polo", 1),
                                 new BundleItemSpec(jeans, "1 Dark Indigo Jeans", 1),
@@ -449,7 +449,7 @@ public class DataSeeder {
                 seedCombo(comboRepo, comboItemRepo,
                         "Combo 8 – Fashion Pack", "combo-8-fashion-pack", ComboTier.STANDARD,
                         "Modern street style edit featuring a ribbed modal top, high-rise tailored jeans, and a premium leather crossbody handbag.",
-                        "https://images.openai.com/static-rsc-4/CwP7vrET7FoXBh_ZWUG2rm-PT7tFMQloCx52NsmHaeWDHBTwYqxdVQjKXrUF3ayy1Kk1naT-rV2-8btZ8cjGgSIkuMv3MaQasf6s2QeKgq4s1dAAWXIAQ1j_2zEdCoiA3CIDZMu9-egKzavTFA-9L0y3_KXfJOmCjB_lr73nE6S1587aioSy-OdEuRzMeD_w?purpose=inline",
+                        "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=900",
                         2199, 3999, "Editorial Pick",
                         List.of(new BundleItemSpec(tshirt, "1 Ribbed Modal Top", 1),
                                 new BundleItemSpec(jeans, "1 Tapered Denim Jeans", 1),
@@ -459,7 +459,7 @@ public class DataSeeder {
                 seedCombo(comboRepo, comboItemRepo,
                         "Combo 9 – Men's Premium", "combo-9-mens-premium", ComboTier.PREMIUM,
                         "Executive 4-piece formal attire: wool-blend tailored blazer, crisp twill shirt, pleated trousers, and matching leather belt.",
-                        "https://images.openai.com/static-rsc-4/z1TRYosBc_gfWbOf39AIsb8uX4Wuy9IpswbFnd23lE9RUUX557Aa21bXw4NbQU6qFBtom_HMoQHR7tyd825l4O6c5CkPOCGrZyRNr5q2Nmf84bBeLc1ae1G5_R78g9scOTPx81tTQfv9xNitSnK--5hYfJi53T2-Yn-BkF1QuEw?purpose=inline",
+                        "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=900",
                         3999, 6999, "Executive 4-Piece",
                         List.of(new BundleItemSpec(blazer, "1 Tailored Wool-Blend Blazer", 1),
                                 new BundleItemSpec(shirt, "1 Formal Twill Shirt", 1),
@@ -469,7 +469,7 @@ public class DataSeeder {
                 seedCombo(comboRepo, comboItemRepo,
                         "Combo 10 – Women's Premium", "combo-10-womens-premium", ComboTier.PREMIUM,
                         "Evening cocktail glamour: Mulberry silk satin midi dress paired with an Italian leather bag and footwear.",
-                        "https://images.openai.com/static-rsc-4/N1ut-DIT6jC-LTg14OjQshEqXSrngMB--jmpsqlZrDluQ5Xsb3du38nwrAkl_qaLEyTfpnhS2YBvp8LDkJvgwyH4IsV9VGjgfAFxBQKEcGMvUJJQluI1yvfpOxdlxibSkdqgQX6nnAbJJzUGJ3KGdM3MEHpZYEWYK9xOlbWg0jU?purpose=inline",
+                        "https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=900",
                         4499, 7999, "Cocktail Gala",
                         List.of(new BundleItemSpec(dress, "1 Silk Satin Midi Slip Dress", 1),
                                 new BundleItemSpec(handbag, "1 Italian Leather Shoulder Bag", 1),
@@ -478,7 +478,7 @@ public class DataSeeder {
                 seedCombo(comboRepo, comboItemRepo,
                         "Combo 11 – Complete Look", "combo-11-complete-look", ComboTier.PREMIUM,
                         "Urban winter statement: Japanese selvedge denim jacket, Oxford shirt, straight jeans, and clean sneakers.",
-                        "https://images.openai.com/static-rsc-4/tyN8UGHu46nhXgYd4sobS5gnI-HB5yRh2Jel8-S_EbFT-O7q5jYh0d25oFHsYS1Sc6grCw4eWtl7CaYxktfSkbzz5pz3H_kmmdVZCWr4lwwLh89ofa9kT-fiuIj6F5eIJF5fPrQSBz2S-io913fe0yjEwPiIrlN2VOK86U1SH_U?purpose=inline",
+                        "https://images.unsplash.com/photo-1576995853123-5a10305d93c0?w=900",
                         5499, 8999, "Urban Luxe 4-Piece",
                         List.of(new BundleItemSpec(jacket, "1 Vintage Denim Jacket", 1),
                                 new BundleItemSpec(shirt, "1 Oxford Shirt", 1),
@@ -488,7 +488,7 @@ public class DataSeeder {
                 seedCombo(comboRepo, comboItemRepo,
                         "Combo 12 – Luxury Ethnic", "combo-12-luxury-ethnic", ComboTier.PREMIUM,
                         "Royal wedding festive suite: hand-embroidered Chanderi silk suit, zari dupatta, and embellished evening handbag.",
-                        "https://images.openai.com/static-rsc-4/UIZ8VAlQqjoLjyVbHArqL3K-BJfW4HInnbZM-wbnZS7IY-Po_qh6FwuG5jnJKar3ITYSm_S3pF8M3rkXFDnLulMhtHs91l21UnY1_FPv8DLPqQgP7BVccZLEwZGbVE8c0upd5HUVxPnput50Ac8LiMzdYs-uk1ZiYNhUPwglFjc?purpose=inline",
+                        "https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?w=900",
                         5999, 10999, "Royal Heritage",
                         List.of(new BundleItemSpec(kurti, "1 Chanderi Silk Suit", 1),
                                 new BundleItemSpec(dupatta, "1 Zari Border Dupatta", 1),
@@ -548,10 +548,10 @@ public class DataSeeder {
                         "https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?w=900",
                         List.of("https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=900", "https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=900")),
 
-                // 6. Women's Oversized Wool Trench Coat
+                // 6. Women's Oversized Wool Trench Coat (Elegant camel wool coat on model - NOT A MAN IN A HAT!)
                 new ProductVisualPreset("SH-W-006",
-                        "https://images.unsplash.com/photo-1539533018447-63fcce667883?w=900",
-                        List.of("https://images.unsplash.com/photo-1548624149-f9b1859aa7d0?w=900", "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=900")),
+                        "https://images.unsplash.com/photo-1544441893-675973e31985?w=900",
+                        List.of("https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=900", "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=900")),
 
                 // 7. Women's Cashmere Cardigan
                 new ProductVisualPreset("SH-W-007",
@@ -573,20 +573,20 @@ public class DataSeeder {
                         "https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=900",
                         List.of("https://images.unsplash.com/photo-1518831959646-742c3a14ebf7?w=900")),
 
-                // 11. Minimal Structured Canvas Tote
+                // 11. Minimal Structured Canvas Tote (Structured minimalist cream canvas bag - NOT A WICKER BASKET!)
                 new ProductVisualPreset("SH-ACC-011",
-                        "https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=900",
-                        List.of("https://images.unsplash.com/photo-1544816155-12df9643f363?w=900")),
+                        "https://images.unsplash.com/photo-1544816155-12df9643f363?w=900",
+                        List.of("https://images.unsplash.com/photo-1591561954557-26941169b49e?w=900", "https://images.unsplash.com/photo-1544816155-12df9643f363?w=900")),
 
                 // 12. Classic Full-Grain Leather Belt
                 new ProductVisualPreset("SH-ACC-012",
                         "https://images.unsplash.com/photo-1624222247344-550fb60583dc?w=900",
                         List.of("https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=900")),
 
-                // 13. Footwear: Monochrome Leather Court Sneakers
+                // 13. Footwear: Monochrome Leather Court Sneakers (Pristine minimal white court sneaker - NOT RED RUNNING SHOES!)
                 new ProductVisualPreset("SH-FT-013",
-                        "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=900",
-                        List.of("https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=900", "https://images.unsplash.com/photo-1600185365926-3a2ce3cdb9eb?w=900")),
+                        "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=900",
+                        List.of("https://images.unsplash.com/photo-1600185365926-3a2ce3cdb9eb?w=900", "https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?w=900")),
 
                 // 14. Footwear: Suede Chelsea Boots
                 new ProductVisualPreset("SH-FT-014",
@@ -606,7 +606,7 @@ public class DataSeeder {
                 // 18. Minimal Low-Top Leather Sneakers
                 new ProductVisualPreset("SH-FT-017",
                         "https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?w=900",
-                        List.of("https://images.unsplash.com/photo-1549298916-b41d501d3772?w=900")),
+                        List.of("https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=900")),
 
                 // 19. Women's Hand-Block Printed Kurti
                 new ProductVisualPreset("SH-W-018",
@@ -623,10 +623,10 @@ public class DataSeeder {
                         "https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?w=900",
                         List.of("https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=900")),
 
-                // 22. Italian Leather Crossbody Bag (ONLY authentic luxury crossbody bag angles - NO random backpacks/wicker!)
+                // 22. Italian Leather Crossbody Bag (ONLY authentic luxury red leather handbag angles - NO random backpacks/wicker!)
                 new ProductVisualPreset("SH-ACC-021",
                         "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=900",
-                        List.of("https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=900", "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=900")),
+                        List.of("https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d?w=900", "https://images.unsplash.com/photo-1594223274512-ad4803739b7c?w=900")),
 
                 // 23. Tailored Wool-Blend Evening Blazer (Men)
                 new ProductVisualPreset("SH-M-022",
@@ -645,8 +645,8 @@ public class DataSeeder {
 
                 // 26. Round Toe Pivot Pro Sneakers (U.S. Polo Assn. high-tech lifestyle athletic footwear)
                 new ProductVisualPreset("SH-FT-031",
-                        "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=900",
-                        List.of("https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?w=900", "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=900", "https://images.unsplash.com/photo-1600185365926-3a2ce3cdb9eb?w=900"))
+                        "https://images.unsplash.com/photo-1600185365926-3a2ce3cdb9eb?w=900",
+                        List.of("https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?w=900", "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=900", "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=900"))
         );
 
         for (ProductVisualPreset preset : presets) {

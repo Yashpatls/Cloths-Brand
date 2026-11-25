@@ -228,6 +228,7 @@ public class ComboImageGenerator {
     }
 
     private static final java.util.Map<String, BufferedImage> IMAGE_MEM_CACHE = new java.util.concurrent.ConcurrentHashMap<>();
+    private static final File DISK_CACHE_DIR = new File("uploads", "cache");
 
     private BufferedImage fetchImage(String urlStr) {
         if (urlStr == null || urlStr.isBlank()) {
@@ -264,7 +265,23 @@ public class ComboImageGenerator {
                 return null;
             }
 
-            // 3. Handle remote HTTP / HTTPS URLs
+            // 3. Handle disk cache for remote URLs
+            if (!DISK_CACHE_DIR.exists()) {
+                DISK_CACHE_DIR.mkdirs();
+            }
+            String cacheFilename = Integer.toHexString(urlStr.hashCode()) + ".jpg";
+            File diskCachedFile = new File(DISK_CACHE_DIR, cacheFilename);
+            if (diskCachedFile.exists() && diskCachedFile.length() > 0) {
+                try {
+                    BufferedImage img = ImageIO.read(diskCachedFile);
+                    if (img != null) {
+                        IMAGE_MEM_CACHE.put(urlStr, img);
+                        return img;
+                    }
+                } catch (Exception ignored) {}
+            }
+
+            // 4. Handle remote HTTP / HTTPS URLs with 5000ms timeout
             String targetUrl = urlStr;
             if (targetUrl.contains("images.unsplash.com") && !targetUrl.contains("fm=jpg")) {
                 targetUrl += (targetUrl.contains("?") ? "&" : "?") + "fm=jpg";
@@ -273,8 +290,8 @@ public class ComboImageGenerator {
             URI uri = URI.create(targetUrl);
             URL url = uri.toURL();
             URLConnection conn = url.openConnection();
-            conn.setConnectTimeout(1500);
-            conn.setReadTimeout(1500);
+            conn.setConnectTimeout(5000);
+            conn.setReadTimeout(5000);
             conn.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36");
             conn.setRequestProperty("Accept", "image/jpeg,image/png,image/*;q=0.9");
 
@@ -284,6 +301,9 @@ public class ComboImageGenerator {
                     BufferedImage img = ImageIO.read(bais);
                     if (img != null) {
                         IMAGE_MEM_CACHE.put(urlStr, img);
+                        try (java.io.FileOutputStream fos = new java.io.FileOutputStream(diskCachedFile)) {
+                            fos.write(data);
+                        } catch (Exception ignored) {}
                     }
                     return img;
                 }

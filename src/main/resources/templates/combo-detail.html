@@ -293,6 +293,7 @@
           id: /*[[${it.id}]]*/ 0,
           productId: /*[[${it.product != null ? it.product.id : 0}]]*/ 0,
           title: /*[[${it.customTitle}]]*/ 'Item',
+          imageUrl: /*[[${it.product != null ? it.product.imageUrl : ''}]]*/ '',
           price: parseFloat(/*[[${it.itemPrice}]]*/ 0),
           origPrice: parseFloat(/*[[${it.originalPrice}]]*/ 0),
           included: true
@@ -348,9 +349,23 @@
       // Automatically Update Main Composite Flat-Lay Preview Image (Contained Items Only)
       const mainImg = document.getElementById('main-bundle-image');
       if (mainImg) {
-        const activeItemIds = activeItems.map(it => it.id);
-        const activePids = activeItems.map(it => it.productId).filter(pid => pid > 0);
-        if (activeItemIds.length > 0) {
+        if (activeCount === 1) {
+          // Only 1 item remains in combo: Display that product's actual photograph directly!
+          const singleImg = activeItems[0].imageUrl;
+          if (singleImg && singleImg.length > 0) {
+            mainImg.src = singleImg;
+            mainImg.style.opacity = '1';
+            mainImg.setAttribute('data-active-items', String(activeItems[0].id));
+          }
+        } else if (activeCount === comboData.items.length) {
+          // All garments included: Display full curated outfit lookbook flat-lay
+          mainImg.src = defaultComboImg;
+          mainImg.style.opacity = '1';
+          mainImg.setAttribute('data-active-items', 'all');
+        } else if (activeCount > 1) {
+          // Multiple items remain: Request composed collage of active items
+          const activeItemIds = activeItems.map(it => it.id);
+          const activePids = activeItems.map(it => it.productId).filter(pid => pid > 0);
           const newSrc = '/combos/' + comboData.id + '/collage.jpg?itemIds=' + activeItemIds.join(',') + '&productIds=' + activePids.join(',') + '&t=' + Date.now();
           const currentKeyStr = activeItemIds.slice().sort().join(',');
           if (mainImg.getAttribute('data-active-items') !== currentKeyStr) {
@@ -363,7 +378,7 @@
               mainImg.style.opacity = '1';
             };
             preload.onerror = function() {
-              mainImg.src = defaultComboImg;
+              mainImg.src = (activeItems[0] && activeItems[0].imageUrl) ? activeItems[0].imageUrl : defaultComboImg;
               mainImg.style.opacity = '1';
             };
             preload.src = newSrc;

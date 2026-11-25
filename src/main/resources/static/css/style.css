@@ -1,28 +1,40 @@
 /* ==============================================================================
-   StyleHub — Premium Modern Fashion Design Stylesheet
-   Typography: Playfair Display (Headings) & DM Sans (Body)
+   StyleHub — Zara & Massimo Dutti Editorial Fashion Design System
+   Typography: Cormorant Garamond & Playfair Display (Serif) + Plus Jakarta Sans (Sans)
+   Palette: Obsidian Black (#0a0a0a), Warm Ecru (#f9f8f6), Editorial White (#ffffff),
+            Sand Border (#eae7e1), Champagne Gold Accent (#b5915f)
    ============================================================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..800;1,9..40,300..800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
 
 :root {
-  --primary: #121212;
-  --primary-light: #2c2c2c;
-  --secondary: #6e6d68;
-  --accent: #c86a4b;
-  --accent-hover: #b05739;
-  --paper-bg: #f9f8f5;
+  --primary: #0a0a0a;
+  --primary-light: #222222;
+  --secondary: #6e6b66;
+  --paper-bg: #f9f8f6;
   --paper-card: #ffffff;
-  --border-line: #e8e6e1;
-  --gold: #d4af37;
-  --success: #2e7d32;
-  --danger: #d32f2f;
-  --font-serif: 'Playfair Display', Georgia, serif;
-  --font-sans: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-  --transition-smooth: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
-  --shadow-md: 0 6px 20px rgba(0, 0, 0, 0.08);
-  --shadow-lg: 0 12px 35px rgba(0, 0, 0, 0.12);
+  --paper-soft: #f4f2ee;
+  --border-line: #eae7e1;
+  --border-dark: #1a1a1a;
+  --gold: #b5915f;
+  --gold-light: #dfc89e;
+  --accent: #0a0a0a;
+  --success: #1e7e34;
+  --danger: #c53030;
+  
+  --font-serif: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
+  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  
+  --transition-smooth: all 0.28s cubic-bezier(0.25, 0.8, 0.25, 1);
+  --transition-slow: all 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+  --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.03);
+  --shadow-md: 0 8px 25px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.09);
+  --shadow-glass: 0 8px 32px rgba(0, 0, 0, 0.08);
+}
+
+* {
+  box-sizing: border-box;
 }
 
 body {
@@ -31,11 +43,22 @@ body {
   background-color: #ffffff;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-h1, h2, h3, h4, .font-serif, .brand {
+h1, h2, h3, h4, h5, .font-serif, .brand {
   font-family: var(--font-serif);
+  font-weight: 500;
+  letter-spacing: -0.01em;
 }
+
+.font-sans {
+  font-family: var(--font-sans) !important;
+}
+
+.letter-spacing-1 { letter-spacing: 0.1em !important; }
+.letter-spacing-2 { letter-spacing: 0.2em !important; }
+.letter-spacing-3 { letter-spacing: 0.3em !important; }
 
 a {
   color: inherit;
@@ -44,219 +67,346 @@ a {
 }
 
 a:hover {
-  color: var(--accent);
+  color: var(--primary);
+  opacity: 0.82;
 }
 
 /* ------------------------------------------------------------------------------
-   Navigation & Top Bar
+   Editorial Top Strip & Navigation Bar
    ------------------------------------------------------------------------------ */
 .site-header {
-  border-bottom: 1px solid var(--border-line);
-  background: rgba(255, 255, 255, 0.96);
-  backdrop-filter: blur(10px);
   position: sticky;
   top: 0;
-  z-index: 1030;
-}
-
-.top-announcement {
-  background-color: var(--primary);
-  color: #ffffff;
-  font-size: 0.78rem;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  padding: 6px 0;
-  text-align: center;
-  font-weight: 500;
-}
-
-.navbar-brand {
-  font-size: 1.55rem;
-  font-weight: 800;
-  letter-spacing: 3px;
-  color: var(--primary) !important;
-}
-
-.navbar-brand span {
-  color: var(--accent);
-}
-
-.nav-link {
-  font-size: 0.88rem;
-  font-weight: 600;
-  letter-spacing: 1.2px;
-  text-transform: uppercase;
-  color: #3b3a36 !important;
-  padding: 0.5rem 1rem !important;
+  z-index: 1040;
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border-line);
   transition: var(--transition-smooth);
 }
 
-.nav-link:hover, .nav-link.active {
-  color: var(--accent) !important;
+.top-announcement {
+  background-color: #0b0b0b;
+  color: #f7f6f3;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.top-announcement a {
+  color: #d8cbb8;
+  transition: var(--transition-smooth);
+}
+
+.top-announcement a:hover {
+  color: #ffffff;
+}
+
+.navbar-brand.brand {
+  font-family: var(--font-sans);
+  font-size: 1.65rem;
+  font-weight: 900;
+  letter-spacing: 0.22em;
+  color: #0a0a0a !important;
+  text-transform: uppercase;
+  padding: 0;
+  margin-right: 2.5rem;
+  display: inline-flex;
+  align-items: center;
+}
+
+.navbar-brand.brand span {
+  font-weight: 300;
+  color: var(--gold);
+}
+
+.nav-link {
+  font-family: var(--font-sans);
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #1a1a1a !important;
+  padding: 0.6rem 0.9rem !important;
+  position: relative;
+  transition: var(--transition-smooth);
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 1.5px;
+  background: var(--primary);
+  transition: all 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
+  transform: translateX(-50%);
+}
+
+.nav-link:hover::after, .nav-link.active::after {
+  width: 70%;
+}
+
+.search-input-editorial {
+  border: 1px solid var(--border-line);
+  background-color: var(--paper-bg);
+  border-radius: 50px;
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+  padding: 0.45rem 1rem 0.45rem 2.2rem;
+  width: 210px;
+  transition: var(--transition-smooth);
+}
+
+.search-input-editorial:focus {
+  background-color: #ffffff;
+  border-color: #0a0a0a;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(10, 10, 10, 0.06);
+  width: 250px;
+}
+
+.header-icon-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #0a0a0a;
+  background: transparent;
+  transition: var(--transition-smooth);
+  position: relative;
+}
+
+.header-icon-btn:hover {
+  background: var(--paper-bg);
+  color: #0a0a0a;
 }
 
 .badge-counter {
+  font-family: var(--font-sans);
   font-size: 0.65rem;
-  padding: 3px 6px;
-  border-radius: 50px;
-  background-color: var(--accent);
+  font-weight: 700;
+  min-width: 17px;
+  height: 17px;
+  line-height: 17px;
+  border-radius: 50%;
+  background-color: #0a0a0a;
   color: #ffffff;
-  vertical-align: top;
-  margin-left: 2px;
+  text-align: center;
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  border: 2px solid #ffffff;
 }
 
 /* ------------------------------------------------------------------------------
-   Editorial Hero Section
+   Zara & Massimo Dutti Editorial Hero Section
    ------------------------------------------------------------------------------ */
-.hero-editorial {
-  min-height: 82vh;
-  background: #f4f1ea;
+.editorial-hero {
+  min-height: 85vh;
   position: relative;
+  background-color: #0e0e0e;
   overflow: hidden;
   display: flex;
   align-items: center;
 }
 
-.hero-copy {
-  padding: 4rem 2rem;
-  z-index: 2;
-}
-
-.hero-tag {
-  font-size: 0.82rem;
-  letter-spacing: 3px;
-  font-weight: 700;
-  color: var(--accent);
-  text-transform: uppercase;
-  margin-bottom: 1.2rem;
-  display: inline-block;
-}
-
-.hero-title {
-  font-size: clamp(2.8rem, 5.5vw, 4.8rem);
-  line-height: 1.05;
-  font-weight: 600;
-  margin-bottom: 1.5rem;
-  color: var(--primary);
-}
-
-.hero-title em {
-  font-style: italic;
-  font-weight: 400;
-  color: var(--accent);
-}
-
-.hero-description {
-  font-size: 1.1rem;
-  color: var(--secondary);
-  max-width: 440px;
-  margin-bottom: 2.2rem;
-  line-height: 1.7;
-}
-
-.hero-image-wrap {
-  height: 100%;
-  min-height: 520px;
-  background-position: center;
+.editorial-hero-bg {
+  position: absolute;
+  inset: 0;
   background-size: cover;
-  border-radius: 4px;
-  box-shadow: var(--shadow-lg);
+  background-position: center 25%;
+  filter: brightness(0.72) contrast(1.05);
+  transform: scale(1.02);
+  transition: transform 8s ease-out;
+}
+
+.editorial-hero:hover .editorial-hero-bg {
+  transform: scale(1.05);
+}
+
+.editorial-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(10,10,10,0.3) 0%, rgba(10,10,10,0.65) 100%);
+  z-index: 1;
+}
+
+.editorial-hero-content {
+  position: relative;
+  z-index: 2;
+  color: #ffffff;
+  max-width: 780px;
+  padding: 4rem 1.5rem;
+}
+
+.editorial-hero-tag {
+  font-family: var(--font-sans);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gold-light);
+  display: inline-block;
+  margin-bottom: 1.4rem;
+}
+
+.editorial-hero-title {
+  font-family: var(--font-serif);
+  font-size: clamp(3rem, 6.5vw, 5.5rem);
+  line-height: 1.02;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  margin-bottom: 1.6rem;
+  color: #ffffff;
+}
+
+.editorial-hero-title em {
+  font-style: italic;
+  font-weight: 300;
+  color: #f1ede4;
+}
+
+.editorial-hero-desc {
+  font-family: var(--font-sans);
+  font-size: 1.05rem;
+  font-weight: 300;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.85);
+  max-width: 520px;
+  margin-bottom: 2.5rem;
 }
 
 /* ------------------------------------------------------------------------------
-   Category Cards
+   Editorial Lookbook Category Banners (Zara Split Grid)
    ------------------------------------------------------------------------------ */
-.category-card {
+.lookbook-card {
   position: relative;
+  height: 520px;
   overflow: hidden;
-  border-radius: 4px;
-  height: 380px;
+  border-radius: 2px;
   display: block;
-  box-shadow: var(--shadow-sm);
+  background-color: #0b0b0b;
 }
 
-.category-card img {
+.lookbook-card img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.65s cubic-bezier(0.25, 1, 0.5, 1);
+  object-position: center 20%;
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), filter 0.8s ease;
+  filter: brightness(0.85);
 }
 
-.category-card:hover img {
+.lookbook-card:hover img {
   transform: scale(1.06);
+  filter: brightness(0.92);
 }
 
-.category-card-overlay {
+.lookbook-card-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, rgba(18, 18, 18, 0.82) 0%, rgba(18, 18, 18, 0.15) 50%, transparent 100%);
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  padding: 2rem;
+  padding: 2.5rem;
+  background: linear-gradient(180deg, transparent 40%, rgba(10, 10, 10, 0.85) 100%);
+  color: #ffffff;
+  z-index: 2;
+}
+
+.lookbook-card-overlay .tag {
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--gold-light);
+  margin-bottom: 0.4rem;
+}
+
+.lookbook-card-overlay h3 {
+  font-family: var(--font-serif);
+  font-size: 2.2rem;
+  font-weight: 400;
+  margin-bottom: 0.5rem;
   color: #ffffff;
 }
 
-.category-card-overlay h3 {
-  font-size: 1.8rem;
-  font-weight: 600;
-  margin-bottom: 0.3rem;
-}
-
-.category-card-overlay p {
+.lookbook-card-overlay p {
+  font-family: var(--font-sans);
   font-size: 0.85rem;
-  opacity: 0.85;
-  margin-bottom: 0.8rem;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 1rem;
 }
 
-.category-card-overlay span {
-  font-size: 0.82rem;
-  font-weight: 600;
+.lookbook-card-overlay .btn-link-editorial {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
-  letter-spacing: 1.5px;
+  font-weight: 700;
+  color: #ffffff;
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  gap: 8px;
+  border-bottom: 1px solid #ffffff;
+  padding-bottom: 3px;
+  width: fit-content;
+  transition: var(--transition-smooth);
+}
+
+.lookbook-card:hover .btn-link-editorial {
+  color: var(--gold-light);
+  border-color: var(--gold-light);
+  gap: 12px;
 }
 
 /* ------------------------------------------------------------------------------
-   Product Cards
+   Editorial Product Cards (Massimo Dutti 3:4 High-Fashion Grid)
    ------------------------------------------------------------------------------ */
 .product-card {
   border: none;
   background: transparent;
-  transition: var(--transition-smooth);
   position: relative;
+  transition: var(--transition-smooth);
 }
 
 .product-thumb {
   position: relative;
   overflow: hidden;
   background-color: var(--paper-bg);
-  border-radius: 3px;
-  height: 370px;
+  border-radius: 2px;
+  aspect-ratio: 3 / 4;
 }
 
 .product-thumb img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.5s ease;
+  transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .product-card:hover .product-thumb img {
-  transform: scale(1.04);
+  transform: scale(1.05);
 }
 
 .product-badge {
   position: absolute;
-  top: 14px;
-  left: 14px;
-  background-color: var(--primary);
+  top: 12px;
+  left: 12px;
+  background: rgba(10, 10, 10, 0.88);
+  backdrop-filter: blur(8px);
   color: #ffffff;
-  font-size: 0.72rem;
+  font-family: var(--font-sans);
+  font-size: 0.65rem;
   font-weight: 700;
-  letter-spacing: 1px;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   padding: 4px 10px;
   border-radius: 2px;
@@ -264,17 +414,19 @@ a:hover {
 }
 
 .product-badge.sale {
-  background-color: var(--accent);
+  background: #c53030;
 }
 
 .btn-wishlist {
   position: absolute;
-  top: 14px;
-  right: 14px;
-  background: #ffffff;
-  border: none;
-  width: 38px;
-  height: 38px;
+  top: 12px;
+  right: 12px;
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -282,325 +434,231 @@ a:hover {
   box-shadow: var(--shadow-sm);
   cursor: pointer;
   transition: var(--transition-smooth);
-  color: #333;
+  color: #1a1a1a;
   z-index: 2;
 }
 
 .btn-wishlist:hover, .btn-wishlist.active {
-  background: var(--accent);
+  background: #0a0a0a;
   color: #ffffff;
+  border-color: #0a0a0a;
+  transform: scale(1.08);
 }
 
 .product-info {
-  padding-top: 1rem;
+  padding-top: 0.9rem;
 }
 
 .product-cat {
-  font-size: 0.75rem;
-  letter-spacing: 1.2px;
+  font-family: var(--font-sans);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--secondary);
-  margin-bottom: 0.2rem;
-  font-weight: 600;
+  margin-bottom: 0.25rem;
 }
 
 .product-title {
-  font-size: 1.05rem;
-  font-weight: 600;
+  font-family: var(--font-serif);
+  font-size: 1.15rem;
+  font-weight: 500;
   color: var(--primary);
-  margin-bottom: 0.4rem;
-  line-height: 1.35;
+  margin-bottom: 0.35rem;
+  line-height: 1.3;
+  transition: var(--transition-smooth);
+}
+
+.product-card:hover .product-title {
+  color: #666;
+}
+
+.card-color-swatch {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  display: inline-block;
+  cursor: pointer;
+  border: 1.5px solid #ffffff;
+  box-shadow: 0 0 0 1px #d6d3cd;
+  transition: all 0.2s ease;
+}
+
+.card-color-swatch:hover, .card-color-swatch.active {
+  transform: scale(1.25);
+  box-shadow: 0 0 0 2px #0a0a0a;
 }
 
 .product-price {
+  font-family: var(--font-sans);
   font-size: 1rem;
   font-weight: 700;
   color: var(--primary);
   display: flex;
-  align-items: center;
+  align-items: baseline;
   gap: 8px;
 }
 
 .price-original {
-  font-size: 0.88rem;
-  color: #999;
+  font-size: 0.85rem;
+  color: #8c8983;
   text-decoration: line-through;
   font-weight: 400;
 }
 
 /* ------------------------------------------------------------------------------
-   Buttons & Micro-interactions
+   Editorial Buttons & Controls
    ------------------------------------------------------------------------------ */
 .btn-fashion-dark {
-  background-color: var(--primary);
-  color: #ffffff;
-  border: 1px solid var(--primary);
-  padding: 12px 28px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  letter-spacing: 1.5px;
+  background-color: #0a0a0a;
+  color: #ffffff !important;
+  border: 1px solid #0a0a0a;
+  padding: 14px 32px;
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
-  border-radius: 2px;
+  border-radius: 0;
   transition: var(--transition-smooth);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .btn-fashion-dark:hover {
-  background-color: var(--accent);
-  border-color: var(--accent);
-  color: #ffffff;
+  background-color: #262626;
+  border-color: #262626;
+  color: #ffffff !important;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
 }
 
 .btn-fashion-light {
   background-color: #ffffff;
-  color: var(--primary);
-  border: 1px solid var(--border-line);
-  padding: 12px 28px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  letter-spacing: 1.5px;
+  color: #0a0a0a !important;
+  border: 1px solid #0a0a0a;
+  padding: 14px 32px;
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
-  border-radius: 2px;
+  border-radius: 0;
   transition: var(--transition-smooth);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .btn-fashion-light:hover {
-  background-color: var(--paper-bg);
-  border-color: var(--primary);
-  color: var(--primary);
+  background-color: #0a0a0a;
+  color: #ffffff !important;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.btn-fashion-gold {
+  background: linear-gradient(135deg, #c4a478 0%, #a88553 100%);
+  color: #ffffff !important;
+  border: none;
+  padding: 14px 32px;
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  border-radius: 0;
+  transition: var(--transition-smooth);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-fashion-gold:hover {
+  background: linear-gradient(135deg, #d3b488 0%, #b5915f 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(181, 145, 95, 0.35);
 }
 
 /* ------------------------------------------------------------------------------
-   Cart & Checkout Pages
+   Editorial Product Page Layout (Zara Magazine Experience)
+   ------------------------------------------------------------------------------ */
+.product-hero-sticky {
+  position: sticky;
+  top: 100px;
+}
+
+.thumb-selector {
+  transition: var(--transition-smooth);
+  border: 1px solid var(--border-line);
+}
+
+.thumb-selector:hover {
+  border-color: #0a0a0a !important;
+  opacity: 1 !important;
+}
+
+.thumb-selector.active-thumb {
+  border-color: #0a0a0a !important;
+  box-shadow: 0 0 0 1px #0a0a0a;
+}
+
+.color-swatch-btn {
+  border: 1px solid var(--border-line);
+  background-color: #ffffff;
+  transition: var(--transition-smooth);
+}
+
+.color-swatch-btn:hover {
+  border-color: #0a0a0a;
+  background-color: var(--paper-bg);
+}
+
+/* ------------------------------------------------------------------------------
+   Cart & Checkout Pages (Clean Luxury Shopping Bag)
    ------------------------------------------------------------------------------ */
 .cart-summary-card {
   background-color: var(--paper-bg);
-  padding: 2rem;
-  border-radius: 4px;
+  padding: 2.2rem;
+  border-radius: 2px;
   border: 1px solid var(--border-line);
 }
 
-.checkout-step {
-  padding: 1.8rem;
-  border: 1px solid var(--border-line);
-  border-radius: 4px;
-  margin-bottom: 1.5rem;
-}
-
-.checkout-step.active {
-  border-color: var(--primary);
-}
-
-.step-header {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 1.2rem;
-}
-
-.step-num {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  background: var(--primary);
-  color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  font-size: 0.85rem;
-}
-
 /* ------------------------------------------------------------------------------
-   Order Tracking Stepper
-   ------------------------------------------------------------------------------ */
-.tracking-stepper {
-  display: flex;
-  justify-content: space-between;
-  position: relative;
-  margin: 2.5rem 0;
-}
-
-.tracking-stepper::before {
-  content: '';
-  position: absolute;
-  top: 15px;
-  left: 20px;
-  right: 20px;
-  height: 3px;
-  background-color: var(--border-line);
-  z-index: 1;
-}
-
-.track-step {
-  position: relative;
-  z-index: 2;
-  text-align: center;
-}
-
-.track-icon {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: #ffffff;
-  border: 3px solid var(--border-line);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto 8px;
-  font-size: 0.75rem;
-  font-weight: 700;
-  color: #999;
-}
-
-.track-step.done .track-icon {
-  background: var(--success);
-  border-color: var(--success);
-  color: #ffffff;
-}
-
-.track-step.current .track-icon {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: #ffffff;
-  box-shadow: 0 0 0 4px rgba(200, 106, 75, 0.2);
-}
-
-.track-step span {
-  font-size: 0.82rem;
-  font-weight: 600;
-  color: var(--secondary);
-}
-
-.track-step.done span, .track-step.current span {
-  color: var(--primary);
-}
-
-/* ------------------------------------------------------------------------------
-   Footer
+   Site Footer (Editorial Haute Couture Black)
    ------------------------------------------------------------------------------ */
 .site-footer {
-  background-color: #121212;
-  color: #d1cfc7;
-  padding: 5rem 0 2.5rem;
-  font-size: 0.9rem;
+  background-color: #0b0b0b;
+  color: #c9c6be;
+  padding: 5rem 0 2rem;
+  font-size: 0.88rem;
+  border-top: 1px solid #222222;
 }
 
 .site-footer h5 {
   color: #ffffff;
-  font-size: 1.1rem;
-  margin-bottom: 1.4rem;
+  font-family: var(--font-serif);
+  font-size: 1.35rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  margin-bottom: 1.5rem;
 }
 
 .site-footer a {
-  color: #a8a69e;
+  color: #9c9991;
+  transition: var(--transition-smooth);
 }
 
 .site-footer a:hover {
   color: #ffffff;
+  padding-left: 4px;
 }
 
 .footer-bottom {
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
   padding-top: 2rem;
   margin-top: 3.5rem;
-  font-size: 0.8rem;
-  color: #7a7872;
-}
-
-/* ------------------------------------------------------------------------------
-   Black Friday Sale & Enhanced UI Animations
-   ------------------------------------------------------------------------------ */
-.black-friday-banner {
-  background: linear-gradient(135deg, #090909 0%, #1a0826 40%, #0d0014 100%);
-  border: 1px solid rgba(255, 0, 127, 0.25);
-  box-shadow: 0 10px 30px rgba(26, 8, 38, 0.4);
-  position: relative;
-  overflow: hidden;
-}
-
-.black-friday-banner::before {
-  content: '';
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: radial-gradient(circle, rgba(255, 0, 127, 0.08) 0%, transparent 60%);
-  pointer-events: none;
-  animation: bfRotate 15s linear infinite;
-}
-
-@keyframes bfRotate {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-.black-friday-badge {
-  background: linear-gradient(90deg, #ff007f, #ff7700);
-  color: #ffffff;
-  font-weight: 800;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  animation: bfGlow 2s infinite alternate;
-}
-
-@keyframes bfGlow {
-  from { box-shadow: 0 0 6px rgba(255, 0, 127, 0.4); }
-  to { box-shadow: 0 0 22px rgba(255, 119, 0, 0.8); }
-}
-
-.coupon-copy-pill {
-  background: rgba(255, 255, 255, 0.12);
-  border: 1px dashed rgba(255, 255, 255, 0.4);
-  color: #ffffff;
-  padding: 0.4rem 1rem;
-  border-radius: 50px;
-  font-family: monospace;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.coupon-copy-pill:hover {
-  background: rgba(255, 255, 255, 0.25);
-  border-color: #ffffff;
-  transform: scale(1.04);
-}
-
-.product-card {
-  transition: transform 0.28s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.28s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
-}
-
-.product-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.12) !important;
-}
-
-.btn-fashion-gold {
-  background: linear-gradient(135deg, #d4af37 0%, #b08917 100%);
-  color: #000000 !important;
-  font-weight: 700;
-  border: none;
-  letter-spacing: 0.5px;
-  transition: all 0.25s ease;
-}
-
-.btn-fashion-gold:hover {
-  background: linear-gradient(135deg, #f5cf53 0%, #cfa325 100%);
-  color: #000000 !important;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(212, 175, 55, 0.4);
-}
-
-.btn-fashion-dark:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
-}
-
-.btn-fashion-light:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+  font-size: 0.78rem;
+  color: #6a6862;
 }

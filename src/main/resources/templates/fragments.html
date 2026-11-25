@@ -20,24 +20,24 @@
 
   <!-- Top Announcement Header -->
   <header th:fragment="header" class="site-header">
-    <div class="top-announcement" style="background: #000000; border-bottom: 1px solid rgba(255, 0, 127, 0.35);">
-      <div class="container d-flex justify-content-between align-items-center py-1">
-        <div>
-          <span class="badge bg-danger text-uppercase me-2 fw-bold" style="letter-spacing: 1px; font-size: 0.65rem;">BLACK FRIDAY LIVE</span>
-          <span class="small text-light">Extra 30% OFF Sitewide with code <strong class="text-warning font-monospace">BLACKFRIDAY</strong> | Free Express Shipping over ₹1,500</span>
+    <div class="top-announcement" style="background: #0a0a0a; border-bottom: 1px solid rgba(255, 255, 255, 0.08);">
+      <div class="container d-flex justify-content-between align-items-center py-2">
+        <div class="d-flex align-items-center gap-2">
+          <span class="badge bg-dark border border-secondary text-uppercase fw-semibold" style="letter-spacing: 1.5px; font-size: 0.65rem;">EDITORIAL EDIT</span>
+          <span class="small text-light" style="letter-spacing: 0.5px; font-size: 0.8rem;">Complimentary Express Shipping over ₹1,500 | 30% OFF with code <strong class="text-warning font-monospace">BLACKFRIDAY</strong></span>
         </div>
-        <div class="d-none d-md-flex gap-3 small">
-          <a href="/shop" class="text-warning text-decoration-none fw-bold"><i class="bi bi-tag-fill me-1"></i>Special Offers</a>
+        <div class="d-none d-md-flex gap-3 small" style="letter-spacing: 0.5px; font-size: 0.8rem;">
+          <a href="/shop" class="text-warning text-decoration-none fw-semibold"><i class="bi bi-stars me-1"></i>Special Offers</a>
           <span class="text-secondary">·</span>
-          <a href="/contact" class="text-white text-decoration-none">Concierge / Contact</a>
+          <a href="/contact" class="text-white-50 text-decoration-none hover-white">Client Concierge</a>
           <span class="text-secondary">·</span>
-          <a href="/orders" class="text-white text-decoration-none">Track Order</a>
+          <a href="/orders" class="text-white-50 text-decoration-none hover-white">Track Order</a>
         </div>
       </div>
     </div>
 
     <!-- Main Navigation Bar -->
-    <nav class="navbar navbar-expand-lg bg-white py-3">
+    <nav class="navbar navbar-expand-lg bg-white py-3 border-bottom sticky-top" style="backdrop-filter: blur(12px); background-color: rgba(255, 255, 255, 0.96) !important;">
       <div class="container">
         <!-- Mobile Toggle Button -->
         <button class="navbar-toggler border-0 p-0 me-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileMenu">
@@ -45,25 +45,25 @@
         </button>
 
         <!-- Brand Logo -->
-        <a class="navbar-brand brand me-4" href="/">
-          STYLE<span>HUB</span>
+        <a class="navbar-brand brand me-4" href="/" style="font-family: var(--font-serif); font-size: 1.65rem; font-weight: 700; letter-spacing: 4px; color: #0a0a0a;">
+          STYLE<span style="font-weight: 300; letter-spacing: 5px; color: #555;">HUB</span>
         </a>
 
         <!-- Desktop Menu Links -->
         <div class="collapse navbar-collapse" id="desktopNav">
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0 gap-1">
-            <li class="nav-item"><a class="nav-link" href="/shop">Shop All</a></li>
-            <li class="nav-item"><a class="nav-link" href="/category/men">Men</a></li>
-            <li class="nav-item"><a class="nav-link" href="/category/women">Women</a></li>
-            <li class="nav-item"><a class="nav-link" href="/category/kids">Kids</a></li>
-            <li class="nav-item"><a class="nav-link" href="/category/accessories">Accessories</a></li>
-            <li class="nav-item"><a class="nav-link" href="/category/footwear">Footwear</a></li>
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0 gap-3">
+            <li class="nav-item"><a class="nav-link text-uppercase" href="/shop" style="font-size: 0.82rem; letter-spacing: 1.5px; font-weight: 600;">Shop All</a></li>
+            <li class="nav-item"><a class="nav-link text-uppercase" href="/category/women" style="font-size: 0.82rem; letter-spacing: 1.5px; font-weight: 500;">Women</a></li>
+            <li class="nav-item"><a class="nav-link text-uppercase" href="/category/men" style="font-size: 0.82rem; letter-spacing: 1.5px; font-weight: 500;">Men</a></li>
+            <li class="nav-item"><a class="nav-link text-uppercase" href="/category/kids" style="font-size: 0.82rem; letter-spacing: 1.5px; font-weight: 500;">Kids</a></li>
+            <li class="nav-item"><a class="nav-link text-uppercase" href="/category/accessories" style="font-size: 0.82rem; letter-spacing: 1.5px; font-weight: 500;">Accessories</a></li>
+            <li class="nav-item"><a class="nav-link text-uppercase" href="/category/footwear" style="font-size: 0.82rem; letter-spacing: 1.5px; font-weight: 500;">Footwear</a></li>
           </ul>
 
           <!-- Search Bar -->
           <form class="d-none d-xl-flex me-4" action="/search" method="get">
             <div class="input-group input-group-sm">
-              <input type="text" name="q" class="form-control rounded-start-pill ps-3 border-end-0 bg-light" placeholder="Search cashmere, linen..." style="width: 200px;">
+              <input type="text" name="q" class="form-control rounded-start-pill ps-3 border-end-0 bg-light" placeholder="Search cashmere, linen..." style="width: 210px; font-size: 0.82rem;">
               <button class="btn btn-outline-secondary border-start-0 rounded-end-pill bg-light" type="submit">
                 <i class="bi bi-search text-muted"></i>
               </button>
@@ -113,7 +113,7 @@
           </div>
 
           <div sec:authorize="isAnonymous()">
-            <a href="/login" class="btn btn-sm btn-fashion-dark px-3">Sign In</a>
+            <a href="/login" class="btn btn-sm btn-fashion-dark px-3 rounded-pill text-uppercase fw-semibold" style="letter-spacing: 1px; font-size: 0.75rem;">Sign In</a>
           </div>
         </div>
       </div>

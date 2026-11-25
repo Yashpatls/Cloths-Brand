@@ -225,7 +225,7 @@ public class DataSeeder {
                 p.setPrice(BigDecimal.valueOf(1799));
                 p.setCategory(menCat);
                 p.setCategoryName(menCat.getName());
-                p.setImageUrl("https://images.unsplash.com/photo-1714143136372-ddaf8b606da7?w=900");
+                p.setImageUrl("https://images.unsplash.com/photo-1542272604-787c3835535d?w=900");
                 p.setStock(40);
                 p.setActive(true);
                 Product saved = productRepo.save(p);
@@ -259,7 +259,7 @@ public class DataSeeder {
                 p.setPrice(BigDecimal.valueOf(2299));
                 p.setCategory(footCat);
                 p.setCategoryName(footCat.getName());
-                p.setImageUrl("https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?w=900");
+                p.setImageUrl("https://images.unsplash.com/photo-1549298916-b41d501d3772?w=900");
                 p.setStock(30);
                 p.setActive(true);
                 Product saved = productRepo.save(p);
@@ -293,7 +293,7 @@ public class DataSeeder {
                 p.setPrice(BigDecimal.valueOf(499));
                 p.setCategory(womenCat);
                 p.setCategoryName(womenCat.getName());
-                p.setImageUrl("https://images.unsplash.com/photo-1789111161057-90c5ce12dc21?w=900");
+                p.setImageUrl("https://images.unsplash.com/photo-1509916796186-85dc916cb043?w=900");
                 p.setStock(50);
                 p.setActive(true);
                 Product saved = productRepo.save(p);
@@ -630,12 +630,12 @@ public class DataSeeder {
                 // 12. Classic Full-Grain Leather Belt
                 new ProductVisualPreset("SH-ACC-012",
                         "https://images.unsplash.com/photo-1624222247344-550fb60583dc?w=900",
-                        List.of("https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=900")),
+                        List.of()),
 
                 // 13. Footwear: Monochrome Leather Court Sneakers (Pristine minimal white court sneaker)
                 new ProductVisualPreset("SH-FT-013",
                         "https://images.unsplash.com/photo-1560769629-975ec94e6a86?w=900",
-                        List.of("https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=900", "https://images.unsplash.com/photo-1600185365926-3a2ce3cdb9eb?w=900", "https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?w=900")),
+                        List.of("https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=900", "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=900")),
 
                 // 14. Footwear: Suede Chelsea Boots
                 new ProductVisualPreset("SH-FT-014",
@@ -644,8 +644,8 @@ public class DataSeeder {
 
                 // 16. Men's Straight-Leg Denim Jeans (Clean folded studio and on-model denim photography)
                 new ProductVisualPreset("SH-M-015",
-                        "https://images.unsplash.com/photo-1714143136372-ddaf8b606da7?w=900",
-                        List.of("https://images.unsplash.com/photo-1617114919297-3c8ddb01f599?w=900", "https://images.unsplash.com/photo-1542272604-787c3835535d?w=900", "https://images.unsplash.com/photo-1555689502-c4b22d76c56f?w=900")),
+                        "https://images.unsplash.com/photo-1542272604-787c3835535d?w=900",
+                        List.of("https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=900", "https://images.unsplash.com/photo-1584370848010-d7fe6bc767ec?w=900")),
 
                 // 17. Handcrafted Leather Belt
                 new ProductVisualPreset("SH-ACC-016",
@@ -655,13 +655,13 @@ public class DataSeeder {
                                 new ColorVariantPreset("Cognac Brown", "#795548", "https://images.unsplash.com/photo-1624222247344-550fb60583dc?w=900")
                         )),
 
-                // 18. Minimal Low-Top Leather Sneakers
+                // 18. Minimal Low-Top Leather Sneakers (Pristine minimal white leather sneaker)
                 new ProductVisualPreset("SH-FT-017",
-                        "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=900",
-                        List.of("https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?w=900"),
+                        "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=900",
+                        List.of("https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=900"),
                         List.of(
-                                new ColorVariantPreset("Optic White", "#ffffff", "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=900"),
-                                new ColorVariantPreset("Triple Black", "#111111", "https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?w=900")
+                                new ColorVariantPreset("Optic White", "#ffffff", "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=900"),
+                                new ColorVariantPreset("Triple Black", "#111111", "https://images.unsplash.com/photo-1551107696-a4b0c5a0d9a2?w=900")
                         )),
 
                 // 19. Women's Hand-Block Printed Kurti
@@ -669,12 +669,16 @@ public class DataSeeder {
                         "https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=900",
                         List.of("https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=900")),
 
-                // 20. Women's Stretch Comfort Cotton Leggings (Pristine studio black leggings photography)
+                // 20. Women's Stretch Comfort Cotton Leggings (Pristine activewear leggings photography)
                 new ProductVisualPreset("SH-W-019",
-                        "https://images.unsplash.com/photo-1789111161057-90c5ce12dc21?w=900",
-                        List.of("https://images.unsplash.com/photo-1789111161024-14711920a5b0?w=900", "https://images.unsplash.com/photo-1762331658023-794dd6a002eb?w=900", "https://images.unsplash.com/photo-1762331651871-76ae345a365f?w=900")),
+                        "https://images.unsplash.com/photo-1509916796186-85dc916cb043?w=900",
+                        List.of("https://images.unsplash.com/photo-1518611012118-696072aa579a?w=900"),
+                        List.of(
+                                new ColorVariantPreset("Jet Black", "#111111", "https://images.unsplash.com/photo-1509916796186-85dc916cb043?w=900"),
+                                new ColorVariantPreset("Charcoal Grey", "#424242", "https://images.unsplash.com/photo-1518611012118-696072aa579a?w=900")
+                        )),
 
-                // 21. Pure Chiffon Gold Border Dupatta (Elegant festive sheer stole - NOT A COFFEE CUP!)
+                // 21. Pure Chiffon Gold Border Dupatta (Elegant festive sheer stole)
                 new ProductVisualPreset("SH-W-020",
                         "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=900",
                         List.of("https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?w=900"),
@@ -683,14 +687,14 @@ public class DataSeeder {
                                 new ColorVariantPreset("Rani Pink & Gold", "#c2185b", "https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?w=900")
                         )),
 
-                // 22. Italian Leather Crossbody Bag (ONLY authentic luxury red leather handbag angles - NO random backpacks/wicker!)
+                // 22. Italian Leather Crossbody Bag (ONLY authentic luxury leather crossbody bags - NO backpacks/wicker!)
                 new ProductVisualPreset("SH-ACC-021",
                         "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=900",
-                        List.of("https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d?w=900", "https://images.unsplash.com/photo-1594223274512-ad4803739b7c?w=900"),
+                        List.of("https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=900", "https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=900"),
                         List.of(
                                 new ColorVariantPreset("Cognac Brown", "#8d4925", "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=900"),
-                                new ColorVariantPreset("Saddle Tan", "#c68642", "https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d?w=900"),
-                                new ColorVariantPreset("Noir Black", "#1a1a1a", "https://images.unsplash.com/photo-1594223274512-ad4803739b7c?w=900")
+                                new ColorVariantPreset("Saddle Tan", "#c68642", "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=900"),
+                                new ColorVariantPreset("Noir Black", "#1a1a1a", "https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=900")
                         )),
 
                 // 23. Tailored Wool-Blend Evening Blazer (Men)
@@ -724,10 +728,10 @@ public class DataSeeder {
                 // 26. Round Toe Pivot Pro Sneakers (U.S. Polo Assn. high-tech lifestyle athletic footwear)
                 new ProductVisualPreset("SH-FT-031",
                         "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=900",
-                        List.of("https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?w=900", "https://images.unsplash.com/photo-1560769629-975ec94e6a86?w=900", "https://images.unsplash.com/photo-1600185365926-3a2ce3cdb9eb?w=900"),
+                        List.of("https://images.unsplash.com/photo-1551107696-a4b0c5a0d9a2?w=900", "https://images.unsplash.com/photo-1560769629-975ec94e6a86?w=900", "https://images.unsplash.com/photo-1600185365926-3a2ce3cdb9eb?w=900"),
                         List.of(
                                 new ColorVariantPreset("Optic White", "#f4f4f4", "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=900"),
-                                new ColorVariantPreset("Triple Black", "#1a1a1a", "https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?w=900"),
+                                new ColorVariantPreset("Triple Black", "#1a1a1a", "https://images.unsplash.com/photo-1551107696-a4b0c5a0d9a2?w=900"),
                                 new ColorVariantPreset("Navy Tech", "#1f2a44", "https://images.unsplash.com/photo-1560769629-975ec94e6a86?w=900"),
                                 new ColorVariantPreset("Solar Orange", "#e65100", "https://images.unsplash.com/photo-1600185365926-3a2ce3cdb9eb?w=900")
                         )),

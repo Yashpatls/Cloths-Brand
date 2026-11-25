@@ -103,4 +103,16 @@ public class CartItem {
         }
         return "/images/placeholder.jpg";
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof CartItem cartItem)) return false;
+        return id != null && id.equals(cartItem.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : getClass().hashCode();
+    }
 }

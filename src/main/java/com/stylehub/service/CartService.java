@@ -158,7 +158,17 @@ public class CartService {
 
     @Transactional
     public void removeItem(Long itemId) {
-        cartItemRepo.deleteById(itemId);
+        if (itemId == null) return;
+        cartItemRepo.findById(itemId).ifPresent(item -> {
+            Cart cart = item.getCart();
+            if (cart != null && cart.getItems() != null) {
+                cart.getItems().removeIf(ci -> ci.getId() != null && ci.getId().equals(itemId));
+                cart.setUpdatedAt(LocalDateTime.now());
+                cartRepo.save(cart);
+            }
+            cartItemRepo.delete(item);
+            cartItemRepo.flush();
+        });
     }
 
     @Transactional

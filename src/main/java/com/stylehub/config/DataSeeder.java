@@ -20,7 +20,7 @@ public class DataSeeder {
     private static final Logger log = LoggerFactory.getLogger(DataSeeder.class);
 
     @Bean
-    CommandLineRunner seedDatabase(
+     CommandLineRunner seedDatabase(
             UserRepository userRepo,
             AddressRepository addressRepo,
             CategoryRepository categoryRepo,
@@ -85,81 +85,648 @@ public class DataSeeder {
                 return saved;
             });
 
-            // 3. Seed Core Categories
-            Category menCat = categoryRepo.findBySlugIgnoreCase("men").orElseGet(() ->
-                    categoryRepo.save(new Category("Men", "men", "Tailored menswear, casual essentials, outerwear and refined denim.", "https://images.unsplash.com/photo-1617137984095-74e4e5e3613f?w=900", 1)));
+            // 3. Seed & Update All 10 Core Clothing Categories with High-Quality Photography
+            Category menCat = upsertCategory(categoryRepo, "Men's Fashion", "men",
+                    "Tailored shirts, casual essentials, trousers, blazers and modern menswear.",
+                    "https://images.unsplash.com/photo-1617137984095-74e4e5e3613f?w=900&auto=format&fit=crop&q=80", 1);
 
-            Category womenCat = categoryRepo.findBySlugIgnoreCase("women").orElseGet(() ->
-                    categoryRepo.save(new Category("Women", "women", "Effortless silhouettes, relaxed linen, dresses, and modern outerwear.", "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=900", 2)));
+            Category womenCat = upsertCategory(categoryRepo, "Women's Fashion", "women",
+                    "Effortless silhouettes, relaxed linen, dresses, tops and modern outerwear.",
+                    "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=900&auto=format&fit=crop&q=80", 2);
 
-            Category kidsCat = categoryRepo.findBySlugIgnoreCase("kids").orElseGet(() ->
-                    categoryRepo.save(new Category("Kids", "kids", "Comfort-first organic cotton basics, seasonal sets, and playwear.", "https://images.unsplash.com/photo-1519238263530-99bdd11df2ea?w=900", 3)));
+            Category kidsCat = upsertCategory(categoryRepo, "Kids' Wear", "kids",
+                    "Comfort-first organic cotton basics, seasonal sets, playwear and dresses.",
+                    "https://images.unsplash.com/photo-1622290291468-a28f7a7dc6a8?w=900&auto=format&fit=crop&q=80", 3);
 
-            Category accCat = categoryRepo.findBySlugIgnoreCase("accessories").orElseGet(() ->
-                    categoryRepo.save(new Category("Accessories", "accessories", "Hand-finished leather goods, carry-all totes, and accents.", "https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=900", 4)));
+            Category ethnicCat = upsertCategory(categoryRepo, "Ethnic & Festive", "ethnic",
+                    "Artisanal hand-block kurtis, festive sherwanis, silk suits and zari dupattas.",
+                    "https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=900&auto=format&fit=crop&q=80", 4);
 
-            Category footCat = categoryRepo.findBySlugIgnoreCase("footwear").orElseGet(() ->
-                    categoryRepo.save(new Category("Footwear", "footwear", "Architectural minimal sneakers, Chelsea boots, and everyday loafers.", "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=900", 5)));
+            Category casualCat = upsertCategory(categoryRepo, "Casual & Denim", "casual-denim",
+                    "Japanese selvedge denim jackets, authentic washed jeans, casual tees and overshirts.",
+                    "https://images.unsplash.com/photo-1576995853123-5a10305d93c0?w=900&auto=format&fit=crop&q=80", 5);
 
-            // 4. Seed Rich Product Catalog & Reference Products
-            if (productRepo.count() == 0) {
-                createProduct(productRepo, imageRepo, sizeRepo, colorRepo,
-                        "Tailored Oxford Cotton Shirt", "SH-M-001",
-                        "Crafted from premium 100% Egyptian combed cotton with a structured button-down collar.",
-                        1499, 1299, menCat,
-                        "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=900",
-                        List.of("https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=900"),
-                        List.of("S", "M", "L", "XL", "XXL"),
-                        List.of("Crisp White", "Powder Blue", "Navy"),
-                        45, true);
+            Category formalCat = upsertCategory(categoryRepo, "Formal & Workwear", "formal-wear",
+                    "Tailored wool-blend blazers, executive dress shirts and pleated formal trousers.",
+                    "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=900&auto=format&fit=crop&q=80", 6);
 
-                createProduct(productRepo, imageRepo, sizeRepo, colorRepo,
-                        "Vintage Washed Denim Jacket", "SH-M-002",
-                        "Heavyweight 13.5oz Japanese selvedge denim jacket finished with subtle distressed abrasions.",
-                        2899, 2499, menCat,
-                        "https://images.unsplash.com/photo-1576995853123-5a10305d93c0?w=900",
-                        List.of(
-                                "https://images.unsplash.com/photo-1551028719-00167b16eac5?w=900",
-                                "https://images.unsplash.com/photo-1544441893-675973e31985?w=900"
-                        ),
-                        List.of("M", "L", "XL"),
-                        List.of("Indigo Wash", "Charcoal Black"),
-                        28, true);
+            Category winterCat = upsertCategory(categoryRepo, "Winterwear & Knitwear", "winterwear",
+                    "Cashmere cardigans, cozy knit pullovers, wool trench coats and warm layers.",
+                    "https://images.unsplash.com/photo-1434389677669-e08b4cac3105?w=900&auto=format&fit=crop&q=80", 7);
 
-                createProduct(productRepo, imageRepo, sizeRepo, colorRepo,
-                        "Pleated Linen Chino Trousers", "SH-M-004",
-                        "Tailored wide-leg trousers cut in breathable French linen-cotton blend.",
-                        1999, 1699, menCat,
-                        "https://images.unsplash.com/photo-1479064555552-3ef4979f8908?w=900",
-                        List.of(
-                                "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=900",
-                                "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=900",
-                                "https://images.unsplash.com/photo-1506630448388-4e683c67ddb0?w=900"
-                        ),
-                        List.of("30", "32", "34", "36"),
-                        List.of("Khaki Oat", "French Navy", "Olive Drab"),
-                        32, true);
+            Category activeCat = upsertCategory(categoryRepo, "Activewear & Sport", "activewear",
+                    "Performance athletic tops, 4-way stretch leggings, track pants and training essentials.",
+                    "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=900&auto=format&fit=crop&q=80", 8);
 
-                createProduct(productRepo, imageRepo, sizeRepo, colorRepo,
-                        "Silk Satin Midi Slip Dress", "SH-W-005",
-                        "Bias-cut Mulberry silk slip dress with delicate adjustable rouleau straps.",
-                        3499, 2999, womenCat,
-                        "https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=900",
-                        List.of(),
-                        List.of("XS", "S", "M", "L"),
-                        List.of("Champagne", "Emerald Green", "Noir Black"),
-                        24, true);
+            Category footCat = upsertCategory(categoryRepo, "Footwear", "footwear",
+                    "Minimalist leather court sneakers, Chelsea boots, formal shoes and tech soles.",
+                    "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=900&auto=format&fit=crop&q=80", 9);
 
-                createProduct(productRepo, imageRepo, sizeRepo, colorRepo,
-                        "Pima Cotton Essential T-Shirt", "SH-M-007",
-                        "Everyday staple jersey t-shirt crafted from long-staple Peruvian pima cotton.",
-                        599, 499, menCat,
-                        "https://images.unsplash.com/photo-1581655353564-df123a1eb820?w=900",
-                        List.of(),
-                        List.of("S", "M", "L", "XL"),
-                        List.of("Optic White", "Heather Grey", "Black"),
-                        60, false);
-            }
+            Category accCat = upsertCategory(categoryRepo, "Accessories & Bags", "accessories",
+                    "Hand-finished leather belts, Italian crossbody bags, canvas totes and accents.",
+                    "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=900&auto=format&fit=crop&q=80", 10);
+
+            // 4. Seed & Synchronize All Catalog Products with Appropriate Categories
+            createOrUpdateProduct(productRepo, imageRepo, sizeRepo, colorRepo,
+                    "Tailored Oxford Cotton Shirt", "SH-M-001",
+                    "Crafted from premium 100% Egyptian combed cotton with a structured button-down collar.",
+                    1499, 1299, menCat,
+                    "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=900",
+                    List.of("https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=900"),
+                    List.of("S", "M", "L", "XL", "XXL"),
+                    List.of("Crisp White", "Powder Blue", "Navy"),
+                    45, true);
+
+            createOrUpdateProduct(productRepo, imageRepo, sizeRepo, colorRepo,
+                    "Pleated Linen Chino Trousers", "SH-M-004",
+                    "Tailored wide-leg trousers cut in breathable French linen-cotton blend.",
+                    1999, 1699, menCat,
+                    "https://images.unsplash.com/photo-1479064555552-3ef4979f8908?w=900",
+                    List.of("https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=900"),
+                    List.of("30", "32", "34", "36"),
+                    List.of("Khaki Oat", "French Navy", "Olive Drab"),
+                    32, true);
+
+            createOrUpdateProduct(productRepo, imageRepo, sizeRepo, colorRepo,
+                    "Pima Cotton Essential T-Shirt", "SH-M-007",
+                    "Everyday staple jersey t-shirt crafted from long-staple Peruvian pima cotton.",
+                    599, 499, menCat,
+                    "https://images.unsplash.com/photo-1581655353564-df123a1eb820?w=900",
+                    List.of(),
+                    List.of("S", "M", "L", "XL"),
+                    List.of("Optic White", "Heather Grey", "Black"),
+                    60, false);
+
+            createOrUpdateProduct(productRepo, imageRepo, sizeRepo, colorRepo,
+                    "Silk Satin Midi Slip Dress", "SH-W-005",
+                    "Bias-cut Mulberry silk slip dress with delicate adjustable rouleau straps.",
+                    3499, 2999, womenCat,
+                    "https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=900",
+                    List.of(),
+                    List.of("XS", "S", "M", "L"),
+                    List.of("Champagne", "Emerald Green", "Noir Black"),
+                    24, true);
+
+            createOrUpdateProduct(productRepo, imageRepo, sizeRepo, colorRepo,
+                    "Floral Summer Midi Dress", "SH-W-006",
+                    "Flowing lightweight floral midi dress cut in soft breathable modal crepe.",
+                    2799, 2199, womenCat,
+                    "https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?w=900",
+                    List.of("https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=900"),
+                    List.of("S", "M", "L"),
+                    List.of("Sunburst Floral", "Pastel Ivory"),
+                    25, true);
+
+            createOrUpdateProduct(productRepo, imageRepo, sizeRepo, colorRepo,
+                    "Vintage Washed Denim Jacket", "SH-M-002",
+                    "Heavyweight 13.5oz Japanese selvedge denim jacket finished with subtle distressed abrasions.",
+                    2899, 2499, casualCat,
+                    "https://images.unsplash.com/photo-1576995853123-5a10305d93c0?w=900",
+                    List.of("https://images.unsplash.com/photo-1551028719-00167b16eac5?w=900"),
+                    List.of("M", "L", "XL"),
+                    List.of("Indigo Wash", "Charcoal Black"),
+                    28, true);
+
+            createOrUpdateProduct(productRepo, imageRepo, sizeRepo, colorRepo,
+                    "Straight-Leg Denim Jeans", "SH-M-015",
+                    "Premium durable cotton denim with authentic vintage wash and copper hardware.",
+                    1799, 1499, casualCat,
+                    "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=900",
+                    List.of(),
+                    List.of("30", "32", "34", "36"),
+                    List.of("Dark Indigo", "Vintage Blue"),
+                    40, true);
+
+            createOrUpdateProduct(productRepo, imageRepo, sizeRepo, colorRepo,
+                    "High-Rise Relaxed Crop Jeans", "SH-W-008",
+                    "Flattering high-rise ankle-crop denim jeans with soft stretch comfort.",
+                    1999, 1699, casualCat,
+                    "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=900",
+                    List.of(),
+                    List.of("26", "28", "30", "32"),
+                    List.of("Washed Indigo", "Charcoal Black"),
+                    35, false);
+
+            createOrUpdateProduct(productRepo, imageRepo, sizeRepo, colorRepo,
+                    "Tailored Wool-Blend Evening Blazer", "SH-M-022",
+                    "Single-breasted 2-button blazer with notch lapels and hand-pick stitch detailing.",
+                    3999, 3499, formalCat,
+                    "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=900",
+                    List.of("https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=900"),
+                    List.of("38R", "40R", "42R", "44R"),
+                    List.of("Charcoal Grey", "Navy Wool"),
+                    20, true);
+
+            createOrUpdateProduct(productRepo, imageRepo, sizeRepo, colorRepo,
+                    "Executive Pure Cotton Twill Shirt", "SH-FRM-001",
+                    "Refined formal dress shirt with semi-spread collar and wrinkle-resistant finish.",
+                    1899, 1499, formalCat,
+                    "https://images.unsplash.com/photo-1603252109303-2751441dd157?w=900",
+                    List.of(),
+                    List.of("39", "40", "42", "44"),
+                    List.of("Pure White", "French Blue"),
+                    30, false);
+
+            createOrUpdateProduct(productRepo, imageRepo, sizeRepo, colorRepo,
+                    "Tailored Slim-Fit Dress Trousers", "SH-FRM-002",
+                    "Structured flat-front wool-blend formal trousers with internal waistband grip.",
+                    2199, 1799, formalCat,
+                    "https://images.unsplash.com/photo-1479064555552-3ef4979f8908?w=900",
+                    List.of(),
+                    List.of("30", "32", "34", "36"),
+                    List.of("Slate Black", "Deep Charcoal"),
+                    28, false);
+
+            createOrUpdateProduct(productRepo, imageRepo, sizeRepo, colorRepo,
+                    "Hand-Block Printed Cotton Kurti", "SH-W-018",
+                    "Artisanal Jaipuri hand-block print kurti in breathable pure organic cotton.",
+                    1199, 999, ethnicCat,
+                    "https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=900",
+                    List.of("https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=900"),
+                    List.of("S", "M", "L", "XL"),
+                    List.of("Crimson Red", "Indigo Gold"),
+                    35, true);
+
+            createOrUpdateProduct(productRepo, imageRepo, sizeRepo, colorRepo,
+                    "Pure Chiffon Gold Border Dupatta", "SH-W-020",
+                    "Lightweight sheer chiffon stole finished with delicate zari metallic edging.",
+                    599, 499, ethnicCat,
+                    "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=900",
+                    List.of(),
+                    List.of("Free Size"),
+                    List.of("Gold Ivory", "Rani Pink"),
+                    40, false);
+
+            createOrUpdateProduct(productRepo, imageRepo, sizeRepo, colorRepo,
+                    "Hand-Embroidered Chanderi Silk Suit", "SH-ETH-001",
+                    "Royal festive ensemble with intricate hand embroidery on fine Chanderi silk.",
+                    4499, 3799, ethnicCat,
+                    "https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?w=900",
+                    List.of(),
+                    List.of("S", "M", "L"),
+                    List.of("Royal Emerald", "Ruby Crimson"),
+                    20, true);
+
+            createOrUpdateProduct(productRepo, imageRepo, sizeRepo, colorRepo,
+                    "Oversized Camel Wool Trench Coat", "SH-WNT-001",
+                    "Double-breasted trench coat tailored in virgin wool with structured notched storm collar.",
+                    6999, 5499, winterCat,
+                    "https://images.unsplash.com/photo-1539533018447-63fcce2678e3?w=900",
+                    List.of("https://images.unsplash.com/photo-1592327877233-90b9bfd92e48?w=900"),
+                    List.of("S", "M", "L"),
+                    List.of("Warm Camel", "Obsidian Black"),
+                    18, true);
+
+            createOrUpdateProduct(productRepo, imageRepo, sizeRepo, colorRepo,
+                    "Merino Wool Turtleneck Knit", "SH-M-003",
+                    "Ultra-fine 100% Australian merino wool high-neck pullover with ribbed cuffs.",
+                    2499, 1999, winterCat,
+                    "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?w=900",
+                    List.of(),
+                    List.of("M", "L", "XL"),
+                    List.of("Oatmeal Melange", "Midnight Black"),
+                    30, false);
+
+            createOrUpdateProduct(productRepo, imageRepo, sizeRepo, colorRepo,
+                    "Cashmere Button-Down Cardigan", "SH-W-007",
+                    "Soft lightweight cashmere blend cardigan with tonal horn buttons.",
+                    2799, 2299, winterCat,
+                    "https://images.unsplash.com/photo-1434389677669-e08b4cac3105?w=900",
+                    List.of(),
+                    List.of("XS", "S", "M", "L"),
+                    List.of("Soft Cream", "Heather Grey"),
+                    25, false);
+
+            createOrUpdateProduct(productRepo, imageRepo, sizeRepo, colorRepo,
+                    "Pro-Dry Performance Athletic Tee", "SH-ACT-001",
+                    "High-ventilation antimicrobial dry-fit athletic training t-shirt.",
+                    999, 799, activeCat,
+                    "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=900",
+                    List.of(),
+                    List.of("S", "M", "L", "XL"),
+                    List.of("Gunmetal Grey", "Deep Teal"),
+                    45, true);
+
+            createOrUpdateProduct(productRepo, imageRepo, sizeRepo, colorRepo,
+                    "Stretch Comfort Cotton Leggings", "SH-W-019",
+                    "High-waisted stretch cotton churidar leggings with 4-way flexibility.",
+                    499, 399, activeCat,
+                    "https://images.unsplash.com/photo-1506629082955-511b1aa562c8?w=900",
+                    List.of(),
+                    List.of("Free Size"),
+                    List.of("Jet Black", "Charcoal Grey"),
+                    50, false);
+
+            createOrUpdateProduct(productRepo, imageRepo, sizeRepo, colorRepo,
+                    "Kids Pure Cotton 2-Piece Lounge Set", "SH-K-009",
+                    "Breathable organic cotton top and bottoms set for gentle everyday comfort.",
+                    999, 799, kidsCat,
+                    "https://images.unsplash.com/photo-1519238263530-99bdd11df2ea?w=900",
+                    List.of(),
+                    List.of("2-3Y", "4-5Y", "6-7Y"),
+                    List.of("Earthy Ochre", "Sage Green"),
+                    30, true);
+
+            createOrUpdateProduct(productRepo, imageRepo, sizeRepo, colorRepo,
+                    "Kids Denim Dungarees & Striped Tee", "SH-K-024",
+                    "Durable washed denim overalls paired with a breathable striped cotton t-shirt.",
+                    1299, 999, kidsCat,
+                    "https://images.unsplash.com/photo-1519457431-44ccd64a579b?w=900",
+                    List.of(),
+                    List.of("3-4Y", "5-6Y"),
+                    List.of("Classic Indigo", "Stone Washed"),
+                    25, false);
+
+            createOrUpdateProduct(productRepo, imageRepo, sizeRepo, colorRepo,
+                    "Kids Floral Organic Cotton Dress", "SH-K-025",
+                    "Airy A-line summer dress crafted in pure organic cotton with hand-drawn florals.",
+                    899, 699, kidsCat,
+                    "https://images.unsplash.com/photo-1518831959646-742c3a14ebf7?w=900",
+                    List.of(),
+                    List.of("3-4Y", "5-6Y"),
+                    List.of("Pastel Floral"),
+                    30, false);
+
+            createOrUpdateProduct(productRepo, imageRepo, sizeRepo, colorRepo,
+                    "Kids Active Drawstring Shorts", "SH-K-023",
+                    "Soft organic cotton french terry play shorts with elasticated waist.",
+                    499, 399, kidsCat,
+                    "https://images.unsplash.com/photo-1622290291468-a28f7a7dc6a8?w=900",
+                    List.of(),
+                    List.of("4-5Y", "6-7Y"),
+                    List.of("Electric Blue", "Navy Blue"),
+                    30, false);
+
+            createOrUpdateProduct(productRepo, imageRepo, sizeRepo, colorRepo,
+                    "Kids Cozy Knit Colorblock Pullover", "SH-K-026",
+                    "Chunky warm knit sweater with ribbed cuffs and contrast earthy colorblocking.",
+                    999, 799, kidsCat,
+                    "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=900",
+                    List.of(),
+                    List.of("4-5Y", "6-7Y"),
+                    List.of("Mustard & Cream"),
+                    25, false);
+
+            createOrUpdateProduct(productRepo, imageRepo, sizeRepo, colorRepo,
+                    "Round Toe Pivot Pro Sneakers", "SH-FT-031",
+                    "Engineered athletic lifestyle sneakers with high-density breathable mesh and dual-density memory sole.",
+                    5999, 3999, footCat,
+                    "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=900",
+                    List.of("https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=900"),
+                    List.of("UK 6", "UK 7", "UK 8", "UK 9", "UK 10", "UK 11"),
+                    List.of("Optic White", "Triple Black", "Navy Tech"),
+                    35, true);
+
+            createOrUpdateProduct(productRepo, imageRepo, sizeRepo, colorRepo,
+                    "Minimal Low-Top Leather Sneakers", "SH-FT-017",
+                    "Italian calfskin leather tennis sneakers on a stitched Margom rubber sole.",
+                    2299, 1899, footCat,
+                    "https://images.unsplash.com/photo-1560769629-975ec94e6a86?w=900",
+                    List.of(),
+                    List.of("UK 7", "UK 8", "UK 9", "UK 10"),
+                    List.of("All White", "All Black"),
+                    30, false);
+
+            createOrUpdateProduct(productRepo, imageRepo, sizeRepo, colorRepo,
+                    "Suede Chelsea Boots", "SH-FT-014",
+                    "Handcrafted Chelsea boots in water-resistant suede with elastic side gussets.",
+                    3499, 2999, footCat,
+                    "https://images.unsplash.com/photo-1638247025967-b4e38f787b76?w=900",
+                    List.of(),
+                    List.of("UK 7", "UK 8", "UK 9", "UK 10"),
+                    List.of("Tobacco Suede", "Dark Olive"),
+                    22, true);
+
+            createOrUpdateProduct(productRepo, imageRepo, sizeRepo, colorRepo,
+                    "Handcrafted Leather Belt", "SH-ACC-016",
+                    "Vegetable-tanned Italian full-grain leather belt with solid brushed brass buckle.",
+                    899, 699, accCat,
+                    "https://images.unsplash.com/photo-1624222247344-550fb60583dc?w=900",
+                    List.of(),
+                    List.of("Free Size"),
+                    List.of("Cognac Brown", "Noir Black"),
+                    50, true);
+
+            createOrUpdateProduct(productRepo, imageRepo, sizeRepo, colorRepo,
+                    "Italian Leather Crossbody Bag", "SH-ACC-021",
+                    "Structured saddle bag in smooth vegetable-tanned grain leather with adjustable strap.",
+                    1999, 1599, accCat,
+                    "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=900",
+                    List.of("https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=900"),
+                    List.of("One Size"),
+                    List.of("Cognac Brown", "Saddle Tan", "Noir Black"),
+                    25, true);
+
+            createOrUpdateProduct(productRepo, imageRepo, sizeRepo, colorRepo,
+                    "Minimal Structured Canvas Tote", "SH-ACC-011",
+                    "Heavy duty organic canvas tote with Italian leather handles and interior zip pocket.",
+                    1299, 999, accCat,
+                    "https://images.unsplash.com/photo-1574365569389-a10d488ca3fb?w=900",
+                    List.of(),
+                    List.of("One Size"),
+                    List.of("Natural Canvas", "Charcoal Canvas"),
+                    35, false);
+
+            // 4. Seed & Synchronize All Catalog Products with Appropriate Categories
+            createOrUpdateProduct(productRepo, imageRepo, sizeRepo, colorRepo,
+                    "Tailored Oxford Cotton Shirt", "SH-M-001",
+                    "Crafted from premium 100% Egyptian combed cotton with a structured button-down collar.",
+                    1499, 1299, menCat,
+                    "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=900",
+                    List.of("https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=900"),
+                    List.of("S", "M", "L", "XL", "XXL"),
+                    List.of("Crisp White", "Powder Blue", "Navy"),
+                    45, true);
+
+            createOrUpdateProduct(productRepo, imageRepo, sizeRepo, colorRepo,
+                    "Pleated Linen Chino Trousers", "SH-M-004",
+                    "Tailored wide-leg trousers cut in breathable French linen-cotton blend.",
+                    1999, 1699, menCat,
+                    "https://images.unsplash.com/photo-1479064555552-3ef4979f8908?w=900",
+                    List.of("https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=900"),
+                    List.of("30", "32", "34", "36"),
+                    List.of("Khaki Oat", "French Navy", "Olive Drab"),
+                    32, true);
+
+            createOrUpdateProduct(productRepo, imageRepo, sizeRepo, colorRepo,
+                    "Pima Cotton Essential T-Shirt", "SH-M-007",
+                    "Everyday staple jersey t-shirt crafted from long-staple Peruvian pima cotton.",
+                    599, 499, menCat,
+                    "https://images.unsplash.com/photo-1581655353564-df123a1eb820?w=900",
+                    List.of(),
+                    List.of("S", "M", "L", "XL"),
+                    List.of("Optic White", "Heather Grey", "Black"),
+                    60, false);
+
+            createOrUpdateProduct(productRepo, imageRepo, sizeRepo, colorRepo,
+                    "Silk Satin Midi Slip Dress", "SH-W-005",
+                    "Bias-cut Mulberry silk slip dress with delicate adjustable rouleau straps.",
+                    3499, 2999, womenCat,
+                    "https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=900",
+                    List.of(),
+                    List.of("XS", "S", "M", "L"),
+                    List.of("Champagne", "Emerald Green", "Noir Black"),
+                    24, true);
+
+            createOrUpdateProduct(productRepo, imageRepo, sizeRepo, colorRepo,
+                    "Floral Summer Midi Dress", "SH-W-006",
+                    "Flowing lightweight floral midi dress cut in soft breathable modal crepe.",
+                    2799, 2199, womenCat,
+                    "https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?w=900",
+                    List.of("https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=900"),
+                    List.of("S", "M", "L"),
+                    List.of("Sunburst Floral", "Pastel Ivory"),
+                    25, true);
+
+            createOrUpdateProduct(productRepo, imageRepo, sizeRepo, colorRepo,
+                    "Vintage Washed Denim Jacket", "SH-M-002",
+                    "Heavyweight 13.5oz Japanese selvedge denim jacket finished with subtle distressed abrasions.",
+                    2899, 2499, casualCat,
+                    "https://images.unsplash.com/photo-1576995853123-5a10305d93c0?w=900",
+                    List.of("https://images.unsplash.com/photo-1551028719-00167b16eac5?w=900"),
+                    List.of("M", "L", "XL"),
+                    List.of("Indigo Wash", "Charcoal Black"),
+                    28, true);
+
+            createOrUpdateProduct(productRepo, imageRepo, sizeRepo, colorRepo,
+                    "Straight-Leg Denim Jeans", "SH-M-015",
+                    "Premium durable cotton denim with authentic vintage wash and copper hardware.",
+                    1799, 1499, casualCat,
+                    "https://images.unsplash.com/photo-1542272604-787c3835535d?w=900",
+                    List.of(),
+                    List.of("30", "32", "34", "36"),
+                    List.of("Dark Indigo", "Vintage Blue"),
+                    40, true);
+
+            createOrUpdateProduct(productRepo, imageRepo, sizeRepo, colorRepo,
+                    "High-Rise Relaxed Crop Jeans", "SH-W-008",
+                    "Flattering high-rise ankle-crop denim jeans with soft stretch comfort.",
+                    1999, 1699, casualCat,
+                    "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=900",
+                    List.of(),
+                    List.of("26", "28", "30", "32"),
+                    List.of("Washed Indigo", "Charcoal Black"),
+                    35, false);
+
+            createOrUpdateProduct(productRepo, imageRepo, sizeRepo, colorRepo,
+                    "Tailored Wool-Blend Evening Blazer", "SH-M-022",
+                    "Single-breasted 2-button blazer with notch lapels and hand-pick stitch detailing.",
+                    3999, 3499, formalCat,
+                    "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=900",
+                    List.of("https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=900"),
+                    List.of("38R", "40R", "42R", "44R"),
+                    List.of("Charcoal Grey", "Navy Wool"),
+                    20, true);
+
+            createOrUpdateProduct(productRepo, imageRepo, sizeRepo, colorRepo,
+                    "Executive Pure Cotton Twill Shirt", "SH-FRM-001",
+                    "Refined formal dress shirt with semi-spread collar and wrinkle-resistant finish.",
+                    1899, 1499, formalCat,
+                    "https://images.unsplash.com/photo-1603252109303-2751441dd157?w=900",
+                    List.of(),
+                    List.of("39", "40", "42", "44"),
+                    List.of("Pure White", "French Blue"),
+                    30, false);
+
+            createOrUpdateProduct(productRepo, imageRepo, sizeRepo, colorRepo,
+                    "Tailored Slim-Fit Dress Trousers", "SH-FRM-002",
+                    "Structured flat-front wool-blend formal trousers with internal waistband grip.",
+                    2199, 1799, formalCat,
+                    "https://images.unsplash.com/photo-1479064555552-3ef4979f8908?w=900",
+                    List.of(),
+                    List.of("30", "32", "34", "36"),
+                    List.of("Slate Black", "Deep Charcoal"),
+                    28, false);
+
+            createOrUpdateProduct(productRepo, imageRepo, sizeRepo, colorRepo,
+                    "Hand-Block Printed Cotton Kurti", "SH-W-018",
+                    "Artisanal Jaipuri hand-block print kurti in breathable pure organic cotton.",
+                    1199, 999, ethnicCat,
+                    "https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=900",
+                    List.of("https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=900"),
+                    List.of("S", "M", "L", "XL"),
+                    List.of("Crimson Red", "Indigo Gold"),
+                    35, true);
+
+            createOrUpdateProduct(productRepo, imageRepo, sizeRepo, colorRepo,
+                    "Pure Chiffon Gold Border Dupatta", "SH-W-020",
+                    "Lightweight sheer chiffon stole finished with delicate zari metallic edging.",
+                    599, 499, ethnicCat,
+                    "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=900",
+                    List.of(),
+                    List.of("Free Size"),
+                    List.of("Gold Ivory", "Rani Pink"),
+                    40, false);
+
+            createOrUpdateProduct(productRepo, imageRepo, sizeRepo, colorRepo,
+                    "Hand-Embroidered Chanderi Silk Suit", "SH-ETH-001",
+                    "Royal festive ensemble with intricate hand embroidery on fine Chanderi silk.",
+                    4499, 3799, ethnicCat,
+                    "https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?w=900",
+                    List.of(),
+                    List.of("S", "M", "L"),
+                    List.of("Royal Emerald", "Ruby Crimson"),
+                    20, true);
+
+            createOrUpdateProduct(productRepo, imageRepo, sizeRepo, colorRepo,
+                    "Oversized Camel Wool Trench Coat", "SH-WNT-001",
+                    "Double-breasted trench coat tailored in virgin wool with structured notched storm collar.",
+                    6999, 5499, winterCat,
+                    "https://images.unsplash.com/photo-1539533018447-63fcce2678e3?w=900",
+                    List.of("https://images.unsplash.com/photo-1592327877233-90b9bfd92e48?w=900"),
+                    List.of("S", "M", "L"),
+                    List.of("Warm Camel", "Obsidian Black"),
+                    18, true);
+
+            createOrUpdateProduct(productRepo, imageRepo, sizeRepo, colorRepo,
+                    "Merino Wool Turtleneck Knit", "SH-M-003",
+                    "Ultra-fine 100% Australian merino wool high-neck pullover with ribbed cuffs.",
+                    2499, 1999, winterCat,
+                    "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?w=900",
+                    List.of(),
+                    List.of("M", "L", "XL"),
+                    List.of("Oatmeal Melange", "Midnight Black"),
+                    30, false);
+
+            createOrUpdateProduct(productRepo, imageRepo, sizeRepo, colorRepo,
+                    "Cashmere Button-Down Cardigan", "SH-W-007",
+                    "Soft lightweight cashmere blend cardigan with tonal horn buttons.",
+                    2799, 2299, winterCat,
+                    "https://images.unsplash.com/photo-1434389677669-e08b4cac3105?w=900",
+                    List.of(),
+                    List.of("XS", "S", "M", "L"),
+                    List.of("Soft Cream", "Heather Grey"),
+                    25, false);
+
+            createOrUpdateProduct(productRepo, imageRepo, sizeRepo, colorRepo,
+                    "Pro-Dry Performance Athletic Tee", "SH-ACT-001",
+                    "High-ventilation antimicrobial dry-fit athletic training t-shirt.",
+                    999, 799, activeCat,
+                    "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=900",
+                    List.of(),
+                    List.of("S", "M", "L", "XL"),
+                    List.of("Gunmetal Grey", "Deep Teal"),
+                    45, true);
+
+            createOrUpdateProduct(productRepo, imageRepo, sizeRepo, colorRepo,
+                    "Stretch Comfort Cotton Leggings", "SH-W-019",
+                    "High-waisted stretch cotton churidar leggings with 4-way flexibility.",
+                    499, 399, activeCat,
+                    "https://images.unsplash.com/photo-1509916796186-85dc916cb043?w=900",
+                    List.of(),
+                    List.of("Free Size"),
+                    List.of("Jet Black", "Charcoal Grey"),
+                    50, false);
+
+            createOrUpdateProduct(productRepo, imageRepo, sizeRepo, colorRepo,
+                    "Kids Pure Cotton 2-Piece Lounge Set", "SH-K-009",
+                    "Breathable organic cotton top and bottoms set for gentle everyday comfort.",
+                    999, 799, kidsCat,
+                    "https://images.unsplash.com/photo-1519238263530-99bdd11df2ea?w=900",
+                    List.of(),
+                    List.of("2-3Y", "4-5Y", "6-7Y"),
+                    List.of("Earthy Ochre", "Sage Green"),
+                    30, true);
+
+            createOrUpdateProduct(productRepo, imageRepo, sizeRepo, colorRepo,
+                    "Kids Denim Dungarees & Striped Tee", "SH-K-024",
+                    "Durable washed denim overalls paired with a breathable striped cotton t-shirt.",
+                    1299, 999, kidsCat,
+                    "https://images.unsplash.com/photo-1519457431-44ccd64a579b?w=900",
+                    List.of(),
+                    List.of("3-4Y", "5-6Y"),
+                    List.of("Classic Indigo", "Stone Washed"),
+                    25, false);
+
+            createOrUpdateProduct(productRepo, imageRepo, sizeRepo, colorRepo,
+                    "Kids Floral Organic Cotton Dress", "SH-K-025",
+                    "Airy A-line summer dress crafted in pure organic cotton with hand-drawn florals.",
+                    899, 699, kidsCat,
+                    "https://images.unsplash.com/photo-1518831959646-742c3a14ebf7?w=900",
+                    List.of(),
+                    List.of("3-4Y", "5-6Y"),
+                    List.of("Pastel Floral"),
+                    30, false);
+
+            createOrUpdateProduct(productRepo, imageRepo, sizeRepo, colorRepo,
+                    "Kids Active Drawstring Shorts", "SH-K-023",
+                    "Soft organic cotton french terry play shorts with elasticated waist.",
+                    499, 399, kidsCat,
+                    "https://images.unsplash.com/photo-1622290291468-a28f7a7dc6a8?w=900",
+                    List.of(),
+                    List.of("4-5Y", "6-7Y"),
+                    List.of("Electric Blue", "Navy Blue"),
+                    30, false);
+
+            createOrUpdateProduct(productRepo, imageRepo, sizeRepo, colorRepo,
+                    "Kids Cozy Knit Colorblock Pullover", "SH-K-026",
+                    "Chunky warm knit sweater with ribbed cuffs and contrast earthy colorblocking.",
+                    999, 799, kidsCat,
+                    "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=900",
+                    List.of(),
+                    List.of("4-5Y", "6-7Y"),
+                    List.of("Mustard & Cream"),
+                    25, false);
+
+            createOrUpdateProduct(productRepo, imageRepo, sizeRepo, colorRepo,
+                    "Round Toe Pivot Pro Sneakers", "SH-FT-031",
+                    "Engineered athletic lifestyle sneakers with high-density breathable mesh and dual-density memory sole.",
+                    5999, 3999, footCat,
+                    "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=900",
+                    List.of("https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=900"),
+                    List.of("UK 6", "UK 7", "UK 8", "UK 9", "UK 10", "UK 11"),
+                    List.of("Optic White", "Triple Black", "Navy Tech"),
+                    35, true);
+
+            createOrUpdateProduct(productRepo, imageRepo, sizeRepo, colorRepo,
+                    "Minimal Low-Top Leather Sneakers", "SH-FT-017",
+                    "Italian calfskin leather tennis sneakers on a stitched Margom rubber sole.",
+                    2299, 1899, footCat,
+                    "https://images.unsplash.com/photo-1560769629-975ec94e6a86?w=900",
+                    List.of(),
+                    List.of("UK 7", "UK 8", "UK 9", "UK 10"),
+                    List.of("All White", "All Black"),
+                    30, false);
+
+            createOrUpdateProduct(productRepo, imageRepo, sizeRepo, colorRepo,
+                    "Suede Chelsea Boots", "SH-FT-014",
+                    "Handcrafted Chelsea boots in water-resistant suede with elastic side gussets.",
+                    3499, 2999, footCat,
+                    "https://images.unsplash.com/photo-1638247025967-b4e38f787b76?w=900",
+                    List.of(),
+                    List.of("UK 7", "UK 8", "UK 9", "UK 10"),
+                    List.of("Tobacco Suede", "Dark Olive"),
+                    22, true);
+
+            createOrUpdateProduct(productRepo, imageRepo, sizeRepo, colorRepo,
+                    "Handcrafted Leather Belt", "SH-ACC-016",
+                    "Vegetable-tanned Italian full-grain leather belt with solid brushed brass buckle.",
+                    899, 699, accCat,
+                    "https://images.unsplash.com/photo-1624222247344-550fb60583dc?w=900",
+                    List.of(),
+                    List.of("Free Size"),
+                    List.of("Cognac Brown", "Noir Black"),
+                    50, true);
+
+            createOrUpdateProduct(productRepo, imageRepo, sizeRepo, colorRepo,
+                    "Italian Leather Crossbody Bag", "SH-ACC-021",
+                    "Structured saddle bag in smooth vegetable-tanned grain leather with adjustable strap.",
+                    1999, 1599, accCat,
+                    "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=900",
+                    List.of("https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=900"),
+                    List.of("One Size"),
+                    List.of("Cognac Brown", "Saddle Tan", "Noir Black"),
+                    25, true);
+
+            createOrUpdateProduct(productRepo, imageRepo, sizeRepo, colorRepo,
+                    "Minimal Structured Canvas Tote", "SH-ACC-011",
+                    "Heavy duty organic canvas tote with Italian leather handles and interior zip pocket.",
+                    1299, 999, accCat,
+                    "https://images.unsplash.com/photo-1574365569389-a10d488ca3fb?w=900",
+                    List.of(),
+                    List.of("One Size"),
+                    List.of("Natural Canvas", "Charcoal Canvas"),
+                    35, false);
 
             // Reference Product: Round Toe Pivot Pro Sneakers (U.S. Polo Assn. inspired high-tech footwear)
             Product pivotSneakers = productRepo.findBySku("SH-FT-031").orElseGet(() -> {
@@ -225,7 +792,7 @@ public class DataSeeder {
                 p.setPrice(BigDecimal.valueOf(1799));
                 p.setCategory(menCat);
                 p.setCategoryName(menCat.getName());
-                p.setImageUrl("https://images.unsplash.com/photo-1542272604-787c3835535d?w=900");
+                p.setImageUrl("https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=900");
                 p.setStock(40);
                 p.setActive(true);
                 Product saved = productRepo.save(p);
@@ -293,7 +860,7 @@ public class DataSeeder {
                 p.setPrice(BigDecimal.valueOf(499));
                 p.setCategory(womenCat);
                 p.setCategoryName(womenCat.getName());
-                p.setImageUrl("https://images.unsplash.com/photo-1509916796186-85dc916cb043?w=900");
+                p.setImageUrl("https://images.unsplash.com/photo-1506629082955-511b1aa562c8?w=900");
                 p.setStock(50);
                 p.setActive(true);
                 Product saved = productRepo.save(p);
@@ -644,8 +1211,8 @@ public class DataSeeder {
 
                 // 16. Men's Straight-Leg Denim Jeans (Clean folded studio and on-model denim photography)
                 new ProductVisualPreset("SH-M-015",
-                        "https://images.unsplash.com/photo-1542272604-787c3835535d?w=900",
-                        List.of("https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=900", "https://images.unsplash.com/photo-1584370848010-d7fe6bc767ec?w=900")),
+                        "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=900",
+                        List.of("https://images.unsplash.com/photo-1582552938357-32b906df40cb?w=900", "https://images.unsplash.com/photo-1584370848010-d7fe6bc767ec?w=900")),
 
                 // 17. Handcrafted Leather Belt
                 new ProductVisualPreset("SH-ACC-016",
@@ -671,10 +1238,10 @@ public class DataSeeder {
 
                 // 20. Women's Stretch Comfort Cotton Leggings (Pristine activewear leggings photography)
                 new ProductVisualPreset("SH-W-019",
-                        "https://images.unsplash.com/photo-1509916796186-85dc916cb043?w=900",
+                        "https://images.unsplash.com/photo-1506629082955-511b1aa562c8?w=900",
                         List.of("https://images.unsplash.com/photo-1518611012118-696072aa579a?w=900"),
                         List.of(
-                                new ColorVariantPreset("Jet Black", "#111111", "https://images.unsplash.com/photo-1509916796186-85dc916cb043?w=900"),
+                                new ColorVariantPreset("Jet Black", "#111111", "https://images.unsplash.com/photo-1506629082955-511b1aa562c8?w=900"),
                                 new ColorVariantPreset("Charcoal Grey", "#424242", "https://images.unsplash.com/photo-1518611012118-696072aa579a?w=900")
                         )),
 
@@ -747,7 +1314,7 @@ public class DataSeeder {
                 // 28. Kids Floral Organic Cotton Dress
                 new ProductVisualPreset("SH-K-025",
                         "https://images.unsplash.com/photo-1518831959646-742c3a14ebf7?w=900",
-                        List.of(),
+                        List.of("https://images.unsplash.com/photo-1596870230751-ebdfce98ec42?w=900", "https://images.unsplash.com/photo-1622290291468-a28f7a7dc6a8?w=900"),
                         List.of(
                                 new ColorVariantPreset("Pastel Floral", "#f8bbd0", "https://images.unsplash.com/photo-1518831959646-742c3a14ebf7?w=900")
                         )),
@@ -983,6 +1550,77 @@ public class DataSeeder {
                 itemRepo.save(ci);
             }
         }
+    }
+
+    private Category upsertCategory(CategoryRepository repo, String name, String slug, String desc, String imageUrl, int displayOrder) {
+        Category cat = repo.findBySlugIgnoreCase(slug).orElse(null);
+        if (cat == null) {
+            cat = repo.findAll().stream()
+                    .filter(c -> c.getName() != null && c.getName().equalsIgnoreCase(name))
+                    .findFirst()
+                    .orElse(null);
+        }
+        if (cat == null) {
+            cat = new Category(name, slug, desc, imageUrl, displayOrder);
+        } else {
+            cat.setName(name);
+            cat.setSlug(slug);
+            cat.setDescription(desc);
+            cat.setImageUrl(imageUrl);
+            cat.setDisplayOrder(displayOrder);
+            cat.setActive(true);
+        }
+        return repo.save(cat);
+    }
+
+    private Product createOrUpdateProduct(ProductRepository repo, ProductImageRepository imgRepo,
+                                          ProductSizeRepository sizeRepo, ProductColorRepository colRepo,
+                                          String name, String sku, String desc, int price, Integer discountPrice,
+                                          Category category, String primaryImg, List<String> additionalImgs,
+                                          List<String> sizes, List<String> colors, int stock, boolean featured) {
+
+        Product p = repo.findBySku(sku).orElse(null);
+        if (p == null) {
+            p = repo.findBySkuIgnoreCase(sku).orElse(null);
+        }
+        if (p == null) {
+            p = new Product();
+            p.setSku(sku);
+        }
+        p.setName(name);
+        p.setDescription(desc);
+        p.setPrice(BigDecimal.valueOf(price));
+        if (discountPrice != null) p.setDiscountPrice(BigDecimal.valueOf(discountPrice));
+        p.setCategory(category);
+        p.setCategoryName(category.getName());
+        p.setImageUrl(primaryImg);
+        p.setStock(stock);
+        p.setFeatured(featured);
+        p.setActive(true);
+
+        Product saved = repo.save(p);
+
+        if (imgRepo.findByProductIdOrderBySortOrderAsc(saved.getId()).isEmpty()) {
+            imgRepo.save(new ProductImage(saved, primaryImg, name, true, 0));
+            int order = 1;
+            for (String url : additionalImgs) {
+                imgRepo.save(new ProductImage(saved, url, name + " alternate view", false, order++));
+            }
+        }
+
+        if (sizeRepo.findByProductId(saved.getId()).isEmpty()) {
+            for (String s : sizes) {
+                sizeRepo.save(new ProductSize(saved, s, stock));
+            }
+        }
+
+        if (colRepo.findByProductId(saved.getId()).isEmpty()) {
+            for (String c : colors) {
+                colRepo.save(new ProductColor(saved, c, "#222222"));
+            }
+        }
+
+        return saved;
     }
 
     private void createProduct(ProductRepository repo, ProductImageRepository imgRepo,

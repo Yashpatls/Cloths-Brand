@@ -1,80 +1,123 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <th:block th:replace="~{fragments :: head(${selectedCategory != null ? selectedCategory + ' Collection' : 'Shop All Products'})}"></th:block>
+  <th:block th:replace="~{fragments :: head(${category != null ? category.name + ' - Clothing Collection' : (selectedCategory != null ? selectedCategory + ' - Catalog' : 'Shop All Products')})}"></th:block>
 </head>
 <body>
 
+  <!-- Navigation Header -->
   <div th:replace="~{fragments :: header}"></div>
 
-  <main class="container py-5">
-    <!-- Breadcrumb & Header -->
+  <main class="container py-4">
+    <!-- Breadcrumb & Header Banner -->
     <div class="mb-4">
       <nav aria-label="breadcrumb">
         <ol class="breadcrumb small">
-          <li class="breadcrumb-item"><a href="/">Home</a></li>
-          <li class="breadcrumb-item active" th:text="${selectedCategory != null ? selectedCategory : 'Catalog'}">Catalog</li>
+          <li class="breadcrumb-item"><a href="/" class="text-decoration-none text-muted">Home</a></li>
+          <li class="breadcrumb-item"><a href="/shop" class="text-decoration-none text-muted">Shop</a></li>
+          <li class="breadcrumb-item active text-dark fw-semibold" aria-current="page" th:text="${category != null ? category.name : (selectedCategory != null ? selectedCategory : 'All Categories')}">Catalog</li>
         </ol>
       </nav>
-      <div class="d-flex justify-content-between align-items-end flex-wrap gap-2">
-        <div>
-          <h1 class="display-6 font-serif mb-1" th:text="${selectedCategory != null ? selectedCategory + ' Collection' : 'All Products'}">All Products</h1>
-          <p class="text-muted small mb-0" th:text="${products.size()} + ' styles found'">0 styles found</p>
+
+      <!-- Category Banner Card if Category is selected -->
+      <div th:if="${category != null}" class="card border-0 rounded-4 overflow-hidden mb-4 shadow-sm position-relative bg-light">
+        <div class="row g-0 align-items-center">
+          <div class="col-md-8 p-4 p-lg-5">
+            <span class="badge bg-dark text-uppercase px-3 py-2 fw-semibold mb-2" style="font-size: 0.72rem; letter-spacing: 1px;">WARDROBE CATEGORY</span>
+            <h1 class="display-6 fw-bold mb-2 text-dark" th:text="${category.name}">Category Name</h1>
+            <p class="text-secondary mb-3 lead fs-6" th:text="${category.description != null ? category.description : 'Explore our premium selection crafted with authentic materials and modern silhouettes.'}">Category description...</p>
+            <span class="badge bg-white text-dark border px-3 py-2 fw-semibold shadow-sm" th:text="${products.size()} + ' styles available'">0 styles available</span>
+          </div>
+          <div class="col-md-4 d-none d-md-block text-end p-3">
+            <img th:src="${category.imageUrl}" th:alt="${category.name}" class="img-fluid rounded-3 shadow-sm" style="max-height: 220px; width: 100%; object-fit: cover;">
+          </div>
         </div>
+      </div>
+
+      <!-- General Header if no specific category object -->
+      <div th:unless="${category != null}" class="d-flex justify-content-between align-items-end flex-wrap gap-2 mb-3">
+        <div>
+          <h1 class="h2 fw-bold text-dark mb-1" th:text="${selectedCategory != null ? selectedCategory : 'All Clothing Catalog'}">All Products</h1>
+          <p class="text-muted small mb-0" th:text="${products.size()} + ' styles found in collection'">0 styles found</p>
+        </div>
+      </div>
+
+      <!-- Quick Category Filter Pills -->
+      <div class="d-flex gap-2 overflow-auto py-2 mb-3" style="scrollbar-width: none;">
+        <a href="/shop" class="cat-pill-btn text-decoration-none"
+           th:classappend="${selectedCategory == null and category == null} ? 'active' : ''">
+          All Styles
+        </a>
+        <a th:each="cat : ${categories}"
+           th:href="@{/category/{slug}(slug=${cat.slug})}"
+           class="cat-pill-btn text-decoration-none"
+           th:classappend="${(category != null and category.slug.equalsIgnoreCase(cat.slug)) or (selectedCategory != null and (selectedCategory.equalsIgnoreCase(cat.name) or selectedCategory.equalsIgnoreCase(cat.slug)))} ? 'active' : ''"
+           th:text="${cat.name}">Category</a>
       </div>
     </div>
 
     <div class="row g-4">
       <!-- Faceted Filter Sidebar -->
       <aside class="col-lg-3">
-        <div class="card border-0 shadow-sm p-4 bg-light rounded-3 sticky-top" style="top: 100px;">
-          <h5 class="font-serif mb-3">Filters</h5>
-          <form action="/shop" method="get">
-            <!-- Hidden query if active -->
-            <input type="hidden" name="q" th:value="${query}" th:if="${query != null}">
+        <div class="card border-0 shadow-sm p-4 bg-white rounded-3 sticky-top" style="top: 100px;">
+          <h5 class="fw-bold mb-3 text-dark">Filter Products</h5>
+          <form th:action="${category != null} ? @{/category/{slug}(slug=${category.slug})} : @{/shop}" method="get">
+            <!-- Hidden inputs to preserve query and category -->
+            <input type="hidden" name="q" th:value="${query}" th:if="${query != null and !query.isBlank()}">
+            <input type="hidden" name="category" th:value="${selectedCategory}" th:if="${selectedCategory != null and category == null}">
 
-            <!-- Category Filter -->
+            <!-- Category List Filter -->
             <div class="mb-4">
-              <label class="form-label small fw-bold text-uppercase text-muted">Category</label>
+              <label class="form-label small fw-bold text-uppercase text-muted" style="letter-spacing: 1px;">Categories</label>
               <div class="d-flex flex-column gap-2">
-                <a href="/shop" class="small text-decoration-none" th:classappend="${selectedCategory == null} ? 'fw-bold text-dark' : 'text-secondary'">
-                  All Categories
+                <a href="/shop" class="small text-decoration-none d-flex justify-content-between align-items-center py-1"
+                   th:classappend="${selectedCategory == null and category == null} ? 'fw-bold text-dark' : 'text-secondary'">
+                  <span>All Categories</span>
+                  <i class="bi bi-chevron-right small text-muted" th:if="${selectedCategory == null and category == null}"></i>
                 </a>
-                <a th:each="cat : ${categories}" th:href="@{/category/{slug}(slug=${cat.slug})}"
-                   class="small text-decoration-none"
-                   th:classappend="${selectedCategory != null and (selectedCategory.equalsIgnoreCase(cat.name) or selectedCategory.equalsIgnoreCase(cat.slug))} ? 'fw-bold text-dark' : 'text-secondary'"
-                   th:text="${cat.name}">Category</a>
+                <a th:each="cat : ${categories}"
+                   th:href="@{/category/{slug}(slug=${cat.slug})}"
+                   class="small text-decoration-none d-flex justify-content-between align-items-center py-1"
+                   th:classappend="${(category != null and category.slug.equalsIgnoreCase(cat.slug)) or (selectedCategory != null and (selectedCategory.equalsIgnoreCase(cat.name) or selectedCategory.equalsIgnoreCase(cat.slug)))} ? 'fw-bold text-dark' : 'text-secondary'">
+                  <span th:text="${cat.name}">Category</span>
+                  <i class="bi bi-check-circle-fill text-dark small" th:if="${(category != null and category.slug.equalsIgnoreCase(cat.slug)) or (selectedCategory != null and (selectedCategory.equalsIgnoreCase(cat.name) or selectedCategory.equalsIgnoreCase(cat.slug)))}"></i>
+                </a>
               </div>
             </div>
 
-            <!-- Price Range -->
+            <!-- Price Range Filter -->
             <div class="mb-4">
-              <label class="form-label small fw-bold text-uppercase text-muted">Price Range (₹)</label>
+              <label class="form-label small fw-bold text-uppercase text-muted" style="letter-spacing: 1px;">Price Range (₹)</label>
               <div class="d-flex gap-2">
                 <input type="number" name="minPrice" class="form-control form-control-sm" placeholder="Min" th:value="${minPrice}">
                 <input type="number" name="maxPrice" class="form-control form-control-sm" placeholder="Max" th:value="${maxPrice}">
               </div>
             </div>
 
-            <button type="submit" class="btn btn-fashion-dark w-100 py-2">Apply Filters</button>
-            <a href="/shop" class="btn btn-fashion-light w-100 py-2 mt-2">Reset</a>
+            <button type="submit" class="btn btn-fashion-dark w-100 py-2 rounded-pill fw-semibold">Apply Filters</button>
+            <a th:href="${category != null} ? @{/category/{slug}(slug=${category.slug})} : @{/shop}" class="btn btn-fashion-light w-100 py-2 mt-2 rounded-pill fw-semibold">Reset Filters</a>
           </form>
         </div>
       </aside>
 
       <!-- Products Grid -->
       <div class="col-lg-9">
-        <div th:if="${products.isEmpty()}" class="text-center py-5 bg-light rounded-3">
-          <i class="bi bi-search fs-1 text-muted d-block mb-3"></i>
-          <h4 class="font-serif">No products match your criteria</h4>
-          <p class="text-muted">Try clearing your filters or searching for something else.</p>
-          <a href="/shop" class="btn btn-fashion-dark mt-2">View All Products</a>
+        <!-- Empty State -->
+        <div th:if="${products.isEmpty()}" class="text-center py-5 bg-white rounded-4 shadow-sm border p-4">
+          <i class="bi bi-box-seam fs-1 text-muted d-block mb-3"></i>
+          <h4 class="fw-bold text-dark">No products found in this category</h4>
+          <p class="text-muted">We currently don't have items matching this filter. Browse our other categories or check back soon!</p>
+          <div class="d-flex justify-content-center gap-2 mt-3">
+            <a href="/shop" class="btn btn-fashion-dark rounded-pill px-4">View All Products</a>
+            <a href="/" class="btn btn-fashion-light rounded-pill px-4">Return to Homepage</a>
+          </div>
         </div>
 
+        <!-- Product Cards Grid -->
         <div class="row g-4" th:unless="${products.isEmpty()}">
           <div class="col-6 col-md-4" th:each="product : ${products}">
-            <div class="product-card">
-              <div class="product-thumb">
+            <div class="modern-product-card">
+              <div class="modern-product-thumb">
                 <span class="product-badge sale" th:if="${product.discountPrice != null}">Sale</span>
                 <button class="btn-wishlist btn-wishlist-toggle" th:attr="data-product-id=${product.id}" title="Save to wishlist">
                   <i class="bi bi-heart"></i>
@@ -83,31 +126,41 @@
                   <img th:id="'shop-prod-img-' + ${product.id}" th:src="${product.imageUrl}" th:alt="${product.name}" loading="lazy">
                 </a>
               </div>
-              <div class="product-info">
+              <div class="modern-product-body">
                 <div class="d-flex justify-content-between align-items-center mb-1">
-                  <span class="product-cat" th:text="${product.categoryName}">Category</span>
-                  <span th:if="${product.stock > 5}" class="badge bg-success-subtle text-success small" style="font-size: 0.65rem;"><i class="bi bi-check2"></i> In Stock</span>
-                  <span th:if="${product.stock > 0 and product.stock <= 5}" class="badge bg-warning-subtle text-warning-emphasis small" style="font-size: 0.65rem;">Only <span th:text="${product.stock}">2</span> left</span>
-                  <span th:if="${product.stock <= 0}" class="badge bg-secondary-subtle text-secondary small" style="font-size: 0.65rem;">Sold Out</span>
+                  <span class="product-cat text-muted" th:text="${product.categoryName}">Category</span>
+                  <span th:if="${product.stock > 5}" class="badge bg-success-subtle text-success small" style="font-size: 0.65rem;">
+                    <i class="bi bi-check2"></i> In Stock
+                  </span>
+                  <span th:if="${product.stock > 0 and product.stock <= 5}" class="badge bg-warning-subtle text-warning-emphasis small" style="font-size: 0.65rem;">
+                    Only <span th:text="${product.stock}">2</span> left
+                  </span>
+                  <span th:if="${product.stock <= 0}" class="badge bg-secondary-subtle text-secondary small" style="font-size: 0.65rem;">
+                    Sold Out
+                  </span>
                 </div>
-                <a th:href="@{/products/{id}(id=${product.id})}">
-                  <h3 class="product-title" th:text="${product.name}">Product Name</h3>
+                <a th:href="@{/products/{id}(id=${product.id})}" class="text-decoration-none">
+                  <h3 class="product-title fs-6 mb-1 text-dark fw-semibold" th:text="${product.name}">Product Name</h3>
                 </a>
-                <!-- Interactive Color Swatches on Product Card -->
+
+                <!-- Interactive Color Swatches -->
                 <div class="d-flex gap-1 align-items-center flex-wrap my-1" th:if="${not #lists.isEmpty(product.colors)}">
-                  <span th:each="c, cStat : ${product.colors}"
-                        class="card-color-swatch rounded-circle border cursor-pointer"
-                        th:style="'width: 14px; height: 14px; background-color: ' + (${c.hexCode != null ? c.hexCode : '#111111'}) + '; display: inline-block; cursor: pointer; transition: transform 0.15s;'"
-                        th:attr="data-variant-img=${c.imageUrl != null ? c.imageUrl : product.imageUrl}, data-target-id='shop-prod-img-' + ${product.id}, data-color-name=${c.colorName}"
+                  <span th:each="c : ${product.colors}"
+                        class="card-color-swatch rounded-circle"
+                        th:style="'background-color: ' + (${c.hexCode != null ? c.hexCode : '#111111'})"
+                        th:attr="data-variant-img=${c.imageUrl != null ? c.imageUrl : product.imageUrl}, data-target-id='shop-prod-img-' + ${product.id}"
                         th:title="${c.colorName}"
                         onclick="onCardColorClick(this)"
                         onmouseover="onCardColorHover(this)">
                   </span>
                   <span class="text-muted ms-1" style="font-size: 0.7rem;" th:if="${product.colors.size() > 1}" th:text="${product.colors.size()} + ' shades'">2 shades</span>
                 </div>
-                <div class="product-price">
-                  <span th:if="${product.discountPrice != null}" th:text="'₹' + ${product.discountPrice}">₹0</span>
-                  <span th:classappend="${product.discountPrice != null} ? 'price-original' : ''" th:text="'₹' + ${product.price}">₹0</span>
+
+                <!-- Price -->
+                <div class="product-price mt-auto pt-2">
+                  <span class="fw-bold text-dark fs-6" th:if="${product.discountPrice != null}" th:text="'₹' + ${product.discountPrice}">₹0</span>
+                  <span th:classappend="${product.discountPrice != null} ? 'price-original text-muted text-decoration-line-through small' : 'fw-bold text-dark fs-6'" th:text="'₹' + ${product.price}">₹0</span>
+                  <span class="badge bg-danger-subtle text-danger small ms-auto" th:if="${product.discountPrice != null}">Offer</span>
                 </div>
               </div>
             </div>
@@ -137,6 +190,7 @@
     }
   </script>
 
+  <!-- Footer -->
   <div th:replace="~{fragments :: footer}"></div>
 
 </body>

@@ -32,36 +32,48 @@
 
     <!-- Product Hero Row -->
     <div class="row g-5">
-      <!-- Left: Zara-Style Multi-Angle Image Cascade Column -->
-      <div class="col-lg-7">
-        <!-- Main Feature Image Viewport -->
-        <div class="zara-cascade-item position-relative mb-3 shadow-sm">
-          <img id="main-product-image" th:src="${product.imageUrl}" th:alt="${product.name}" class="w-100 object-fit-cover">
+      <!-- Left: Simple Luxury Image Slider Box Column -->
+      <div class="col-lg-6">
+        <!-- Main Slider Box Container -->
+        <div class="product-slider-box position-relative bg-light rounded-2 overflow-hidden mb-3" style="aspect-ratio: 3/4; max-height: 560px;">
+          <!-- Active Slide Image -->
+          <img id="main-product-image" th:src="${product.imageUrl}" th:alt="${product.name}" class="w-100 h-100 object-fit-cover" style="transition: opacity 0.25s ease;">
+          
           <span class="product-badge sale" th:if="${product.discountPrice != null}">Special Offer</span>
+          
+          <!-- Prev / Next Slider Arrow Buttons (inside the box) -->
+          <button type="button" class="slider-arrow-btn slider-prev position-absolute top-50 start-0 translate-middle-y ms-2 btn btn-sm btn-light rounded-circle shadow-sm d-flex align-items-center justify-content-center"
+                  onclick="slideProductImage(-1)" title="Previous photo" style="width: 38px; height: 38px; background: rgba(255, 255, 255, 0.88); backdrop-filter: blur(4px); border: 1px solid rgba(0,0,0,0.08); z-index: 5;">
+            <i class="bi bi-chevron-left fs-6"></i>
+          </button>
+          <button type="button" class="slider-arrow-btn slider-next position-absolute top-50 end-0 translate-middle-y me-2 btn btn-sm btn-light rounded-circle shadow-sm d-flex align-items-center justify-content-center"
+                  onclick="slideProductImage(1)" title="Next photo" style="width: 38px; height: 38px; background: rgba(255, 255, 255, 0.88); backdrop-filter: blur(4px); border: 1px solid rgba(0,0,0,0.08); z-index: 5;">
+            <i class="bi bi-chevron-right fs-6"></i>
+          </button>
+          
+          <!-- Slide Counter (e.g. 1 / 3) -->
+          <span id="slider-counter" class="position-absolute bottom-0 end-0 m-3 badge bg-dark bg-opacity-75 text-white small px-2 py-1" style="font-size: 0.72rem; letter-spacing: 1px; backdrop-filter: blur(4px);">
+            1 / <span th:text="${not #lists.isEmpty(product.images) ? product.images.size() : 1}">1</span>
+          </span>
         </div>
 
-        <!-- Thumbnails Quick Switcher Strip -->
-        <div class="d-flex gap-2 flex-wrap mb-4" th:if="${not #lists.isEmpty(product.images)}">
+        <!-- Thumbnails gallery (multiple images inside strip) -->
+        <div class="d-flex gap-2 flex-wrap mb-4" id="slider-thumbnails-container" th:if="${not #lists.isEmpty(product.images) and product.images.size() > 1}">
           <div th:each="img, stat : ${product.images}"
                class="thumb-selector border rounded-2 p-1 cursor-pointer transition-all"
                th:classappend="${stat.index == 0} ? 'border-dark shadow-sm active-thumb' : 'border-secondary-subtle opacity-75'"
-               th:attr="data-image-url=${img.imageUrl}, data-thumb-index=${stat.index}, onclick='onThumbnailClick(this, \'' + ${img.imageUrl} + '\')'"
+               th:data-image-url="${img.imageUrl}"
+               th:data-thumb-index="${stat.index}"
+               onclick="goToSlide(parseInt(this.getAttribute('data-thumb-index')))"
                style="width: 78px; height: 96px; overflow: hidden; cursor: pointer;">
-            <img th:src="${img.imageUrl}" class="w-100 h-100 object-fit-cover rounded-1" th:alt="${img.altText}">
-          </div>
-        </div>
-
-        <!-- Cascading Editorial Detail Shots (Zara Editorial Gallery) -->
-        <div class="d-none d-lg-block mt-3" th:if="${not #lists.isEmpty(product.images)}">
-          <div th:each="img, stat : ${product.images}" class="zara-cascade-item shadow-2xs mb-4">
-            <img th:src="${img.imageUrl}" class="w-100 object-fit-cover" th:alt="${img.altText}" loading="lazy">
+            <img th:src="${img.imageUrl}" class="w-100 h-100 object-fit-cover rounded-1" th:alt="${img.altText != null ? img.altText : product.name}">
           </div>
         </div>
       </div>
 
       <!-- Right: Sticky Purchase Column -->
-      <div class="col-lg-5">
-        <div class="sticky-purchase-rail">
+      <div class="col-lg-6">
+        <div class="sticky-purchase-rail ps-lg-3">
           <!-- Dispatch Countdown Pill -->
           <div class="mb-3 d-flex align-items-center justify-content-between flex-wrap gap-2">
             <span class="dispatch-countdown-badge">
@@ -501,47 +513,102 @@
   </div>
 
   <script>
-    function switchMainProductImage(thumbElement, newUrl) {
-      const mainImg = document.getElementById('main-product-image');
-      if (mainImg && newUrl) {
-        mainImg.style.transition = 'opacity 0.2s ease';
-        mainImg.style.opacity = '0.5';
-        setTimeout(() => {
-          mainImg.src = newUrl;
-          mainImg.style.opacity = '1';
-        }, 150);
+    let currentSlideIndex = 0;
+    let slideImages = [];
+
+    function initSlides() {
+      slideImages = [];
+      const thumbs = document.querySelectorAll('.thumb-selector');
+      if (thumbs && thumbs.length > 0) {
+        thumbs.forEach(thumb => {
+          const u = thumb.getAttribute('data-image-url');
+          if (u && !slideImages.includes(u)) {
+            slideImages.push(u);
+          }
+        });
       }
-      document.querySelectorAll('.thumb-selector').forEach(el => {
-        el.classList.remove('border-dark', 'shadow-sm', 'active-thumb');
-        el.classList.add('border-secondary-subtle', 'opacity-75');
-      });
-      if (thumbElement) {
-        thumbElement.classList.remove('border-secondary-subtle', 'opacity-75');
-        thumbElement.classList.add('border-dark', 'shadow-sm', 'active-thumb');
+      if (slideImages.length === 0) {
+        const mainImg = document.getElementById('main-product-image');
+        if (mainImg && mainImg.src) {
+          slideImages.push(mainImg.src);
+        }
+      }
+      // Update counter on init
+      const counter = document.getElementById('slider-counter');
+      if (counter) {
+        counter.innerHTML = `${currentSlideIndex + 1} / ${Math.max(1, slideImages.length)}`;
+      }
+      // Hide arrows if only 1 image
+      const prevBtn = document.querySelector('.slider-prev');
+      const nextBtn = document.querySelector('.slider-next');
+      if (slideImages.length <= 1) {
+        if (prevBtn) prevBtn.style.display = 'none';
+        if (nextBtn) nextBtn.style.display = 'none';
+        if (counter) counter.style.display = 'none';
       }
     }
 
-    function onThumbnailClick(thumbElement, imgUrl) {
-      switchMainProductImage(thumbElement, imgUrl);
+    function goToSlide(index) {
+      if (slideImages.length === 0) initSlides();
+      if (slideImages.length === 0) return;
 
-      // Check if a color radio matches this image
-      let matchedRadio = null;
-      document.querySelectorAll('.color-radio').forEach(radio => {
-        const radioImg = radio.getAttribute('data-image');
-        if (radioImg && imgUrl && (radioImg === imgUrl || radioImg.split('?')[0] === imgUrl.split('?')[0])) {
-          matchedRadio = radio;
+      let idx = parseInt(index);
+      if (isNaN(idx)) idx = 0;
+      if (idx < 0) idx = slideImages.length - 1;
+      if (idx >= slideImages.length) idx = 0;
+      currentSlideIndex = idx;
+
+      const targetUrl = slideImages[currentSlideIndex];
+      const mainImg = document.getElementById('main-product-image');
+      if (mainImg && targetUrl) {
+        mainImg.style.transition = 'opacity 0.2s ease';
+        mainImg.style.opacity = '0.35';
+        setTimeout(() => {
+          mainImg.src = targetUrl;
+          mainImg.style.opacity = '1';
+        }, 120);
+      }
+
+      // Update slide counter
+      const counter = document.getElementById('slider-counter');
+      if (counter) {
+        counter.innerHTML = `${currentSlideIndex + 1} / ${slideImages.length}`;
+      }
+
+      // Highlight thumbnail
+      document.querySelectorAll('.thumb-selector').forEach((t, i) => {
+        if (i === currentSlideIndex) {
+          t.classList.remove('border-secondary-subtle', 'opacity-75');
+          t.classList.add('border-dark', 'shadow-sm', 'active-thumb');
+        } else {
+          t.classList.remove('border-dark', 'shadow-sm', 'active-thumb');
+          t.classList.add('border-secondary-subtle', 'opacity-75');
         }
       });
 
-      // If no direct image URL match, match by thumbnail index to shade radio index
-      if (!matchedRadio) {
-        const thumbIndex = parseInt(thumbElement.getAttribute('data-thumb-index'));
+      // Synchronize color swatch if matching
+      syncColorFromUrl(targetUrl, currentSlideIndex);
+    }
+
+    function slideProductImage(delta) {
+      goToSlide(currentSlideIndex + delta);
+    }
+
+    function syncColorFromUrl(imgUrl, slideIdx) {
+      if (!imgUrl) return;
+      let matchedRadio = null;
+      document.querySelectorAll('.color-radio').forEach(radio => {
+        const radioImg = radio.getAttribute('data-image');
+        if (radioImg && (radioImg === imgUrl || radioImg.split('?')[0] === imgUrl.split('?')[0])) {
+          matchedRadio = radio;
+        }
+      });
+      if (!matchedRadio && typeof slideIdx === 'number') {
         const allRadios = document.querySelectorAll('.color-radio');
-        if (allRadios && allRadios.length > thumbIndex && thumbIndex >= 0) {
-          matchedRadio = allRadios[thumbIndex];
+        if (allRadios && allRadios.length > slideIdx && slideIdx >= 0) {
+          matchedRadio = allRadios[slideIdx];
         }
       }
-
       if (matchedRadio) {
         matchedRadio.checked = true;
         updateColorUI(matchedRadio);
@@ -552,21 +619,21 @@
       updateColorUI(radioInput);
       const imgUrl = radioInput.getAttribute('data-image');
       if (imgUrl && imgUrl.trim().length > 0) {
-        // Switch main image to this color variant
-        switchMainProductImage(null, imgUrl);
-
-        // Highlight matching thumbnail in the gallery
-        document.querySelectorAll('.thumb-selector').forEach(thumb => {
-          const thumbUrl = thumb.getAttribute('data-image-url');
-          if (thumbUrl && (thumbUrl === imgUrl || thumbUrl.split('?')[0] === imgUrl.split('?')[0])) {
-            document.querySelectorAll('.thumb-selector').forEach(el => {
-              el.classList.remove('border-dark', 'shadow-sm', 'active-thumb');
-              el.classList.add('border-secondary-subtle', 'opacity-75');
-            });
-            thumb.classList.remove('border-secondary-subtle', 'opacity-75');
-            thumb.classList.add('border-dark', 'shadow-sm', 'active-thumb');
+        if (slideImages.length === 0) initSlides();
+        const foundIdx = slideImages.findIndex(u => u === imgUrl || u.split('?')[0] === imgUrl.split('?')[0]);
+        if (foundIdx >= 0) {
+          goToSlide(foundIdx);
+        } else {
+          const mainImg = document.getElementById('main-product-image');
+          if (mainImg) {
+            mainImg.style.transition = 'opacity 0.2s ease';
+            mainImg.style.opacity = '0.35';
+            setTimeout(() => {
+              mainImg.src = imgUrl;
+              mainImg.style.opacity = '1';
+            }, 120);
           }
-        });
+        }
       }
     }
 
@@ -630,7 +697,10 @@
         el.textContent = `${h}h ${m}m ${s}s`;
       }, 1000);
     }
-    document.addEventListener('DOMContentLoaded', startDispatchTimer);
+    document.addEventListener('DOMContentLoaded', () => {
+      startDispatchTimer();
+      initSlides();
+    });
   </script>
 
   <div th:replace="~{fragments :: footer}"></div>

@@ -176,7 +176,10 @@ public class ComboPackage {
     public void setFeatured(boolean featured) { this.featured = featured; }
 
     public String getBadge() { return badge; }
+    public String getBadgeText() { return badge != null ? badge : "Bundle Deal"; }
     public void setBadge(String badge) { this.badge = badge; }
+
+    public BigDecimal getPrice() { return getEffectivePrice(); }
 
     public int getSalesCount() { return salesCount; }
     public void setSalesCount(int salesCount) { this.salesCount = salesCount; }

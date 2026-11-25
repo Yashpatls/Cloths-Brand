@@ -18,14 +18,19 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     List<Product> findByActiveTrueAndCategoryIdOrderByIdDesc(Long categoryId);
 
+    @Query("SELECT p FROM Product p WHERE p.active = true AND " +
+           "(p.category.id = :catId OR LOWER(p.categoryName) = LOWER(:catName) OR LOWER(p.category.slug) = LOWER(:slug)) " +
+           "ORDER BY p.id DESC")
+    List<Product> findByCategoryMatches(@Param("catId") Long catId, @Param("catName") String catName, @Param("slug") String slug);
+
     List<Product> findByNameContainingIgnoreCaseAndActiveTrue(String name);
 
     Optional<Product> findBySkuIgnoreCase(String sku);
     Optional<Product> findBySku(String sku);
 
     @Query("SELECT p FROM Product p WHERE p.active = true " +
-           "AND (:category IS NULL OR LOWER(p.categoryName) = LOWER(:category) OR LOWER(p.category.slug) = LOWER(:category)) " +
-           "AND (:query IS NULL OR LOWER(p.name) LIKE LOWER(CONCAT('%', :query, '%')) OR LOWER(p.description) LIKE LOWER(CONCAT('%', :query, '%'))) " +
+           "AND (:category IS NULL OR :category = '' OR LOWER(p.categoryName) = LOWER(:category) OR LOWER(p.category.slug) = LOWER(:category)) " +
+           "AND (:query IS NULL OR :query = '' OR LOWER(p.name) LIKE LOWER(CONCAT('%', :query, '%')) OR LOWER(p.description) LIKE LOWER(CONCAT('%', :query, '%'))) " +
            "AND (:minPrice IS NULL OR p.price >= :minPrice) " +
            "AND (:maxPrice IS NULL OR p.price <= :maxPrice) " +
            "ORDER BY p.id DESC")

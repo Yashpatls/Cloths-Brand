@@ -51,19 +51,33 @@
 
         <!-- Desktop Menu Links -->
         <div class="collapse navbar-collapse" id="desktopNav">
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0 gap-3">
-            <li class="nav-item"><a class="nav-link text-uppercase" href="/shop" style="font-size: 0.82rem; letter-spacing: 1.5px; font-weight: 600;">Shop All</a></li>
-            <li class="nav-item"><a class="nav-link text-uppercase" href="/category/women" style="font-size: 0.82rem; letter-spacing: 1.5px; font-weight: 500;">Women</a></li>
-            <li class="nav-item"><a class="nav-link text-uppercase" href="/category/men" style="font-size: 0.82rem; letter-spacing: 1.5px; font-weight: 500;">Men</a></li>
-            <li class="nav-item"><a class="nav-link text-uppercase" href="/category/kids" style="font-size: 0.82rem; letter-spacing: 1.5px; font-weight: 500;">Kids</a></li>
-            <li class="nav-item"><a class="nav-link text-uppercase" href="/category/accessories" style="font-size: 0.82rem; letter-spacing: 1.5px; font-weight: 500;">Accessories</a></li>
-            <li class="nav-item"><a class="nav-link text-uppercase" href="/category/footwear" style="font-size: 0.82rem; letter-spacing: 1.5px; font-weight: 500;">Footwear</a></li>
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0 gap-2 align-items-center">
+            <li class="nav-item"><a class="nav-link text-uppercase" href="/shop" style="font-size: 0.82rem; letter-spacing: 1px; font-weight: 700;">Shop All</a></li>
+            <li class="nav-item"><a class="nav-link text-uppercase" href="/category/men" style="font-size: 0.82rem; letter-spacing: 1px; font-weight: 600;">Men</a></li>
+            <li class="nav-item"><a class="nav-link text-uppercase" href="/category/women" style="font-size: 0.82rem; letter-spacing: 1px; font-weight: 600;">Women</a></li>
+            <li class="nav-item"><a class="nav-link text-uppercase" href="/category/kids" style="font-size: 0.82rem; letter-spacing: 1px; font-weight: 600;">Kids</a></li>
+            <li class="nav-item"><a class="nav-link text-uppercase" href="/category/ethnic" style="font-size: 0.82rem; letter-spacing: 1px; font-weight: 600;">Ethnic</a></li>
+            <li class="nav-item"><a class="nav-link text-uppercase" href="/category/casual-denim" style="font-size: 0.82rem; letter-spacing: 1px; font-weight: 600;">Casual &amp; Denim</a></li>
+            
+            <!-- More Categories Dropdown -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle text-uppercase" href="#" role="button" data-bs-toggle="dropdown" style="font-size: 0.82rem; letter-spacing: 1px; font-weight: 600;">
+                More Categories
+              </a>
+              <ul class="dropdown-menu shadow-sm border-0 rounded-3">
+                <li th:each="cat : ${navCategories}">
+                  <a class="dropdown-item py-2" th:href="@{/category/{slug}(slug=${cat.slug})}" th:text="${cat.name}">Category</a>
+                </li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item py-2 fw-bold text-dark" href="/combos"><i class="bi bi-box2-heart me-2"></i>Value Style Combos</a></li>
+              </ul>
+            </li>
           </ul>
 
           <!-- Search Bar -->
           <form class="d-none d-xl-flex me-4" action="/search" method="get">
             <div class="input-group input-group-sm">
-              <input type="text" name="q" class="form-control rounded-start-pill ps-3 border-end-0 bg-light" placeholder="Search cashmere, linen..." style="width: 210px; font-size: 0.82rem;">
+              <input type="text" name="q" class="form-control rounded-start-pill ps-3 border-end-0 bg-light" placeholder="Search cotton, denim..." style="width: 210px; font-size: 0.82rem;">
               <button class="btn btn-outline-secondary border-start-0 rounded-end-pill bg-light" type="submit">
                 <i class="bi bi-search text-muted"></i>
               </button>
@@ -132,18 +146,17 @@
             <button class="btn btn-fashion-dark" type="submit"><i class="bi bi-search"></i></button>
           </div>
         </form>
-        <ul class="nav flex-column gap-2 fs-5">
-          <li class="nav-item"><a class="nav-link" href="/shop">Shop All</a></li>
-          <li class="nav-item"><a class="nav-link" href="/category/men">Men's Collection</a></li>
-          <li class="nav-item"><a class="nav-link" href="/category/women">Women's Collection</a></li>
-          <li class="nav-item"><a class="nav-link" href="/category/kids">Kids Collection</a></li>
-          <li class="nav-item"><a class="nav-link" href="/category/accessories">Accessories</a></li>
-          <li class="nav-item"><a class="nav-link" href="/category/footwear">Footwear</a></li>
-          <hr>
-          <li class="nav-item" sec:authorize="isAuthenticated()"><a class="nav-link" href="/profile">My Account</a></li>
-          <li class="nav-item" sec:authorize="isAuthenticated()"><a class="nav-link" href="/orders">My Orders</a></li>
-          <li class="nav-item" sec:authorize="hasRole('ADMIN')"><a class="nav-link text-danger fw-bold" href="/admin">Admin Control</a></li>
-          <li class="nav-item" sec:authorize="isAnonymous()"><a class="nav-link" href="/login">Sign In / Register</a></li>
+        <ul class="nav flex-column gap-2 fs-6">
+          <li class="nav-item"><a class="nav-link fw-bold text-dark py-1" href="/shop">Shop All Catalog</a></li>
+          <li class="nav-item" th:each="cat : ${navCategories}">
+            <a class="nav-link py-1 text-secondary" th:href="@{/category/{slug}(slug=${cat.slug})}" th:text="${cat.name}">Category</a>
+          </li>
+          <li class="nav-item"><a class="nav-link py-1 fw-bold text-warning" href="/combos">Style Combos</a></li>
+          <hr class="my-2">
+          <li class="nav-item" sec:authorize="isAuthenticated()"><a class="nav-link py-1" href="/profile">My Account</a></li>
+          <li class="nav-item" sec:authorize="isAuthenticated()"><a class="nav-link py-1" href="/orders">My Orders</a></li>
+          <li class="nav-item" sec:authorize="hasRole('ADMIN')"><a class="nav-link py-1 text-danger fw-bold" href="/admin">Admin Control</a></li>
+          <li class="nav-item" sec:authorize="isAnonymous()"><a class="nav-link py-1 text-primary fw-bold" href="/login">Sign In / Register</a></li>
         </ul>
       </div>
     </div>
@@ -167,13 +180,12 @@
         </div>
 
         <div class="col-lg-2 col-6">
-          <h5>Collections</h5>
-          <ul class="list-unstyled d-flex flex-column gap-2">
-            <li><a href="/category/men">Men's Apparel</a></li>
-            <li><a href="/category/women">Women's Edit</a></li>
-            <li><a href="/category/kids">Kids & Playwear</a></li>
-            <li><a href="/category/accessories">Accessories</a></li>
-            <li><a href="/category/footwear">Footwear</a></li>
+          <h5>Categories</h5>
+          <ul class="list-unstyled d-flex flex-column gap-2 small">
+            <li th:each="cat, iterStat : ${navCategories}" th:if="${iterStat.index < 6}">
+              <a th:href="@{/category/{slug}(slug=${cat.slug})}" th:text="${cat.name}">Category</a>
+            </li>
+            <li><a href="/shop" class="fw-bold text-light">All Categories &rarr;</a></li>
           </ul>
         </div>
 

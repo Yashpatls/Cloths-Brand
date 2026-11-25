@@ -54,9 +54,17 @@ public class ProductService {
         }
         var catOpt = categoryRepo.findBySlugIgnoreCase(categoryOrSlug);
         if (catOpt.isPresent()) {
-            return productRepo.findByActiveTrueAndCategoryIdOrderByIdDesc(catOpt.get().getId());
+            Category cat = catOpt.get();
+            return productRepo.findByCategoryMatches(cat.getId(), cat.getName(), cat.getSlug());
         }
-        return productRepo.findByActiveTrueAndCategoryNameIgnoreCaseOrderByIdDesc(categoryOrSlug);
+        var nameOpt = categoryRepo.findAll().stream()
+                .filter(c -> c.getName().equalsIgnoreCase(categoryOrSlug))
+                .findFirst();
+        if (nameOpt.isPresent()) {
+            Category cat = nameOpt.get();
+            return productRepo.findByCategoryMatches(cat.getId(), cat.getName(), cat.getSlug());
+        }
+        return productRepo.findByCategoryMatches(0L, categoryOrSlug, categoryOrSlug);
     }
 
     public List<Product> filter(String category, String query, BigDecimal minPrice, BigDecimal maxPrice) {

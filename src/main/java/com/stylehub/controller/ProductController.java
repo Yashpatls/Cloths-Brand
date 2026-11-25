@@ -51,13 +51,24 @@ public class ProductController {
     }
 
     @GetMapping("/category/{slug}")
-    public String collection(@PathVariable String slug, Model model) {
+    public String collection(
+            @PathVariable String slug,
+            @RequestParam(required = false) BigDecimal minPrice,
+            @RequestParam(required = false) BigDecimal maxPrice,
+            Model model) {
         Category cat = categoryService.getBySlug(slug);
-        List<Product> products = productService.getByCategory(slug);
+        List<Product> products;
+        if (minPrice != null || maxPrice != null) {
+            products = productService.filter(cat.getSlug(), null, minPrice, maxPrice);
+        } else {
+            products = productService.getByCategory(slug);
+        }
         model.addAttribute("category", cat);
         model.addAttribute("products", products);
         model.addAttribute("categories", categoryService.getAllActive());
         model.addAttribute("selectedCategory", cat.getName());
+        model.addAttribute("minPrice", minPrice);
+        model.addAttribute("maxPrice", maxPrice);
         return "products";
     }
 

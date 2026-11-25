@@ -30,7 +30,7 @@ public class OrderController {
     private final UserService userService;
     private final PaymentService paymentService;
 
-    @Value("${razorpay.key.id:rzp_test_mock_stylehub}")
+    @Value("${razorpay.key.id:rzp_test_l99uVs9OtIIqFL}")
     private String razorpayKeyId;
 
     public OrderController(OrderService orderService, CartService cartService,

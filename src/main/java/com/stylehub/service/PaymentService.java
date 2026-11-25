@@ -28,10 +28,10 @@ public class PaymentService {
 
     private final PaymentRepository paymentRepo;
 
-    @Value("${razorpay.key.id:rzp_test_mock_stylehub}")
+    @Value("${razorpay.key.id:rzp_test_l99uVs9OtIIqFL}")
     private String keyId;
 
-    @Value("${razorpay.key.secret:mock_secret_key_12345}")
+    @Value("${razorpay.key.secret:jSfm5ENBwuQRwAqPNViQwHCm}")
     private String keySecret;
 
     @Value("${razorpay.currency:INR}")

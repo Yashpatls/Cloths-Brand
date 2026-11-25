@@ -123,7 +123,8 @@
                   <i class="bi bi-heart"></i>
                 </button>
                 <a th:href="@{/products/{id}(id=${product.id})}">
-                  <img th:id="'shop-prod-img-' + ${product.id}" th:src="${product.imageUrl}" th:alt="${product.name}" loading="lazy">
+                  <img th:id="'shop-prod-img-' + ${product.id}" th:src="${product.imageUrl}" th:alt="${product.name}" loading="lazy"
+                       onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1598033129183-c4f50c736f10?w=900&auto=format&fit=crop&q=80';">
                 </a>
               </div>
               <div class="modern-product-body">

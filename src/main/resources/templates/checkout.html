@@ -73,35 +73,43 @@
 
             <div class="d-flex flex-column gap-3">
               <!-- Online Payment Option -->
-              <div class="border rounded-3 p-3 d-flex align-items-center gap-3 bg-light cursor-pointer">
-                <input class="form-check-input fs-5" type="radio" name="paymentMethod" id="pay-online" value="ONLINE" checked>
+              <div class="border rounded-3 p-3 d-flex align-items-center gap-3 bg-white border-2 border-dark cursor-pointer shadow-sm payment-option-card" id="card-pay-online" onclick="document.getElementById('pay-online').checked=true; updatePaymentButton();">
+                <input class="form-check-input fs-5" type="radio" name="paymentMethod" id="pay-online" value="ONLINE" checked onchange="updatePaymentButton()">
                 <label class="form-check-label flex-grow-1 cursor-pointer" for="pay-online">
-                  <div class="d-flex justify-content-between align-items-center">
-                    <span class="fw-bold fs-6"><i class="bi bi-credit-card-2-front-fill text-primary me-2"></i>Online Payment (UPI, Cards & NetBanking)</span>
+                  <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                    <span class="fw-bold fs-6 text-dark"><i class="bi bi-shield-check text-primary me-2"></i>Online Payment (Razorpay UPI, Cards & NetBanking)</span>
                     <span class="badge bg-success text-white">Instant Confirmation</span>
                   </div>
-                  <small class="text-secondary d-block mt-1">Instant digital payment via UPI (Google Pay, PhonePe, Paytm), Credit/Debit Cards, or NetBanking.</small>
+                  <div class="d-flex align-items-center gap-2 mt-2 flex-wrap">
+                    <span class="badge bg-light text-dark border"><i class="bi bi-qr-code-scan me-1 text-primary"></i>UPI (GPay / PhonePe / Paytm / QR)</span>
+                    <span class="badge bg-light text-dark border"><i class="bi bi-credit-card me-1"></i>Credit / Debit Cards</span>
+                    <span class="badge bg-light text-dark border"><i class="bi bi-bank me-1"></i>NetBanking</span>
+                  </div>
+                  <small class="text-secondary d-block mt-2">100% secure encrypted payment via Razorpay. Seamlessly pay using any UPI app or scan the instant QR code.</small>
                 </label>
               </div>
 
               <!-- Cash on Delivery Option -->
-              <div class="border rounded-3 p-3 d-flex align-items-center gap-3 bg-light cursor-pointer">
-                <input class="form-check-input fs-5" type="radio" name="paymentMethod" id="pay-cod" value="CASH_ON_DELIVERY">
+              <div class="border rounded-3 p-3 d-flex align-items-center gap-3 bg-light cursor-pointer payment-option-card" id="card-pay-cod" onclick="document.getElementById('pay-cod').checked=true; updatePaymentButton();">
+                <input class="form-check-input fs-5" type="radio" name="paymentMethod" id="pay-cod" value="CASH_ON_DELIVERY" onchange="updatePaymentButton()">
                 <label class="form-check-label flex-grow-1 cursor-pointer" for="pay-cod">
-                  <div class="d-flex justify-content-between align-items-center">
-                    <span class="fw-bold fs-6"><i class="bi bi-cash-stack text-success me-2"></i>Cash on Delivery (COD)</span>
+                  <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                    <span class="fw-bold fs-6 text-dark"><i class="bi bi-cash-stack text-success me-2"></i>Cash on Delivery (COD)</span>
                     <span class="badge bg-secondary text-white">Pay at Doorstep</span>
                   </div>
-                  <small class="text-secondary d-block mt-1">Pay with cash or UPI directly to our logistics partner upon arrival.</small>
+                  <small class="text-secondary d-block mt-1">Pay with cash or UPI directly to our delivery executive upon package arrival.</small>
                 </label>
               </div>
             </div>
 
             <!-- Submit Action Container -->
             <div class="mt-4">
-              <button id="btn-standard-place-order" type="submit" class="btn btn-fashion-dark w-100 py-3 fs-5 fw-bold shadow-sm">
-                <i class="bi bi-shield-check me-2"></i> Confirm & Place Order
+              <button id="btn-submit-order" type="submit" class="btn btn-fashion-dark w-100 py-3 fs-5 fw-bold shadow-sm d-flex align-items-center justify-content-center">
+                <i class="bi bi-shield-check me-2"></i> <span id="btn-submit-text">Pay Online with Razorpay & UPI</span>
               </button>
+              <div class="text-center mt-2">
+                <small class="text-muted"><i class="bi bi-lock-fill text-success me-1"></i>256-Bit SSL Secured by Razorpay & StyleHub</small>
+              </div>
             </div>
           </div>
         </form>
@@ -114,7 +122,7 @@
           <div class="d-flex flex-column gap-3 mb-4" style="max-height: 320px; overflow-y: auto;">
             <div th:each="item : ${cart.items}" class="d-flex align-items-center gap-3 border-bottom pb-2">
               <img th:src="${item.itemImageUrl}" class="rounded" style="width: 50px; height: 65px; object-fit: cover;"
-                   onerror="this.src='https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=100';">
+                   onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1598033129183-c4f50c736f10?w=300';">
               <div class="flex-grow-1">
                 <span class="badge bg-danger text-uppercase px-1 mb-1" style="font-size: 0.6rem;" th:if="${item.isCombo}">Combo</span>
                 <h6 class="small fw-bold mb-0" th:text="${item.itemTitle}">Item Name</h6>
@@ -163,6 +171,185 @@
   </main>
 
   <div th:replace="~{fragments :: footer}"></div>
+
+  <script th:inline="javascript">
+    function updatePaymentButton() {
+      const isOnline = document.getElementById('pay-online').checked;
+      const btnText = document.getElementById('btn-submit-text');
+      const cardOnline = document.getElementById('card-pay-online');
+      const cardCod = document.getElementById('card-pay-cod');
+
+      if (isOnline) {
+        if (btnText) btnText.textContent = 'Pay Online with Razorpay & UPI';
+        if (cardOnline) {
+          cardOnline.classList.add('border-dark', 'bg-white', 'shadow-sm');
+          cardOnline.classList.remove('bg-light');
+        }
+        if (cardCod) {
+          cardCod.classList.remove('border-dark', 'bg-white', 'shadow-sm');
+          cardCod.classList.add('bg-light');
+        }
+      } else {
+        if (btnText) btnText.textContent = 'Confirm Cash on Delivery Order';
+        if (cardCod) {
+          cardCod.classList.add('border-dark', 'bg-white', 'shadow-sm');
+          cardCod.classList.remove('bg-light');
+        }
+        if (cardOnline) {
+          cardOnline.classList.remove('border-dark', 'bg-white', 'shadow-sm');
+          cardOnline.classList.add('bg-light');
+        }
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      const form = document.getElementById('checkout-form');
+      const submitBtn = document.getElementById('btn-submit-order');
+      const btnText = document.getElementById('btn-submit-text');
+
+      if (!form || !submitBtn) return;
+
+      form.addEventListener('submit', async function (e) {
+        const payOnlineRadio = document.getElementById('pay-online');
+        if (!payOnlineRadio || !payOnlineRadio.checked) {
+          // Cash on delivery: submit standard form
+          return true;
+        }
+
+        // Online payment (Razorpay / UPI)
+        e.preventDefault();
+
+        if (!form.checkValidity()) {
+          form.reportValidity();
+          return;
+        }
+
+        const payload = {
+          fullName: form.fullName.value.trim(),
+          phone: form.phone.value.trim(),
+          streetAddress: form.streetAddress.value.trim(),
+          city: form.city.value.trim(),
+          state: form.state.value.trim(),
+          postalCode: form.postalCode.value.trim()
+        };
+
+        const token = document.querySelector('meta[name="_csrf"]')?.content;
+        const header = document.querySelector('meta[name="_csrf_header"]')?.content;
+        const headers = { 'Content-Type': 'application/json' };
+        if (token && header) headers[header] = token;
+
+        try {
+          submitBtn.disabled = true;
+          btnText.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status"></span>Connecting to Razorpay...';
+
+          const orderRes = await fetch('/checkout/create-razorpay-order', {
+            method: 'POST',
+            headers: headers,
+            body: JSON.stringify(payload)
+          });
+
+          const orderData = await orderRes.json();
+          if (orderData.status !== 'success') {
+            alert('Could not initialize Razorpay order: ' + (orderData.message || 'Unknown error'));
+            submitBtn.disabled = false;
+            btnText.textContent = 'Pay Online with Razorpay & UPI';
+            return;
+          }
+
+          // Open Razorpay Popup
+          if (typeof Razorpay !== 'undefined') {
+            const options = {
+              key: orderData.keyId,
+              amount: orderData.amount,
+              currency: orderData.currency || 'INR',
+              name: 'StyleHub Fashion',
+              description: 'Order Payment #' + orderData.orderNumber,
+              order_id: orderData.razorpayOrderId,
+              handler: async function (response) {
+                submitBtn.disabled = true;
+                btnText.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status"></span>Verifying Payment...';
+
+                try {
+                  const verifyRes = await fetch('/checkout/verify-payment', {
+                    method: 'POST',
+                    headers: headers,
+                    body: JSON.stringify({
+                      orderId: String(orderData.orderId),
+                      razorpay_order_id: response.razorpay_order_id,
+                      razorpay_payment_id: response.razorpay_payment_id,
+                      razorpay_signature: response.razorpay_signature
+                    })
+                  });
+
+                  const verifyData = await verifyRes.json();
+                  if (verifyData.status === 'success') {
+                    window.location.href = '/checkout-success?orderNumber=' + verifyData.orderNumber;
+                  } else {
+                    alert('Payment verification issue: ' + (verifyData.message || 'Verification failed.'));
+                    submitBtn.disabled = false;
+                    btnText.textContent = 'Pay Online with Razorpay & UPI';
+                  }
+                } catch (verErr) {
+                  console.error('Verification error:', verErr);
+                  alert('An error occurred during verification.');
+                  submitBtn.disabled = false;
+                  btnText.textContent = 'Pay Online with Razorpay & UPI';
+                }
+              },
+              prefill: {
+                name: payload.fullName,
+                contact: payload.phone
+              },
+              notes: {
+                orderNumber: orderData.orderNumber
+              },
+              theme: {
+                color: '#0a0a0a'
+              },
+              modal: {
+                ondismiss: function () {
+                  submitBtn.disabled = false;
+                  btnText.textContent = 'Pay Online with Razorpay & UPI';
+                }
+              }
+            };
+
+            const rzp = new Razorpay(options);
+            rzp.on('payment.failed', function (resp) {
+              alert('Payment cancelled or failed: ' + (resp.error ? resp.error.description : 'Please try again.'));
+              submitBtn.disabled = false;
+              btnText.textContent = 'Pay Online with Razorpay & UPI';
+            });
+            rzp.open();
+          } else {
+            // Fallback if checkout.js blocked in demo mode
+            if (confirm('Razorpay checkout SDK unavailable. Would you like to simulate successful test payment for Order #' + orderData.orderNumber + '?')) {
+              const verifyRes = await fetch('/checkout/verify-payment', {
+                method: 'POST',
+                headers: headers,
+                body: JSON.stringify({
+                  orderId: String(orderData.orderId),
+                  razorpay_order_id: orderData.razorpayOrderId,
+                  razorpay_payment_id: 'pay_test_' + Date.now(),
+                  razorpay_signature: 'test_signature'
+                })
+              });
+              const verifyData = await verifyRes.json();
+              window.location.href = '/checkout-success?orderNumber=' + verifyData.orderNumber;
+            } else {
+              submitBtn.disabled = false;
+              btnText.textContent = 'Pay Online with Razorpay & UPI';
+            }
+          }
+        } catch (err) {
+          console.error('Razorpay initialization error:', err);
+          alert('Could not start Razorpay checkout. Please check connection.');
+          submitBtn.disabled = false;
+          btnText.textContent = 'Pay Online with Razorpay & UPI';
+        }
+      });
+    });
+  </script>
 
 </body>
 </html>

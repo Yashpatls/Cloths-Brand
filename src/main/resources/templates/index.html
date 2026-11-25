@@ -94,7 +94,8 @@
                th:href="@{/category/{slug}(slug=${cat.slug})}"
                class="category-box-card">
               <div class="category-box-img-wrap">
-                <img th:src="${cat.imageUrl}" th:alt="${cat.name}" class="category-box-img" loading="lazy">
+                <img th:src="${cat.imageUrl}" th:alt="${cat.name}" class="category-box-img" loading="lazy"
+                     onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=600&auto=format&fit=crop&q=80';">
               </div>
               <div class="category-box-content">
                 <h3 class="category-box-title" th:text="${cat.name}">Category Name</h3>
@@ -147,7 +148,8 @@
                 <i class="bi bi-heart"></i>
               </button>
               <a th:href="@{/products/{id}(id=${product.id})}">
-                <img th:id="'home-prod-img-' + ${product.id}" th:src="${product.imageUrl}" th:alt="${product.name}" loading="lazy">
+                <img th:id="'home-prod-img-' + ${product.id}" th:src="${product.imageUrl}" th:alt="${product.name}" loading="lazy"
+                     onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1598033129183-c4f50c736f10?w=900&auto=format&fit=crop&q=80';">
               </a>
             </div>
             <div class="modern-product-body">

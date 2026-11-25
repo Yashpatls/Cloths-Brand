@@ -37,7 +37,8 @@
         <!-- Main Slider Box Container -->
         <div class="product-slider-box position-relative bg-light rounded-2 overflow-hidden mb-3" style="aspect-ratio: 3/4; max-height: 560px;">
           <!-- Active Slide Image -->
-          <img id="main-product-image" th:src="${product.imageUrl}" th:alt="${product.name}" class="w-100 h-100 object-fit-cover" style="transition: opacity 0.25s ease;">
+          <img id="main-product-image" th:src="${product.imageUrl}" th:alt="${product.name}" class="w-100 h-100 object-fit-cover" style="transition: opacity 0.25s ease;"
+               onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1598033129183-c4f50c736f10?w=900&auto=format&fit=crop&q=80';">
           
           <span class="product-badge sale" th:if="${product.discountPrice != null}">Special Offer</span>
           
@@ -66,7 +67,8 @@
                th:data-thumb-index="${stat.index}"
                onclick="goToSlide(parseInt(this.getAttribute('data-thumb-index')))"
                style="width: 78px; height: 96px; overflow: hidden; cursor: pointer;">
-            <img th:src="${img.imageUrl}" class="w-100 h-100 object-fit-cover rounded-1" th:alt="${img.altText != null ? img.altText : product.name}">
+            <img th:src="${img.imageUrl}" class="w-100 h-100 object-fit-cover rounded-1" th:alt="${img.altText != null ? img.altText : product.name}"
+                 onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1598033129183-c4f50c736f10?w=300&auto=format&fit=crop&q=80';">
           </div>
         </div>
       </div>
@@ -367,7 +369,8 @@
                     th:if="${rel.discountPrice != null}">Special Offer</span>
               <a th:href="@{/products/{id}(id=${rel.id})}">
                 <img th:src="${rel.imageUrl}" th:alt="${rel.name}"
-                     class="w-100 h-100 object-fit-cover transition-all" loading="lazy">
+                     class="w-100 h-100 object-fit-cover transition-all" loading="lazy"
+                     onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1598033129183-c4f50c736f10?w=600&auto=format&fit=crop&q=80';">
               </a>
             </div>
             <div class="pt-2">

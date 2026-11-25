@@ -224,8 +224,9 @@ public class DataSeeder {
                     "Executive Pure Cotton Twill Shirt", "SH-FRM-001",
                     "Refined formal dress shirt with semi-spread collar and wrinkle-resistant finish.",
                     1899, 1499, formalCat,
-                    "https://images.unsplash.com/photo-1620012253295-c15c429f66bf?w=900&auto=format&fit=crop&q=80",
-                    List.of("https://images.unsplash.com/photo-1598033129183-c4f50c736f10?w=900&auto=format&fit=crop&q=80"),
+                    "https://images.unsplash.com/photo-1598033129183-c4f50c736f10?w=900&auto=format&fit=crop&q=80",
+                    List.of("https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=900&auto=format&fit=crop&q=80",
+                            "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=900&auto=format&fit=crop&q=80"),
                     List.of("39", "40", "42", "44"),
                     List.of("Pure White", "French Blue"),
                     30, false);
@@ -1039,8 +1040,9 @@ public class DataSeeder {
 
                 // 29. Executive Pure Cotton Twill Shirt (Crisp tailored formal executive dress shirt on model)
                 new ProductVisualPreset("SH-FRM-001",
-                        "https://images.unsplash.com/photo-1620012253295-c15c429f66bf?w=900&auto=format&fit=crop&q=80",
-                        List.of("https://images.unsplash.com/photo-1598033129183-c4f50c736f10?w=900&auto=format&fit=crop&q=80")),
+                        "https://images.unsplash.com/photo-1598033129183-c4f50c736f10?w=900&auto=format&fit=crop&q=80",
+                        List.of("https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=900&auto=format&fit=crop&q=80",
+                                "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=900&auto=format&fit=crop&q=80")),
 
                 // 30. Tailored Slim-Fit Dress Trousers
                 new ProductVisualPreset("SH-FRM-002",
@@ -1137,7 +1139,7 @@ public class DataSeeder {
         // Clean up and replace any legacy or broken or abstract images across the entire database
         for (Product existing : productRepo.findAll()) {
             String img = existing.getImageUrl();
-            if (img == null || img.isBlank() || img.contains("1508214751196") || img.contains("1603252109303") ||
+            if (img == null || img.isBlank() || img.contains("1620012253295") || img.contains("1508214751196") || img.contains("1603252109303") ||
                     img.contains("1595777457583") || img.contains("1714143136") || img.contains("1789111161") ||
                     img.contains("176233165") || img.contains("1542272604") || img.contains("1506619216") ||
                     img.contains("1518831959646") || img.contains("openai.com")) {
@@ -1154,7 +1156,7 @@ public class DataSeeder {
                         existing.setImageUrl("https://images.unsplash.com/photo-1622290291468-a28f7a7dc6a8?w=900&auto=format&fit=crop&q=80");
                     }
                 } else if (cName.contains("formal") || pName.contains("formal") || pName.contains("shirt") || pName.contains("twill")) {
-                    existing.setImageUrl("https://images.unsplash.com/photo-1620012253295-c15c429f66bf?w=900&auto=format&fit=crop&q=80");
+                    existing.setImageUrl("https://images.unsplash.com/photo-1598033129183-c4f50c736f10?w=900&auto=format&fit=crop&q=80");
                 } else if (cName.contains("women") || pName.contains("dress") || pName.contains("slip")) {
                     existing.setImageUrl("https://images.unsplash.com/photo-1568252542512-9fe8fe9c87bb?w=900&auto=format&fit=crop&q=80");
                 } else if (cName.contains("foot") || pName.contains("shoe") || pName.contains("sneaker") || pName.contains("boot")) {

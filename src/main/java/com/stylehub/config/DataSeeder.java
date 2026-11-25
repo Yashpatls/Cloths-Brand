@@ -154,7 +154,7 @@ public class DataSeeder {
                         "Pima Cotton Essential T-Shirt", "SH-M-007",
                         "Everyday staple jersey t-shirt crafted from long-staple Peruvian pima cotton.",
                         599, 499, menCat,
-                        "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=900",
+                        "https://images.unsplash.com/photo-1581655353564-df123a1eb820?w=900",
                         List.of(),
                         List.of("S", "M", "L", "XL"),
                         List.of("Optic White", "Heather Grey", "Black"),
@@ -208,7 +208,7 @@ public class DataSeeder {
                 p.setPrice(BigDecimal.valueOf(499));
                 p.setCategory(menCat);
                 p.setCategoryName(menCat.getName());
-                p.setImageUrl("https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=900");
+                p.setImageUrl("https://images.unsplash.com/photo-1581655353564-df123a1eb820?w=900");
                 p.setStock(50);
                 p.setActive(true);
                 Product saved = productRepo.save(p);
@@ -389,7 +389,7 @@ public class DataSeeder {
                 seedCombo(comboRepo, comboItemRepo,
                         "Combo 1 – T-Shirt Pack", "combo-1-t-shirt-pack", ComboTier.BUDGET,
                         "Twin pack of 100% combed cotton crew-neck tees with choice of sizes and colours. Perfect everyday basic layering.",
-                        "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=900",
+                        "https://images.unsplash.com/photo-1581655353564-df123a1eb820?w=900",
                         499, 998, "Save 50% (Bestseller)",
                         List.of(new BundleItemSpec(tshirt, "1 Classic Crew T-Shirt", 1),
                                 new BundleItemSpec(tshirt, "1 Contrast Crew T-Shirt", 1)));
@@ -583,10 +583,10 @@ public class DataSeeder {
                         "https://images.unsplash.com/photo-1624222247344-550fb60583dc?w=900",
                         List.of("https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=900")),
 
-                // 13. Footwear: Monochrome Leather Court Sneakers (Pristine minimal white court sneaker - NOT RED RUNNING SHOES!)
+                // 13. Footwear: Monochrome Leather Court Sneakers (Pristine minimal white court sneaker)
                 new ProductVisualPreset("SH-FT-013",
-                        "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=900",
-                        List.of("https://images.unsplash.com/photo-1600185365926-3a2ce3cdb9eb?w=900", "https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?w=900")),
+                        "https://images.unsplash.com/photo-1560769629-975ec94e6a86?w=900",
+                        List.of("https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=900", "https://images.unsplash.com/photo-1600185365926-3a2ce3cdb9eb?w=900", "https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?w=900")),
 
                 // 14. Footwear: Suede Chelsea Boots
                 new ProductVisualPreset("SH-FT-014",
@@ -633,20 +633,20 @@ public class DataSeeder {
                         "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=900",
                         List.of("https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=900")),
 
-                // 24. Kids Active Drawstring Shorts (Cute organic cotton play shorts - NOT a bearded man!)
+                // 24. Kids Active Drawstring Shorts (Cute organic cotton playwear shorts)
                 new ProductVisualPreset("SH-K-023",
-                        "https://images.unsplash.com/photo-1519238263530-99bdd11df2ea?w=900",
-                        List.of("https://images.unsplash.com/photo-1622290291468-a28f7a7dc6a8?w=900")),
+                        "https://images.unsplash.com/photo-1622290291468-a28f7a7dc6a8?w=900",
+                        List.of("https://images.unsplash.com/photo-1519238263530-99bdd11df2ea?w=900")),
 
-                // 25. Classic Crew Neck Cotton T-Shirt (Men's pure white combed cotton jersey tee - NOT a bearded face!)
+                // 25. Classic Crew Neck Cotton T-Shirt (Crisp pure white combed cotton jersey tee on minimal hanger)
                 new ProductVisualPreset("SH-M-007",
-                        "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=900",
-                        List.of("https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=900", "https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?w=900")),
+                        "https://images.unsplash.com/photo-1581655353564-df123a1eb820?w=900",
+                        List.of("https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=900", "https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=900")),
 
                 // 26. Round Toe Pivot Pro Sneakers (U.S. Polo Assn. high-tech lifestyle athletic footwear)
                 new ProductVisualPreset("SH-FT-031",
-                        "https://images.unsplash.com/photo-1600185365926-3a2ce3cdb9eb?w=900",
-                        List.of("https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?w=900", "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=900", "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=900"))
+                        "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=900",
+                        List.of("https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?w=900", "https://images.unsplash.com/photo-1560769629-975ec94e6a86?w=900", "https://images.unsplash.com/photo-1600185365926-3a2ce3cdb9eb?w=900"))
         );
 
         for (ProductVisualPreset preset : presets) {
@@ -727,7 +727,7 @@ public class DataSeeder {
             // Replace any expired or temporary openai links with permanent curated flat-lay photography
             if (img == null || img.contains("openai.com") || img.isBlank()) {
                 if (slug.contains("t-shirt-pack") || slug.contains("combo-1")) {
-                    cp.setImageUrl("https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=900");
+                    cp.setImageUrl("https://images.unsplash.com/photo-1581655353564-df123a1eb820?w=900");
                 } else if (slug.contains("daily-wear") && !slug.contains("women")) {
                     cp.setImageUrl("https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?w=900");
                 } else if (slug.contains("womens-daily-wear") || slug.contains("combo-3")) {
